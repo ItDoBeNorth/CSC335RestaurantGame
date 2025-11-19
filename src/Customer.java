@@ -1,4 +1,4 @@
 
-public abstract class Customer {
+public interface Customer {
 
 }
