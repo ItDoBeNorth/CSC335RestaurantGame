@@ -1,4 +1,4 @@
 
-public class Tomato {
+public class Tomato extends Toppings {
 
 }

@@ -1,4 +1,4 @@
 
-public class Pickle {
+public class Pickle extends Toppings {
 
 }

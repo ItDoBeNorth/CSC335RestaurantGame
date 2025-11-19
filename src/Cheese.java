@@ -1,4 +1,4 @@
 
-public class Cheese {
+public class Cheese extends Toppings {
 
 }

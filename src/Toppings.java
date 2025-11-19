@@ -1,4 +1,4 @@
 
-public interface Toppings {
+public class Toppings {
 
 }

@@ -1,4 +1,4 @@
 
-public class Onion {
+public class Onion extends Toppings {
 
 }
