@@ -25,7 +25,7 @@ public class RestaurantModel {
 	RestaurantModel(Player player) {
 		// saveLoad from players file but for now pass in a player starting with day one
 		day = player.getDay();
-		currCustomerQueue = new Customer[2];
+		currCustomers = new Customer[2];
 
 	}
 
@@ -66,25 +66,29 @@ public class RestaurantModel {
 	}
 
 	public void addToBasket(Toppings topping) {
-		basket.addTopping(topping);
+		basket.addIngredient(topping);
 	}
 	
 	public void clearBasket() {
+		basket.clearBasket();
 	}
-	
-	public void 
 
 	public void addToBurger(Toppings topping) {
 		burger.addTopping(topping);
 	}
+	
+	public void resetBurger() {
+		burger.reset();
+	}
 
-	public void Serve(Ticket ticket) {
+	public void serve(Ticket ticket) {
 		//should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
 		// rework currCustomers or find a way to check which customer is to be removed
 		currCustomers.remove(ticket.getCustomer());
 		daysCustomer.remove(ticket.getCustomer());
 		currTaskList.remove(ticket);
+		burger.reset();
 	}
 
 	private int checkPrecision(ticket) {
