@@ -26,7 +26,11 @@ public class RestaurantModel {
 		// saveLoad from players file but for now pass in a player starting with day one
 		day = player.getDay();
 		currCustomers = new Customer[2];
-
+	}
+	
+	
+	private boolean dayOver() {
+		return (daysCustomers.isEmpty() && currTaskList.isEmpty());
 	}
 
 	private void nextDay() {
@@ -55,10 +59,6 @@ public class RestaurantModel {
 		
 	}
 	
-	
-	private boolean dayOver() {
-		return (daysCustomers.isEmpty() && currTaskList.isEmpty());
-	}
 
 	public Ticket getCustomerTicket(Customer customer) {
 		ArrayList<Toppings> order = customer.getOrder(daysIngredients, day);
@@ -80,8 +80,9 @@ public class RestaurantModel {
 	public void resetBurger() {
 		burger.reset();
 	}
-
-	public void serve(Ticket ticket) {
+	
+	
+	public void Serve(Ticket ticket) {
 		//should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
 		// rework currCustomers or find a way to check which customer is to be removed
