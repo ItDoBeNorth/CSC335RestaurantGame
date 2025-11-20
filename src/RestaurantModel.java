@@ -11,9 +11,9 @@ public class RestaurantModel {
 	private int day;
 
 	private ArrayList<Toppings> daysIngredients;
-	private ArrayList<Customer> daysCustomers;
+	private Queue<Customer> daysCustomers;
 
-	private Queue currCustomerQueue;
+	private Customer[] currCustomers;
 	private Basket basket;
 	private Burger burger;
 	private ArrayList<Ticket> currTaskList;
@@ -25,6 +25,7 @@ public class RestaurantModel {
 	RestaurantModel(Player player) {
 		// saveLoad from players file but for now pass in a player starting with day one
 		day = player.getDay();
+		currCustomerQueue = new Customer[2];
 
 	}
 
@@ -36,28 +37,53 @@ public class RestaurantModel {
 		daysCustomers = Collections.shuffle(Arrays.copyOfRange(allCustomer, 0, day));
 	}
 
+	public Customer[] updateCustomerQueue() {
+		if (currCustomers[1] == null && currCustomers[2] == null) {
+			if (daysCustomers.isEmpty()) {
+				// controller checks if empty to call next day
+				return currCustomers;
+			}
+		}
+		if (currCustomers[1] == null || currCustomers[2] == null) {
+			for (int i = 0; i < currCustomers.length; i++) {
+				if(currCustomers[i] == null && daysCustomers.peek() != null) {
+					currCustomers[i] = daysCustomers.poll();
+				}
+			}
+		}
+		return currCustomers;
+		
+	}
+	
+	
 	private boolean dayOver() {
 		return (daysCustomers.isEmpty() && currTaskList.isEmpty());
 	}
 
-	private Ticket getCustomerTicket(Customer customer) {
+	public Ticket getCustomerTicket(Customer customer) {
 		ArrayList<Toppings> order = customer.getOrder(daysIngredients, day);
 		Ticket ticket = new Ticket(customer, order);
 	}
 
-	private void addToBasket(Toppings topping) {
+	public void addToBasket(Toppings topping) {
 		basket.addTopping(topping);
 	}
+	
+	public void clearBasket() {
+	}
+	
+	public void 
 
-	private void addToBurger(Toppings topping) {
+	public void addToBurger(Toppings topping) {
 		burger.addTopping(topping);
 	}
 
-	private void Serve(Ticket ticket) {
+	public void Serve(Ticket ticket) {
 		//should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
-		currCustomerQueue.remove(ticket.getCustomer());
-		daysCustomers.remove(ticket.getCustomer());
+		// rework currCustomers or find a way to check which customer is to be removed
+		currCustomers.remove(ticket.getCustomer());
+		daysCustomer.remove(ticket.getCustomer());
 		currTaskList.remove(ticket);
 	}
 
