@@ -19,13 +19,15 @@ public class RestaurantModel {
 	private ArrayList<Ticket> currTaskList;
 
 	// change later
-	private static ToppingsList[] allToppings;
-	private static CustomerList[] allCustomer;
+	private static Toppings[] allToppings;
+	private static Customer[] allCustomer;
 
 	RestaurantModel(Player player) {
 		// saveLoad from players file but for now pass in a player starting with day one
 		day = player.getDay();
 		currCustomers = new Customer[2];
+		allToppings = IngredientsList.TOPPINGS;
+		allCustomer = CustomerList.CUSTOMERS;
 	}
 	
 	
