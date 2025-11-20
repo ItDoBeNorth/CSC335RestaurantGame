@@ -26,6 +26,7 @@ public class RestaurantModel {
 		// saveLoad from players file but for now pass in a player starting with day one
 		day = player.getDay();
 		currCustomers = new Customer[2];
+<<<<<<< Upstream, based on origin/DevelopmentBranch
 		allToppings = IngredientsList.TOPPINGS;
 		allCustomer = CustomerList.CUSTOMERS;
 	}
@@ -33,6 +34,9 @@ public class RestaurantModel {
 	
 	private boolean dayOver() {
 		return (daysCustomers.isEmpty() && currTaskList.isEmpty());
+=======
+
+>>>>>>> 08ee88d added basic burger and basket calls
 	}
 
 	private void nextDay() {
@@ -82,9 +86,14 @@ public class RestaurantModel {
 	public void resetBurger() {
 		burger.reset();
 	}
+<<<<<<< Upstream, based on origin/DevelopmentBranch
 	
 	
 	public void Serve(Ticket ticket) {
+=======
+
+	public void serve(Ticket ticket) {
+>>>>>>> 08ee88d added basic burger and basket calls
 		//should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
 		// rework currCustomers or find a way to check which customer is to be removed
