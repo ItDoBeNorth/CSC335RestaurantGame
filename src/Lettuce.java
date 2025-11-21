@@ -1,12 +1,4 @@
 
-public class Lettuce extends Toppings {
-
-	public Lettuce(double price, double prepTime, String toppingName) {
-		super(price, prepTime, toppingName);
-	}
-	
-	public Lettuce() {
-		super(1.00, .30, "lettuce");
-	}
+public class Lettuce {
 
 }
