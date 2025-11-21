@@ -19,11 +19,11 @@ public class GenericCustomer implements Customer{
 	}
 	
 	@Override
-	public ArrayList<Toppings> getOrder(ArrayList<Toppings> ingredientsList, int maxPick) {
+	public ArrayList<Toppings> getOrder(Toppings[] ingredientsList, int maxPick) {
 		ArrayList<Toppings> order=new ArrayList<>();
 		
 		for (int i=0;i<maxPick;i++) {
-			Toppings currTopping=ingredientsList.get(r.nextInt(ingredientsList.size()));
+			Toppings currTopping=ingredientsList[r.nextInt(ingredientsList.length)];
 			order.add(currTopping);
 		}
 		return order;

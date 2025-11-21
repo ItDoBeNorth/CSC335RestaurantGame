@@ -8,14 +8,8 @@ class customerTest {
 	@Test
 	void genericCostumerTest() {
 		GenericCustomer newCustomer=new GenericCustomer();
-		ArrayList<Toppings> ingredientsList=new ArrayList<>();
-		ingredientsList.add(new Cheese());
-		ingredientsList.add(new Tomato());
-		ingredientsList.add(new Pickle());
-		ingredientsList.add(new Onion());
-		ingredientsList.add(new Lettuce());
-		
-		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList, 3);
+		IngredientsList ingredientsList=new IngredientsList();
+		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList.TOPPINGLIST, 3);
 		
 		assertNotNull(newCustomer.getName());
 		assertNotNull(newCustomer.getShape());
@@ -25,17 +19,12 @@ class customerTest {
 	@Test
 	void JohnTest() {
 		John John=new John();
-		ArrayList<Toppings> ingredientsList=new ArrayList<>();
-		ingredientsList.add(new Cheese());
-		ingredientsList.add(new Tomato());
-		ingredientsList.add(new Pickle());
-		ingredientsList.add(new Onion());
-		ingredientsList.add(new Lettuce());
+		IngredientsList ingredientsList=new IngredientsList();
 		
 		ArrayList<Toppings> favOrder=new ArrayList<>();
 		favOrder.add(new Cheese());
 		
-		ArrayList<Toppings> newOrder=John.getOrder(ingredientsList, 3);
+		ArrayList<Toppings> newOrder=John.getOrder(ingredientsList.TOPPINGLIST, 3);
 	
 		assertEquals(John.getName(),"John");
 		assertEquals(John.getShape(),"circle");
