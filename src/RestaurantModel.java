@@ -13,10 +13,10 @@ public class RestaurantModel {
 	private ArrayList<Toppings> daysIngredients;
 	private Queue<Customer> daysCustomers;
 
-	private Customer[] currCustomers;
-	private Basket basket;
-	private Burger burger;
+	private ArrayList<Customer> currCustomers;
 	private ArrayList<Ticket> currTaskList;
+	private Basket<Toppings> basket;
+	private Burger burger;
 
 	// change later
 	private static Toppings[] allToppings;
@@ -24,10 +24,13 @@ public class RestaurantModel {
 
 	RestaurantModel(Player player) {
 		// saveLoad from players file but for now pass in a player starting with day one
-		day = player.getDay();
-		currCustomers = new Customer[2];
-		allToppings = IngredientsList.TOPPINGS;
+		this.player = player;
+		day = player.getDay(); // if nextDay is the first thing that is called make sure day-1 OR only save day on end of day
+		allToppings = IngredientsList.TOPPINGLIST;
 		allCustomer = CustomerList.CUSTOMERS;
+		currCustomers = new ArrayList<Customer>();
+		currTaskList = new ArrayList<Ticket>();
+		
 	}
 	
 	
@@ -39,21 +42,25 @@ public class RestaurantModel {
 		day++;
 		player.nextDay();
 		player.addScore(1);
-		daysIngredients = Arrays.copyOfRange(allToppings, 0, day);
+		// decide ingredients different if want, for now its by day
+		daysIngredients = new ArrayList<Toppings>(Arrays.copyOfRange(Arrays.asList(allToppings), 0, day));
+		// customerLimit for now is day, can be changed later
 		daysCustomers = Collections.shuffle(Arrays.copyOfRange(allCustomer, 0, day));
+		burger.reset();
+		basket.clearBasket();
+		currTaskList.clear();
+		currCustomers.clear();
 	}
 
-	public Customer[] updateCustomerQueue() {
-		if (currCustomers[1] == null && currCustomers[2] == null) {
-			if (daysCustomers.isEmpty()) {
-				// controller checks if empty to call next day
-				return currCustomers;
-			}
+	public ArrayList<Customer> updateCustomerQueue() {
+		if (currCustomers.isEmpty() && daysCustomers.isEmpty()) {
+			// controller checks if empty to call next day
+			return null;
 		}
-		if (currCustomers[1] == null || currCustomers[2] == null) {
-			for (int i = 0; i < currCustomers.length; i++) {
-				if(currCustomers[i] == null && daysCustomers.peek() != null) {
-					currCustomers[i] = daysCustomers.poll();
+		if (currCustomers.size() < 2) {
+			while (currCustomers.size() < 2 && !daysCustomers.isEmpty()) {
+				if (daysCustomers.peek() != null) {
+					currCustomers.add(daysCustomers.poll());
 				}
 			}
 		}
@@ -88,9 +95,11 @@ public class RestaurantModel {
 		//should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
 		// rework currCustomers or find a way to check which customer is to be removed
+		
+		// remember to add a .equals to customer and ticket
 		currCustomers.remove(ticket.getCustomer());
-		daysCustomer.remove(ticket.getCustomer());
 		currTaskList.remove(ticket);
+		daysCustomers.remove(ticket.getCustomer());
 		burger.reset();
 	}
 
@@ -107,6 +116,7 @@ public class RestaurantModel {
 		}
 		// find other way to evaluate score
 		return score;
+		// maybe using order, correct items, etc.
 	}
 
 	
