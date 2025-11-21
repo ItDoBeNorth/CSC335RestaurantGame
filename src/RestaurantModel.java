@@ -95,7 +95,7 @@ public class RestaurantModel {
 	}
 
 	private int checkPrecision(Ticket ticket) {
-		score = 1;
+		int score = 1;
 		// implement a .equals if needed
 		
 		// add some trouble shooting stuff like check size, order of ingredients
