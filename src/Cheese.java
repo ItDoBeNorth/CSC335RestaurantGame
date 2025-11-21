@@ -6,6 +6,10 @@ public class Cheese extends Toppings {
 		
 	}
 	
+	public Cheese() {
+		super(1.00, .30, "cheese");
+	}
+	
 	
 
 }
