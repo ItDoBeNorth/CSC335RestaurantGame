@@ -8,12 +8,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class RestaurantGUIView  extends Application implements Observer{
 	private TabPane tabPane;
-	
+	private RestaurantController controller;
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -31,6 +33,7 @@ public class RestaurantGUIView  extends Application implements Observer{
 		// SetUp Stage
 		stage.setTitle("Brger");
 		BorderPane pane = new BorderPane();
+		controller = new RestaurantController();
 		
 //		stage.setOnCloseRequest(event -> {
 //			// if closing after completed and unreset game
@@ -52,16 +55,37 @@ public class RestaurantGUIView  extends Application implements Observer{
 		tabPane = new TabPane(); 
 		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		Tab menu = new Tab("Menu");
-		makeMenu(menu);
+		
+		
 		Tab order = new Tab("Order");
 		Tab prep = new Tab("Prep");
 		Tab cook = new Tab("Cook");
 		Tab serve = new Tab("Serve");
 		
+		// make menu
+		// use AnchorPane menuSpace = new AnchorPane(); to set up the gui
+		HBox horiz = new HBox();
+		Button signIn = new Button("Sign In");
+		TextField textfield = new TextField("Enter your name");
+		signIn.setOnAction((event) -> {
+			//send name to controller
+			// *** controller.processPlayerName(textfield.getText().strip().toUpperCase());
+			// switch to order scene
+			tabPane.getTabs().remove(menu);
+			tabPane.getTabs().addAll(order, prep, cook, serve);
+			tabPane.getSelectionModel().select(order);
+		});
+		// menuSpace.getChildren().addAll(signIn);		
+		// set content to tab, switch this with the pane when made
+		horiz.getChildren().setAll(textfield, signIn);
 		
+		menu.setContent(horiz);
 		
-		// set things to 
-		tabPane.getTabs().addAll(menu, order, prep, cook, serve);
+		//make other tabs
+		makeOrder();
+		
+		// set initial things
+		tabPane.getTabs().addAll(menu);
 		pane.setCenter(tabPane);
 		
 		// scene ready
@@ -75,18 +99,9 @@ public class RestaurantGUIView  extends Application implements Observer{
 		launch(args);
 	}
 	
-	public void makeMenu(Tab menu) {
-		BorderPane tabSpace = new BorderPane();
-		Button signIn = new Button("Sign In");
-		signIn.setOnAction((event) -> {
-			// switch to order scene
-			tabPane.getSelectionModel().select(1);
-			tabPane.getTabs().remove(menu);
-		});
-		tabSpace.getChildren().addAll(signIn);
+	public void makeOrder(Tab order) {
+		// some kind of pane 
 		
-		// set content to tab
-		menu.setContent(signIn);
 	}
 	
 }
