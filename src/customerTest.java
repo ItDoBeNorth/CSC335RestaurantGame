@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,13 +9,7 @@ class customerTest {
 	@Test
 	void genericCostumerTest() {
 		GenericCustomer newCustomer=new GenericCustomer();
-		ArrayList<Toppings> ingredientsList=new ArrayList<>();
-		ingredientsList.add(new Cheese());
-		ingredientsList.add(new Tomato());
-		ingredientsList.add(new Pickle());
-		ingredientsList.add(new Onion());
-		ingredientsList.add(new Lettuce());
-		
+		ArrayList<Toppings> ingredientsList=new ArrayList<>(List.of(IngredientsList.TOPPINGLIST));
 		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList, 3);
 		
 		assertNotNull(newCustomer.getName());
@@ -25,13 +20,7 @@ class customerTest {
 	@Test
 	void JohnTest() {
 		John John=new John();
-		ArrayList<Toppings> ingredientsList=new ArrayList<>();
-		ingredientsList.add(new Cheese());
-		ingredientsList.add(new Tomato());
-		ingredientsList.add(new Pickle());
-		ingredientsList.add(new Onion());
-		ingredientsList.add(new Lettuce());
-		
+		ArrayList<Toppings> ingredientsList=new ArrayList<>(List.of(IngredientsList.TOPPINGLIST));
 		ArrayList<Toppings> favOrder=new ArrayList<>();
 		favOrder.add(new Cheese());
 		
