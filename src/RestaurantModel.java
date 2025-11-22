@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -43,9 +44,9 @@ public class RestaurantModel {
 		player.nextDay();
 		player.addScore(1);
 		// decide ingredients different if want, for now its by day
-		daysIngredients = new ArrayList<Toppings>(Arrays.copyOfRange(Arrays.asList(allToppings), 0, day));
+		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, day)));
 		// customerLimit for now is day, can be changed later
-		daysCustomers = Collections.shuffle(Arrays.copyOfRange(allCustomer, 0, day));
+		daysCustomers = new LinkedList<Customer>(Collections.shuffle(Arrays.asList(Arrays.copyOfRange(allCustomer, 0, day)));
 		burger.reset();
 		basket.clearBasket();
 		currTaskList.clear();
@@ -72,6 +73,7 @@ public class RestaurantModel {
 	public Ticket getCustomerTicket(Customer customer) {
 		ArrayList<Toppings> order = customer.getOrder(daysIngredients, day);
 		Ticket ticket = new Ticket(customer, order);
+		return ticket;
 	}
 
 	public void addToBasket(Toppings topping) {
@@ -110,7 +112,7 @@ public class RestaurantModel {
 		// add some trouble shooting stuff like check size, order of ingredients
 		// here is only the implementation for checking if its exact
 		for (int i = 0; i < ticket.getOrderSize(); i++) {
-			if (ticket.getToppingsList.get(i) != burger.getToppings.get(i)) {
+			if (ticket.getToppingsList().get(i) != burger.getToppings().get(i)) {
 				score = 0;
 			}
 		}

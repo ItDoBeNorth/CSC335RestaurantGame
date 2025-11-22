@@ -24,5 +24,17 @@ public class Ticket {
 	public void addTopping(Toppings newIngredient) {
 		this.ingredients.add(newIngredient);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+		Ticket other = (Ticket) obj;
+		return (other.getToppingsList() == this.getToppingsList() && other.getCustomer() == this.getCustomer());
+	}
 
 }
