@@ -7,7 +7,8 @@ public class John extends KnownCustomer {
 	public John() {
 		super("John","circle","red",new ArrayList<Toppings>(){{add(new Cheese());}});
 	}
-	
+
+	@Override
 	public ArrayList<Toppings> getOrder(ArrayList<Toppings> ingredientsList, int maxPick) {
 		ArrayList<Toppings> order= new ArrayList<Toppings>(super.getFavoriteOrder());
 		for (int i=order.size();i<maxPick;i++) {
