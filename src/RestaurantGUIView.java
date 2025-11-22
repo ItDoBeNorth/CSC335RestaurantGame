@@ -6,15 +6,18 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class RestaurantGUIView  extends Application implements Observer{
 	private TabPane tabPane;
+	private Player player;
 	private RestaurantController controller;
 	
 	@Override
@@ -69,7 +72,7 @@ public class RestaurantGUIView  extends Application implements Observer{
 		TextField textfield = new TextField("Enter your name");
 		signIn.setOnAction((event) -> {
 			//send name to controller
-			// *** controller.processPlayerName(textfield.getText().strip().toUpperCase());
+			// *** player = controller.processPlayerName(textfield.getText().strip().toUpperCase()); which should also start the days loop, calling nextDay (make surre player saves the day they completed), and the loop should call checks to is day over and 
 			// switch to order scene
 			tabPane.getTabs().remove(menu);
 			tabPane.getTabs().addAll(order, prep, cook, serve);
@@ -78,11 +81,10 @@ public class RestaurantGUIView  extends Application implements Observer{
 		// menuSpace.getChildren().addAll(signIn);		
 		// set content to tab, switch this with the pane when made
 		horiz.getChildren().setAll(textfield, signIn);
-		
 		menu.setContent(horiz);
 		
 		//make other tabs
-		makeOrder();
+		//makeOrder();
 		
 		// set initial things
 		tabPane.getTabs().addAll(menu);
@@ -100,8 +102,45 @@ public class RestaurantGUIView  extends Application implements Observer{
 	}
 	
 	public void makeOrder(Tab order) {
+		// change pane later
+		BorderPane tempPane = new BorderPane();
+		VBox vert =  new VBox();
+		Button customer1 = new Button("Get Order");
+		customer1.setOnAction((event) -> {
+			
+		});
+		Button customer2 = new Button("Get Order");
+		customer1.setOnAction((event) -> {
+			
+		});
+		vert.getChildren().addAll(customer1,customer2);
+		tempPane.getChildren().add(vert);
+		order.setContent(tempPane);
+		
+		
+	}
+	
+	public void makePrep(Tab prep) {
+		// change pane later
+		BorderPane tempPane = new BorderPane();
+		
+		// contents
+		HBox ticketsInfo = new HBox();
+		// switch labels with better things later
+		Label ticketOne = new Label("get ticket info later");
+		Label ticketTwo = new Label("get ticket info later");
+		
+		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
+		tempPane.getChildren().add(ticketsInfo);
+		prep.setContent(tempPane);
+	}
+	
+	public void makeCook(Tab cook) {
 		// some kind of pane 
 		
 	}
 	
+	public void makeServe(Tab serve) {
+		
+	}
 }
