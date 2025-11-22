@@ -25,4 +25,16 @@ public abstract class KnownCustomer implements Customer {
 	public ArrayList<Toppings> getFavoriteOrder(){
 		return favoriteOrder;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+		GenericCustomer other = (GenericCustomer) obj;
+		return (other.getName() == this.getName());
+	}
 }

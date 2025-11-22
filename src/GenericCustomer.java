@@ -39,4 +39,17 @@ public class GenericCustomer implements Customer{
 		return color;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+		GenericCustomer other = (GenericCustomer) obj;
+		return (other.getName() == this.getName());
+	}
+	
+	
 	}
