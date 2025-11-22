@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,17 +10,16 @@ class TicketTest {
 	@Test
 	void ticketSizeTest() {
 		GenericCustomer newCustomer= new GenericCustomer();
-		IngredientsList ingredientsList=new IngredientsList();
-		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList.TOPPINGLIST, 2);
+		ArrayList<Toppings> ingredientsList=new ArrayList<>(List.of(IngredientsList.TOPPINGLIST));
+		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList, 2);
 		Ticket newTicket=new Ticket(newCustomer,order);
-		
 		assertEquals(newTicket.getOrderSize(),2);
 	}
 	@Test
 	void ticketTest() {
 		GenericCustomer newCustomer= new GenericCustomer();
-		IngredientsList ingredientsList=new IngredientsList();
-		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList.TOPPINGLIST, 2);
+		ArrayList<Toppings> ingredientsList=new ArrayList<>(List.of(IngredientsList.TOPPINGLIST));
+		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList, 2);
 		Ticket newTicket=new Ticket(newCustomer,order);
 		
 		assertEquals(newTicket.getCustomer(),newCustomer);
@@ -28,8 +28,8 @@ class TicketTest {
 	@Test
 	void ticketAddToppingTest() {
 		GenericCustomer newCustomer= new GenericCustomer();
-		IngredientsList ingredientsList=new IngredientsList();
-		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList.TOPPINGLIST, 2);
+		ArrayList<Toppings> ingredientsList=new ArrayList<>(List.of(IngredientsList.TOPPINGLIST));
+		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList, 2);
 		Ticket newTicket=new Ticket(newCustomer,order);
 		newTicket.addTopping(new Cheese());
 		
