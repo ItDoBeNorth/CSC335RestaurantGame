@@ -35,18 +35,20 @@ public class RestaurantModel {
 	}
 	
 	
-	private boolean dayOver() {
+	public boolean dayOver() {
 		return (daysCustomers.isEmpty() && currTaskList.isEmpty());
 	}
 
-	private void nextDay() {
+	public void nextDay() {
 		day++;
 		player.nextDay();
 		player.addScore(1);
 		// decide ingredients different if want, for now its by day
 		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, day)));
 		// customerLimit for now is day, can be changed later
-		daysCustomers = new LinkedList<Customer>(Collections.shuffle(Arrays.asList(Arrays.copyOfRange(allCustomer, 0, day)));
+		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(Arrays.asList(Arrays.copyOfRange(allCustomer, 0, day)));
+		Collections.shuffle(tempCustomers);
+		daysCustomers = new LinkedList<Customer>(tempCustomers)	;
 		burger.reset();
 		basket.clearBasket();
 		currTaskList.clear();
