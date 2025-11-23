@@ -144,7 +144,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		// change pane later
 		BorderPane tempPane = new BorderPane();
 		
-		VBox orderBox = new VBox(10);
+		HBox orderBox = new HBox(10);
 		orderBox.setAlignment(Pos.CENTER);
 		orderBox.setStyle(
 		        "-fx-background-color: white;" +
@@ -154,7 +154,6 @@ public class RestaurantGUIView extends Application implements Observer {
 		        "-fx-background-radius: 10;" +
 		        "-fx-border-radius: 10;"
 		);
-		HBox horiz = new HBox();
 		
 		customer1 = new VBox();
 		Label c1Name = new Label("CustomerName");
@@ -174,10 +173,11 @@ public class RestaurantGUIView extends Application implements Observer {
 			// *** controller.updateTaskList(currCustomer.get(0)); for initial customers which will add to the ticketsInfo after we add observer
 			c2Button.setDisable(true);
 		});
+		customer2.getChildren().addAll(c2Name, c2Button);
 		
 		orderBox.setMaxWidth(300);
 		orderBox.setMaxHeight(300);
-		orderBox.getChildren().addAll(c1Name, c1Button, c2Name, c2Button);
+		orderBox.getChildren().addAll(customer1, customer2);
 		tempPane.setCenter(orderBox);
 		order.setContent(tempPane);
 
