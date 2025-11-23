@@ -122,7 +122,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		makeOrder(order);
 		makePrep(prep);
 		makeCook(cook, serve);
-		makeServe(serve);
+		makeServe(serve, order);
 		
 
 		// set initial things
@@ -286,8 +286,8 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	}
 
-	public void makeServe(Tab serve) {
-		// change pane laters
+	public void makeServe(Tab serve, Tab order) {
+		// change pane later
 		BorderPane tempPane = new BorderPane();
 		
 		VBox finish = new VBox();
@@ -298,8 +298,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		serveBurger.setOnAction((e) -> {
 			if (ticketChoice.getValue() == "Ticket 1") {
 				//*** controller.serveBurger(currTickets.get(0)); in which it should also update customer queue and update that info in customer1 and customer 2
+				tabPane.getSelectionModel().select(order); 
 			} else {
 				// *** controller.serveBurger(currTickets.get(1));
+				tabPane.getSelectionModel().select(order); 
 			}
 		});
 		
