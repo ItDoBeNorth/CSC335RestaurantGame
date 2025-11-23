@@ -4,14 +4,14 @@ public class Player {
 	private String name;
 
 	/**
-	 * Creates a new player with a given name starting at day 1 with score 0.
+	 * Creates a new player with a given name starting at day 0 with score 0. Holds completed days.
 	 * 
 	 * @param name the name chosen for the player by the user.
 	 */
 	public Player(String name) {
 		this.name = name;
 		score = 0;
-		day = 1;
+		day = 0;
 	}
 
 	/**
