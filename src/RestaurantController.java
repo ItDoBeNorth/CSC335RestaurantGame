@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 /**
  * CSC 335, Fall 2025
@@ -8,13 +9,14 @@ import java.util.Stack;
  */
 public class RestaurantController {
 	RestaurantModel model;
+	HashMap<String, Player> playerList;
 	/**
 	 * creates a new controller of the game 
 	 * @param model a model created from the file RestaurantModel that runs the function
 	 * which the controller display
 	 */
-	public RestaurantController(RestaurantModel model ) {
-		this.model=model;
+	public RestaurantController() {
+		playerList=PlayerList.thisPlayerList;
 	}
 	/**
 	 * checks if the day is over
@@ -105,9 +107,10 @@ public class RestaurantController {
 	 * process the player name and starts the new day
 	 * @param player
 	 */
-	public void processPlayerName(Player player) {
-		int day=player.getDay();
-		model.nextDay();
+	public void processPlayerName(String playerName) {
+		Player currPlayer=playerList.get(playerName);
+		RestaurantModel model=new RestaurantModel(currPlayer);
+		this.model=model;
 	}
 	
 }

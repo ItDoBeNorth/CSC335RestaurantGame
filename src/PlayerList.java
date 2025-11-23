@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 public class PlayerList {
 
-	private HashMap<String, Player> thisPlayerList = new HashMap<>();
+	public static HashMap<String, Player> thisPlayerList = new HashMap<>();
 	
 	public Player getPlayer(String playerName) {
 		
@@ -15,5 +15,6 @@ public class PlayerList {
 		
 		return thisPlayer;
 	}
+	
 	
 }

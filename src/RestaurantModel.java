@@ -22,7 +22,7 @@ public class RestaurantModel {
 	// change later
 	private static Toppings[] allToppings;
 	private static Customer[] allCustomer;
-
+ 
 	RestaurantModel(Player player) {
 		// saveLoad from players file but for now pass in a player starting with day one
 		this.player = player;
