@@ -72,7 +72,7 @@ public class RestaurantController {
 	public void updateTaskList(Customer customer) {
 		model.updateTaskList(customer);
 	}
-	public Stack<Toppings>getCurrToppings(){
+	public ArrayList<Toppings> getCurrToppings(){
 		Burger currBurger=model.getBurger();
 		return currBurger.getToppings();
 	}
