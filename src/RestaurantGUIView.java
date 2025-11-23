@@ -4,11 +4,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -96,7 +98,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		// use AnchorPane menuSpace = new AnchorPane(); to set up the gui
 		HBox horiz = new HBox();
 		Button signIn = new Button("Sign In");
-		TextField textfield = new TextField("Enter your name");
+		TextField textfield = new TextField();
+		textfield.setPromptText("Enter your name");
 		signIn.setOnAction((event) -> {
 			// send name to controller
 			// *** player =
@@ -140,6 +143,17 @@ public class RestaurantGUIView extends Application implements Observer {
 	public void makeOrder(Tab order) {
 		// change pane later
 		BorderPane tempPane = new BorderPane();
+		
+		VBox orderBox = new VBox(10);
+		orderBox.setAlignment(Pos.CENTER);
+		orderBox.setStyle(
+		        "-fx-background-color: white;" +
+		        "-fx-padding: 20;" +
+		        "-fx-border-color: black;" +
+		        "-fx-border-width: 2;" +
+		        "-fx-background-radius: 10;" +
+		        "-fx-border-radius: 10;"
+		);
 		HBox horiz = new HBox();
 		
 		customer1 = new VBox();
@@ -160,10 +174,11 @@ public class RestaurantGUIView extends Application implements Observer {
 			// *** controller.updateTaskList(currCustomer.get(0)); for initial customers which will add to the ticketsInfo after we add observer
 			c2Button.setDisable(true);
 		});
-		customer2.getChildren().addAll(c2Name, c2Button);
 		
-		horiz.getChildren().addAll(customer1, customer2);
-		tempPane.setCenter(horiz);
+		orderBox.setMaxWidth(300);
+		orderBox.setMaxHeight(300);
+		orderBox.getChildren().addAll(c1Name, c1Button, c2Name, c2Button);
+		tempPane.setCenter(orderBox);
 		order.setContent(tempPane);
 
 	}
@@ -183,8 +198,11 @@ public class RestaurantGUIView extends Application implements Observer {
 		BorderPane tempPane = new BorderPane();
 
 		VBox content = new VBox();
+		content.setAlignment(Pos.CENTER);
 		pickIngredients = new HBox();
+		pickIngredients.setAlignment(Pos.CENTER);
 		basket = new Label("Current Ingredients");
+		basket.setAlignment(Pos.CENTER);
 		int n = 0;
 		while (n < IngredientsList.TOPPINGLIST.length){
 			Button topping = new Button(IngredientsList.TOPPINGLIST[n].getToppingName());
@@ -201,7 +219,11 @@ public class RestaurantGUIView extends Application implements Observer {
 			pickIngredients.getChildren().add(topping);
 			n++;
 		}
-		content.getChildren().addAll(pickIngredients, basket);
+		
+		ScrollPane scroll = new ScrollPane();
+		scroll.setContent(basket);
+		scroll.setPrefViewportHeight(150);
+		content.getChildren().addAll(pickIngredients, scroll);
 		
 		Button reset = new Button("Reset");
 		reset.setOnAction((event) -> {
