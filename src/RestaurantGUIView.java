@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -19,16 +20,31 @@ import javafx.stage.Stage;
 public class RestaurantGUIView extends Application implements Observer {
 	private RestaurantController controller;
 	private Player player;
-	private ArrayList<Customer> currCustomer;
+	
 	
 	private TabPane tabPane;
 	
 	//might help with observer stuff
-	private VBox ticketsInfo;
+
+	private ArrayList<Customer> currCustomer;
+	private ArrayList<Ticket> currTickets;
+	
+	// these things need to all be updated to the same info, just seperately
+	private VBox ticketsInfoPrep;
+	private VBox ticketsInfoCook;
+	private VBox ticketsInfoServe;
+	
+	private Label burgerCook;
+	private Label burgerServe;
+	
+	private Label basket;
+	private HBox pickFromBasket;
+	
+	// more observer things but seperate
 	private VBox customer1;
 	private VBox customer2;
-	private HBox pickIngredients;
-	Label basket;
+	private HBox pickIngredients;	
+	ChoiceBox<String> ticketChoice;
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -41,6 +57,8 @@ public class RestaurantGUIView extends Application implements Observer {
 	/**
 	 *
 	 */
+	
+	/// move whatevers needed to be reset each day into its own method
 	@Override
 	public void start(Stage stage) throws Exception {
 		// SetUp Stage
@@ -93,16 +111,15 @@ public class RestaurantGUIView extends Application implements Observer {
 		horiz.getChildren().setAll(textfield, signIn);
 		menu.setContent(horiz);
 
-		// make other tabs
+		
 		// contents
-		ticketsInfo = new VBox();
-		// switch labels with better things later
-		Label ticketOne = new Label("get ticket info later");
-		Label ticketTwo = new Label("get ticket info later");
-
-		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
+		ticketsInfoPrep = makeTicketInfos();
+		ticketsInfoCook = makeTicketInfos();
+		ticketsInfoServe = makeTicketInfos();
 		makeOrder(order);
 		makePrep(prep);
+		makeCook(cook, serve);
+		makeServe(serve);
 		
 
 		// set initial things
@@ -130,7 +147,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		// *** customer1Name.setText(currCustomer.get(0).getName());
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction((event) -> {
-			// *** controller.updateTaskList(currCustomer.get(0)); for initial customers which will add to the ticketsInfo after we add observer
+			// *** taskList = controller.updateTaskList(currCustomer.get(0)); for initial customers which will add to the ticketsInfo after we add observer
 			c1Button.setDisable(true);
 		});
 		customer1.getChildren().addAll(c1Name, c1Button);
@@ -149,6 +166,16 @@ public class RestaurantGUIView extends Application implements Observer {
 		tempPane.setCenter(horiz);
 		order.setContent(tempPane);
 
+	}
+	
+	public VBox makeTicketInfos() {
+		VBox ticketsInfo = new VBox();
+		// switch labels with better things later
+		Label ticketOne = new Label("get ticket info later");
+		Label ticketTwo = new Label("get ticket info later");
+
+		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
+		return ticketsInfo;
 	}
 
 	public void makePrep(Tab prep) {
@@ -184,25 +211,80 @@ public class RestaurantGUIView extends Application implements Observer {
 		});
 		
 		tempPane.setCenter(content);
-		tempPane.setLeft(ticketsInfo);
+		tempPane.setLeft(ticketsInfoPrep);
 		tempPane.setRight(reset);
 		
 		prep.setContent(tempPane);
 	}
 
-	public void makeCook(Tab cook) {
+	public void makeCook(Tab cook, Tab serve) {
 		// contents
 		BorderPane tempPane = new BorderPane();
 
+		VBox content = new VBox();
+		pickFromBasket = new HBox(); // also updated when basket updated
+		burgerCook = new Label("Burger Buns");
+		int n = 0;
+		// *** currBasket = controller.getCurrBasket();
+//		while (n < currBasket.size()){
+//			Button topping = new Button(currBasket[n].getToppingName());
+//			Toppings currTopping = currBasket[n];
+//			topping.setOnAction((event) -> {
+//				// *** controller.addToBurger(currTopping); which will update the burger and basket through observer
+//				pickFromBasket.getChildren().remove(topping);
+//			});
+//			pickFromBasket.getChildren().add(topping);
+//			n++;
+//		}
+		content.getChildren().addAll(pickFromBasket, burgerCook);
 		
-		tempPane.setLeft(ticketsInfo);
+		VBox options = new VBox();
+		Button undo = new Button("Undo");
+		undo.setOnAction((event) -> {
+			// *** controller.undoBurger(); which should pop from top of stack of burger
+		});
+		Button reset = new Button("Reset");
+		reset.setOnAction((event) -> {
+			// *** controller.resetBurger(), which will update the basket and burger through observer
+		});
+		Button serveB = new Button("Serve");
+		serveB.setOnAction((e) -> {
+			tabPane.getSelectionModel().select(serve);
+		});
+		options.getChildren().addAll(undo, reset, serveB);
+		
+		tempPane.setLeft(ticketsInfoCook);
+		tempPane.setCenter(content);
+		tempPane.setRight(options);
 		
 		cook.setContent(tempPane);
 
 	}
 
 	public void makeServe(Tab serve) {
-		// change pane later
+		// change pane laters
+		BorderPane tempPane = new BorderPane();
+		
+		VBox finish = new VBox();
+		ticketChoice = new ChoiceBox<String>();
+		ticketChoice.getItems().addAll("Ticket 1", "Ticket 2");
+		burgerServe = new Label("Burger");
+		Button serveBurger = new Button("Serve Burger");
+		serveBurger.setOnAction((e) -> {
+			if (ticketChoice.getValue() == "Ticket 1") {
+				//*** controller.serveBurger(currTickets.get(0)); in which it should also update customer queue and update that info in customer1 and customer 2
+			} else {
+				// *** controller.serveBurger(currTickets.get(1));
+			}
+		});
+		
+		finish.getChildren().addAll(ticketChoice, serveBurger);
+		
+		tempPane.setCenter(burgerServe);
+		tempPane.setLeft(ticketsInfoServe);
+		tempPane.setRight(finish);
+		
+		serve.setContent(tempPane);
 
 	}
 }

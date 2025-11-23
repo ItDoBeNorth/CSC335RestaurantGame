@@ -91,6 +91,9 @@ public class RestaurantModel {
 	}
 	
 	public void resetBurger() {
+		for (int i = 0; i < burger.getToppings().size(); i++) {
+			basket.addIngredient(burger.getToppings().get(i));
+		}
 		burger.reset();
 	}
 	
