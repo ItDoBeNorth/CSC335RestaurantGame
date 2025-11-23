@@ -29,8 +29,8 @@ public class Burger extends FoodItem{
 		System.out.println(toppingList);
 	}
 	
-	public Stack<Toppings> getToppings() {
-		return toppingList;
+	public ArrayList<Toppings> getToppings() {
+		return new ArrayList<Toppings>(toppingList);
 	}
 	
 	
