@@ -125,6 +125,19 @@ public class RestaurantModel {
 		return score;
 		// maybe using order, correct items, etc.
 	}
-
+	public Basket<Toppings> getBasket() {
+		return basket;
+	}
+	
+	public void undoBurger() {
+		burger.RemoveLastTopping();
+	}
+	public Burger getBurger() {
+		return burger;
+	}
+	
+	public void updateTaskList(Customer customer) {
+		currTaskList.add(getCustomerTicket(customer));
+	}
 	
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 /**
  * CSC 335, Fall 2025
  * file RestaurantController.java: This class is responsible to controls the game
@@ -14,6 +15,21 @@ public class RestaurantController {
 	 */
 	public RestaurantController(RestaurantModel model ) {
 		this.model=model;
+	}
+	/**
+	 * checks if the day is over
+	 * @return true if the day is over, false uf tere are costumers remaining
+	 */
+	public boolean isDayOver() {
+		return model.dayOver();
+	}
+	/**
+	 * moves the player to the next day
+	 */
+	public void nextDay() {
+		if (isDayOver()) {
+			model.nextDay();
+		}
 	}
 	/**
 	 * get the current customer.
@@ -50,6 +66,26 @@ public class RestaurantController {
 	public void addToBurger(Toppings topping) {
 		model.addToBurger(topping);
 	}
+	
+	public void updateTaskList(Customer customer) {
+		model.updateTaskList(customer);
+	}
+	public Stack<Toppings>getCurrToppings(){
+		Burger currBurger=model.getBurger();
+		return currBurger.getToppings();
+	}
+	
+	public void undoBurger() {
+		model.undoBurger();
+	}
+	public Basket<Toppings> getcurrBasket() {
+		return model.getBasket();
+	}
+	
+	public void resetBasket() {
+		model.clearBasket();
+	}
+	
 	/**
 	 * reset the burger 
 	 */
@@ -60,8 +96,18 @@ public class RestaurantController {
 	 * serve the order to the customer
 	 * @param ticket the current ticket of the current customer
 	 */
-	public void serveOrder(Ticket ticket) {
+	public void serveBurger(Ticket ticket) {
 		model.Serve(ticket);
+		model.updateCustomerQueue();
+	}
+	
+	/**
+	 * process the player name and starts the new day
+	 * @param player
+	 */
+	public void processPlayerName(Player player) {
+		int day=player.getDay();
+		model.nextDay();
 	}
 	
 }
