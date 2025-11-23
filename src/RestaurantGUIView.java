@@ -244,6 +244,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		BorderPane tempPane = new BorderPane();
 
 		VBox content = new VBox();
+		content.setAlignment(Pos.CENTER);
 		pickFromBasket = new HBox(); // also updated when basket updated
 		burgerCook = new Label("Burger Buns");
 		int n = 0;
@@ -258,6 +259,8 @@ public class RestaurantGUIView extends Application implements Observer {
 //			pickFromBasket.getChildren().add(topping);
 //			n++;
 //		}
+		
+		
 		content.getChildren().addAll(pickFromBasket, burgerCook);
 		
 		VBox options = new VBox();
