@@ -69,8 +69,8 @@ public class RestaurantController {
 		model.addToBurger(topping);
 	}
 	
-	public void updateTaskList(Customer customer) {
-		model.updateTaskList(customer);
+	public void updateTaskList(int customerInt, Customer customer) {
+		model.updateTaskList( customerInt, customer);
 	}
 	public ArrayList<Toppings> getCurrToppings(){
 		Burger currBurger=model.getBurger();
@@ -100,7 +100,9 @@ public class RestaurantController {
 	 */
 	public void serveBurger(Ticket ticket) {
 		model.Serve(ticket);
-		model.updateCustomerQueue();
+		if (!isDayOver()) {
+			model.updateCustomerQueue();
+		}
 	}
 	
 	/**

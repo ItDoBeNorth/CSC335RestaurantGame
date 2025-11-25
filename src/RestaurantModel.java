@@ -2,22 +2,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Observable;
 import java.util.Queue;
 
 /**
- * 
+ * setChanged()
+ * notifyObservers(arg)
  */
-public class RestaurantModel {
+@SuppressWarnings("deprecation")
+public class RestaurantModel extends Observable{
 	private Player player;
-	private int day;
 
 	private ArrayList<Toppings> daysIngredients;
 	private Queue<Customer> daysCustomers;
 
-	private ArrayList<Customer> currCustomers;
-	private ArrayList<Ticket> currTaskList;
+	// things GUI should know
+	private int day; 
+	private Customer[] currCustomers;
+	private Ticket[] currTaskList;
 	private Basket<Toppings> basket;
 	private Burger burger;
+	
 
 	// change later
 	private static Toppings[] allToppings;
@@ -31,10 +36,10 @@ public class RestaurantModel {
 		daysIngredients = new ArrayList<Toppings>();
 		daysCustomers = new LinkedList<Customer>();
 				
-		currCustomers = new ArrayList<Customer>();
-		currTaskList = new ArrayList<Ticket>();;
+		currCustomers = new Customer[2];
+		currTaskList =  new Ticket[2];
 		burger = new Burger();
-		basket = new Basket<Toppings>();
+		basket = new Basket<Toppings>(10);
 		
 		allToppings = IngredientsList.TOPPINGLIST;
 		allCustomer = CustomerList.CUSTOMERS;
@@ -44,7 +49,8 @@ public class RestaurantModel {
 	
 	
 	public boolean dayOver() {
-		return (daysCustomers.isEmpty() && currTaskList.isEmpty());
+		// add something here for player day end score and stuff
+		return (daysCustomers.isEmpty() && currCustomers[0] == null && currCustomers[1] == null);
 	}
 
 	public void nextDay() {
@@ -59,22 +65,22 @@ public class RestaurantModel {
 		daysCustomers = new LinkedList<Customer>(tempCustomers)	;
 		burger.reset();
 		basket.clearBasket();
-		currTaskList.clear();
-		currCustomers.clear();
+		currTaskList = new Ticket[2];
+		currCustomers = new Customer[2];
 	}
 
-	public ArrayList<Customer> updateCustomerQueue() {
-		if (currCustomers.isEmpty() && daysCustomers.isEmpty()) {
-			// controller checks if empty to call next day
+	public Customer[] updateCustomerQueue() {
+		if (currCustomers[0] == null && daysCustomers.isEmpty() || currCustomers[1] == null && daysCustomers.isEmpty()) {
 			return null;
 		}
-		if (currCustomers.size() < 2) {
-			while (currCustomers.size() < 2 && !daysCustomers.isEmpty()) {
-				if (daysCustomers.peek() != null) {
-					currCustomers.add(daysCustomers.poll());
+		if (currCustomers[0] == null || currCustomers[1] == null) {
+			for (int i = 0; i < 2 ; i++) {
+				if (currCustomers[i] == null && daysCustomers.peek() != null ) {
+					currCustomers[i] = (daysCustomers.poll());
 				}
 			}
 		}
+		
 		return currCustomers;
 		
 	}
@@ -106,14 +112,14 @@ public class RestaurantModel {
 	}
 	
 	
-	public void Serve(Ticket ticket) {
+	public void Serve(int ticketInt, Ticket ticket) {
 		//should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
 		// ADD time precision
 		// ADD price of burger
 		
-		currCustomers.remove(ticket.getCustomer());
-		currTaskList.remove(ticket);
+		currCustomers[ticketInt] = null;
+		currTaskList[ticketInt] = null;
 		daysCustomers.remove(ticket.getCustomer());
 		burger.reset();
 	}
@@ -144,8 +150,8 @@ public class RestaurantModel {
 		return burger;
 	}
 	
-	public void updateTaskList(Customer customer) {
-		currTaskList.add(getCustomerTicket(customer));
+	public void updateTaskList(int customerInt, Customer customer) {
+		currTaskList[customerInt] = getCustomerTicket(customer);
 	}
 	
 }

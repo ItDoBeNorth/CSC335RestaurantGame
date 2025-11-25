@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+@SuppressWarnings("deprecation")
 public class RestaurantGUIView extends Application implements Observer {
 	private RestaurantController controller;
 	private Player player;
@@ -92,7 +93,6 @@ public class RestaurantGUIView extends Application implements Observer {
 		tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		Tab menu = new Tab("Menu");
-
 		Tab order = new Tab("Order");
 		Tab prep = new Tab("Prep");
 		Tab cook = new Tab("Cook");
@@ -179,7 +179,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		c1Name.setText(currCustomer.get(0).getName());
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction((event) -> {
-			controller.updateTaskList(currCustomer.get(0)); //for initial customers which will add to the ticketsInfo after we add observer // check later if we want to have this return tasklist to us
+			controller.updateTaskList(0, currCustomer.get(0)); //for initial customers which will add to the ticketsInfo after we add observer // check later if we want to have this return tasklist to us
 			c1Button.setDisable(true);
 		});
 		customer1.getChildren().addAll(c1Name, c1Button);
@@ -188,7 +188,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		c2Name.setText(currCustomer.get(0).getName());
 		Button c2Button = new Button("Get Order");
 		c2Button.setOnAction((event) -> {
-			controller.updateTaskList(currCustomer.get(0)); // for initial customers which will add to the ticketsInfo after we add observer
+			controller.updateTaskList(1, currCustomer.get(0)); // for initial customers which will add to the ticketsInfo after we add observer
 			c2Button.setDisable(true);
 		});
 		customer2.getChildren().addAll(c2Name, c2Button);
@@ -305,6 +305,7 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	}
 
+	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
 	public void makeServe(Tab serve, Tab order) {
 		// change pane later
 		BorderPane tempPane = new BorderPane();
@@ -317,10 +318,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		serveBurger.setOnAction((e) -> {
 			if (ticketChoice.getValue() != null) {
 				if (ticketChoice.getValue().equals("Ticket 1")) {
-					controller.serveBurger(currTickets.get(0)); //in which it should also update customer queue and update that info in customer1 and customer 2
+					controller.serveBurger(0, currTickets.get(0)); //in which it should also update customer queue and update that info in customer1 and customer 2
 					tabPane.getSelectionModel().select(order); 
 				} else if (ticketChoice.getValue().equals("Ticket 2")){
-					controller.serveBurger(currTickets.get(1));
+					controller.serveBurger(1, currTickets.get(1));
 					tabPane.getSelectionModel().select(order); 
 				}
 			}
