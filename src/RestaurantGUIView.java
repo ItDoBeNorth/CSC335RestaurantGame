@@ -31,8 +31,8 @@ public class RestaurantGUIView extends Application implements Observer {
 	
 	//might help with observer stuff
 
-	private ArrayList<Customer> currCustomer;
-	private ArrayList<Ticket> currTickets;
+	private Customer[] currCustomer;
+	private Ticket[] currTickets;
 	
 	// these things need to all be updated to the same info, just seperately
 	private VBox ticketsInfoPrep;
@@ -53,7 +53,45 @@ public class RestaurantGUIView extends Application implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		EventDetail info = (EventDetail) arg;
+		// use enum later if needed
+		// also add sometthing for ingredients stating at the day for enable ingredients thtat are available
+		switch (info.getEventInfo()) {
+			case ("customerQueueUpdate"):
+				currCustomer = (Customer[]) info.getEventChange();
+				// change things in customer1 and customer 2 box
+				break;
+			case("currTasksChanged"):
+				currTickets = (Ticket[]) info.getEventChange();
+				// change things in ticketsInfo  for prep cook and serve
+				break;
+			case("undoBurger"):
+				// passing null for now, can bring object if needed
+				// remove last addition to burger
+				break;
+			case("resetBurger"):
+				// passing null for now, can bring object if needed
+				// remove toppings from burgers
+				break;
+			case("resetBasket"):
+				// passing null for now, can bring object if needed
+				// remove toppings from baskets
+				break;
+			case("addToBurger"):
+				Burger tempBurger = (Burger) info.getEventChange();
+				// add to or change burgers
+				break;
+			case("addToBasket"):
+				Basket<Toppings> tempBasket = (Basket<Toppings>) info.getEventChange();
+				// add to or change burgers
+				break;
+			case(""):
+				
+				break;
+			
+			default:
+				
+		}
 
 	}
 
@@ -105,23 +143,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		TextField textfield = new TextField();
 		textfield.setPromptText("Enter your name");
 		
-		
-
-		//for now, DELETE LATER
-		currCustomer = new ArrayList<Customer>();
-		currCustomer.add(new John());
-		currCustomer.add( new GenericCustomer());
-		currTickets = new ArrayList<Ticket>();
-		currTickets.add(new Ticket(currCustomer.get(0), new ArrayList<Toppings>(Arrays.asList(new Cheese()))));
-		currTickets.add(new Ticket(currCustomer.get(1), new ArrayList<Toppings>(Arrays.asList(new Lettuce()))));
-		
-		
-		
 		signIn.setOnAction((e) -> {
 			// send name to controller
 			player = controller.processPlayerName(textfield.getText().strip().toUpperCase()); //which should also start the days loop, calling nextDay (make surre player saves the day they completed), and the loop should call checks to is day over
 
 			// and switch to order scene. call the first customerupdate which should update those customers to the currCustomer arraylist above
+			
 			
 			// contents based on model
 			ticketsInfoPrep = makeTicketInfos();
@@ -176,19 +203,19 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		customer1 = new VBox();
 		Label c1Name = new Label("CustomerName");
-		c1Name.setText(currCustomer.get(0).getName());
+		c1Name.setText(currCustomer[0].getName());
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction((event) -> {
-			controller.updateTaskList(0, currCustomer.get(0)); //for initial customers which will add to the ticketsInfo after we add observer // check later if we want to have this return tasklist to us
+			controller.updateTaskList(0, currCustomer[0]); //for initial customers which will add to the ticketsInfo after we add observer // check later if we want to have this return tasklist to us
 			c1Button.setDisable(true);
 		});
 		customer1.getChildren().addAll(c1Name, c1Button);
 		customer2 = new VBox();
 		Label c2Name = new Label("CustomerName2");
-		c2Name.setText(currCustomer.get(0).getName());
+		c2Name.setText(currCustomer[0].getName());
 		Button c2Button = new Button("Get Order");
 		c2Button.setOnAction((event) -> {
-			controller.updateTaskList(1, currCustomer.get(0)); // for initial customers which will add to the ticketsInfo after we add observer
+			controller.updateTaskList(1, currCustomer[0]); // for initial customers which will add to the ticketsInfo after we add observer
 			c2Button.setDisable(true);
 		});
 		customer2.getChildren().addAll(c2Name, c2Button);
@@ -318,10 +345,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		serveBurger.setOnAction((e) -> {
 			if (ticketChoice.getValue() != null) {
 				if (ticketChoice.getValue().equals("Ticket 1")) {
-					controller.serveBurger(0, currTickets.get(0)); //in which it should also update customer queue and update that info in customer1 and customer 2
+					controller.serveBurger(0, currTickets[0]); //in which it should also update customer queue and update that info in customer1 and customer 2
 					tabPane.getSelectionModel().select(order); 
 				} else if (ticketChoice.getValue().equals("Ticket 2")){
-					controller.serveBurger(1, currTickets.get(1));
+					controller.serveBurger(1, currTickets[0]);
 					tabPane.getSelectionModel().select(order); 
 				}
 			}

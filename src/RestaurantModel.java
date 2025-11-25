@@ -6,8 +6,8 @@ import java.util.Observable;
 import java.util.Queue;
 
 /**
- * setChanged()
- * notifyObservers(arg)
+ * setChanged();
+ * notifyObservers(new EventDetail());
  */
 @SuppressWarnings("deprecation")
 public class RestaurantModel extends Observable{
@@ -69,19 +69,19 @@ public class RestaurantModel extends Observable{
 		currCustomers = new Customer[2];
 	}
 
-	public Customer[] updateCustomerQueue() {
+	public void updateCustomerQueue() {
 		if (currCustomers[0] == null && daysCustomers.isEmpty() || currCustomers[1] == null && daysCustomers.isEmpty()) {
-			return null;
+			return;
 		}
-		if (currCustomers[0] == null || currCustomers[1] == null) {
+		else if (currCustomers[0] == null || currCustomers[1] == null) {
 			for (int i = 0; i < 2 ; i++) {
 				if (currCustomers[i] == null && daysCustomers.peek() != null ) {
 					currCustomers[i] = (daysCustomers.poll());
 				}
 			}
 		}
-		
-		return currCustomers;
+		setChanged();
+		notifyObservers(new EventDetail("customerQueueUpdate", currCustomers));
 		
 	}
 	
@@ -94,14 +94,20 @@ public class RestaurantModel extends Observable{
 
 	public void addToBasket(Toppings topping) {
 		basket.addIngredient(topping);
+		setChanged();
+		notifyObservers(new EventDetail("addToBasket",basket));
 	}
 	
 	public void clearBasket() {
 		basket.clearBasket();
+		setChanged();
+		notifyObservers(new EventDetail("resetBasket", null));
 	}
 
 	public void addToBurger(Toppings topping) {
 		burger.addTopping(topping);
+		setChanged();
+		notifyObservers(new EventDetail("addToBurger",burger));
 	}
 	
 	public void resetBurger() {
@@ -109,6 +115,8 @@ public class RestaurantModel extends Observable{
 			basket.addIngredient(burger.getToppings().get(i));
 		}
 		burger.reset();
+		setChanged();
+		notifyObservers(new EventDetail("resetBurger", null));
 	}
 	
 	
@@ -145,6 +153,8 @@ public class RestaurantModel extends Observable{
 	
 	public void undoBurger() {
 		burger.RemoveLastTopping();
+		setChanged();
+		notifyObservers(new EventDetail("undoBurger", null));
 	}
 	public Burger getBurger() {
 		return burger;
@@ -152,6 +162,8 @@ public class RestaurantModel extends Observable{
 	
 	public void updateTaskList(int customerInt, Customer customer) {
 		currTaskList[customerInt] = getCustomerTicket(customer);
+		setChanged();
+		notifyObservers(new EventDetail("currTasksChanged", currTaskList));
 	}
 	
 }

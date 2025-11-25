@@ -20,7 +20,7 @@ public class RestaurantController {
 	}
 	/**
 	 * checks if the day is over
-	 * @return true if the day is over, false uf tere are costumers remaining
+	 * @return true if the day is over, false if there are costumers remaining
 	 */
 	public boolean isDayOver() {
 		return model.dayOver();
@@ -37,8 +37,8 @@ public class RestaurantController {
 	 * get the current customer.
 	 * @return an array list of the current customers
 	 */
-	public ArrayList<Customer> getCurrentCustomer() {
-		return model.updateCustomerQueue();
+	public void getCurrentCustomer() {
+		model.updateCustomerQueue();
 	}
 	/**
 	 * get the Ticket of the current customer
@@ -92,14 +92,14 @@ public class RestaurantController {
 	 * reset the burger 
 	 */
 	public void resetBurger() {
-		model.resetBurger();;
+		model.resetBurger();
 	}
 	/**
 	 * serve the order to the customer
 	 * @param ticket the current ticket of the current customer
 	 */
-	public void serveBurger(Ticket ticket) {
-		model.Serve(ticket);
+	public void serveBurger(int ticketInt, Ticket ticket) {
+		model.Serve(ticketInt, ticket);
 		if (!isDayOver()) {
 			model.updateCustomerQueue();
 		}
