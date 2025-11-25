@@ -33,7 +33,7 @@ public class RestaurantModel {
 				
 		currCustomers = new ArrayList<Customer>();
 		currTaskList = new ArrayList<Ticket>();;
-		burger = new Burger(2,0);
+		burger = new Burger();
 		basket = new Basket<Toppings>();
 		
 		allToppings = IngredientsList.TOPPINGLIST;
@@ -109,9 +109,9 @@ public class RestaurantModel {
 	public void Serve(Ticket ticket) {
 		//should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
-		// rework currCustomers or find a way to check which customer is to be removed
+		// ADD time precision
+		// ADD price of burger
 		
-		// remember to add a .equals to customer and ticket
 		currCustomers.remove(ticket.getCustomer());
 		currTaskList.remove(ticket);
 		daysCustomers.remove(ticket.getCustomer());

@@ -2,12 +2,10 @@
 public abstract class Toppings {
 	
 	private double price;
-	private double prepTime;
 	private String toppingName;
 	
-	public Toppings(double price, double prepTime, String toppingName) {
-		this.price = price;
-		this.prepTime = prepTime;
+	public Toppings(double price,String toppingName) {
+		// price and name 
 		this.toppingName = toppingName;
 	}
 	
@@ -15,9 +13,7 @@ public abstract class Toppings {
 		return this.price;
 	}
 	
-	public double getPrepTime() {
-		return this.prepTime;
-	}
+	
 	
 	public String getToppingName() {
 		return this.toppingName;

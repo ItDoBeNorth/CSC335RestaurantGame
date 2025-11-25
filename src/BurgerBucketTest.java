@@ -5,8 +5,7 @@ public class BurgerBucketTest {
 	
 	@Test
 	void test1() {
-		Burger a = new Burger(5.00, 1.00);
-		System.out.println(a.getPrice() + ", " + a.getPrepTime());
+		Burger a = new Burger();
 		a.addTopping(new Cheese(1.00, 0.30, "cheese"));
 		a.printStack();
 		a.reset();
@@ -19,7 +18,7 @@ public class BurgerBucketTest {
 	
 	@Test
 	void test2() {
-		Burger a = new Burger(5.00, 1.00);
+		Burger a = new Burger();
 		Cheese c = new Cheese(1.00, 0.30, "cheese");
 		Basket b = new Basket();
 		b.addIngredient(a);
@@ -29,7 +28,7 @@ public class BurgerBucketTest {
 	
 	@Test
 	void test3() {
-		Burger burger = new Burger(5.00, 1.00);
+		Burger burger = new Burger();
 		Cheese cheese = new Cheese(1.00, 0.30, "cheese");
 		Pickle pickle = new Pickle(1.00, 0.30, "pickle");
 		

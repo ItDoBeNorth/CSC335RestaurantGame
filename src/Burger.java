@@ -1,12 +1,11 @@
 import java.util.*;
 
 
-public class Burger extends FoodItem{
+public class Burger{
 	private Stack<Toppings> toppingList;
 	
 
-	public Burger(double price, double prepTime) {
-		super(price, prepTime);
+	public Burger() {
 		toppingList = new Stack<>();
 	}
 	
