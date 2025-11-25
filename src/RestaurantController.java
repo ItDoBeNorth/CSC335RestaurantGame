@@ -9,14 +9,14 @@ import java.util.Stack;
  */
 public class RestaurantController {
 	RestaurantModel model;
-	HashMap<String, Player> playerList;
+	PlayerList playerList;
 	/**
 	 * creates a new controller of the game 
 	 * @param model a model created from the file RestaurantModel that runs the function
 	 * which the controller display
 	 */
 	public RestaurantController() {
-		playerList=PlayerList.thisPlayerList;
+		playerList= new PlayerList(); // later make it a static and saveload playerList
 	}
 	/**
 	 * checks if the day is over
@@ -80,7 +80,7 @@ public class RestaurantController {
 	public void undoBurger() {
 		model.undoBurger();
 	}
-	public Basket<Toppings> getcurrBasket() {
+	public Basket<Toppings> getCurrBasket() {
 		return model.getBasket();
 	}
 	
@@ -107,10 +107,12 @@ public class RestaurantController {
 	 * process the player name and starts the new day
 	 * @param player
 	 */
-	public void processPlayerName(String playerName) {
-		Player currPlayer=playerList.get(playerName);
+	public Player processPlayerName(String playerName) {
+		Player currPlayer=playerList.getPlayer(playerName);
 		RestaurantModel model=new RestaurantModel(currPlayer);
 		this.model=model;
+		nextDay();
+		return currPlayer;
 	}
 	
 }

@@ -13,12 +13,15 @@ public abstract class KnownCustomer implements Customer {
 		this.favoriteOrder=favoriteOrder;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
+	@Override
 	public String getShape() {
 		return shape;
 	}
+	@Override
 	public String getColor() {
 		return color;
 	}

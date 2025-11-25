@@ -16,11 +16,19 @@ public class Basket<T> {
 	
 	public void clearBasket() {
 		list.clear();
+		size = 0;
 	}
 	
 	public void printList() {
 		System.out.println(list);
 	}
 	
+	public int getSize() {
+		return size;
+	}
+	
+	public ArrayList<T> getList(){
+		return (ArrayList<T>) list;
+	}
 	
 }

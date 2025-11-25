@@ -27,10 +27,18 @@ public class RestaurantModel {
 		// saveLoad from players file but for now pass in a player starting with day one
 		this.player = player;
 		day = player.getDay(); // if nextDay is the first thing that is called make sure day-1 OR only save day on end of day
+
+		daysIngredients = new ArrayList<Toppings>();
+		daysCustomers = new LinkedList<Customer>();
+				
+		currCustomers = new ArrayList<Customer>();
+		currTaskList = new ArrayList<Ticket>();;
+		burger = new Burger(2,0);
+		basket = new Basket<Toppings>();
+		
 		allToppings = IngredientsList.TOPPINGLIST;
 		allCustomer = CustomerList.CUSTOMERS;
-		currCustomers = new ArrayList<Customer>();
-		currTaskList = new ArrayList<Ticket>();
+		
 		
 	}
 	
@@ -46,7 +54,7 @@ public class RestaurantModel {
 		// decide ingredients different if want, for now its by day
 		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, day)));
 		// customerLimit for now is day, can be changed later
-		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(Arrays.asList(Arrays.copyOfRange(allCustomer, 0, day)));
+		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1+day)));
 		Collections.shuffle(tempCustomers);
 		daysCustomers = new LinkedList<Customer>(tempCustomers)	;
 		burger.reset();
