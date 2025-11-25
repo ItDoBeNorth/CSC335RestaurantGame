@@ -5,14 +5,15 @@ public abstract class KnownCustomer implements Customer {
 	protected String shape;
 	protected String color;
 	protected final ArrayList<Toppings> favoriteOrder;
-	
+	public enum Personality {ACCURATE, URGERNT, GENEROUS;}
+	private Personality personality;
 	public KnownCustomer(String name,String shape, String color, ArrayList<Toppings> favoriteOrder) {
 		this.name=name;
 		this.shape=shape;
 		this.color=color;
 		this.favoriteOrder=favoriteOrder;
 	}
-
+	
 	@Override
 	public String getName() {
 		return name;
@@ -40,4 +41,12 @@ public abstract class KnownCustomer implements Customer {
 		GenericCustomer other = (GenericCustomer) obj;
 		return (other.getName() == this.getName());
 	}
+	
+	public void setPersonality(Personality p) {
+		personality=p;
+	}
+	public Personality getPersonality() {
+		return personality;
+	}
+	
 }
