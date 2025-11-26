@@ -19,4 +19,15 @@ public class CountdownTest {
 		assertFalse(countdown.startCountdown(-10.0));
 		
 	}
+	
+	@Test
+	void test3() throws InterruptedException {
+		Countdown countdown = new Countdown();
+		countdown.startStopwatch();
+		Thread.sleep(10000);
+		countdown.stopTimer();
+		Thread.sleep(15000);
+		
+		
+	}
 }

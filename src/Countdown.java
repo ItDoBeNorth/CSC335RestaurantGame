@@ -29,6 +29,21 @@ public class Countdown{
 		return true;
 	}
 	
+	public void startStopwatch() {
+		stopTimer();
+		timer = new Timer();
+		TimerTask task = new TimerTask() {
+			int elapsed = 0;
+			@Override
+			public void run() {
+				System.out.println(elapsed);
+				elapsed++;
+			}
+		};
+		timer.scheduleAtFixedRate(task, 0, 1000);
+	}
+	
+	
 	public void stopTimer() {
 		 if (timer != null) {
 	            timer.cancel();
