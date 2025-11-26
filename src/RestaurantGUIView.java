@@ -21,20 +21,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-@SuppressWarnings("deprecation")
 public class RestaurantGUIView extends Application implements Observer {
 	private RestaurantController controller;
 	private Player player;
-	
 	
 	private TabPane tabPane;
 	
 	//might help with observer stuff
 
-	private Customer[] currCustomer;
+	private Customer[] currCustomers;
 	private Ticket[] currTickets;
 	
 	// these things need to all be updated to the same info, just seperately
+	VBox[] ticketsForTabs;
+	// these are aboves 0, 1, 2
 	private VBox ticketsInfoPrep;
 	private VBox ticketsInfoCook;
 	private VBox ticketsInfoServe;
@@ -55,19 +55,77 @@ public class RestaurantGUIView extends Application implements Observer {
 	public void update(Observable o, Object arg) {
 		EventDetail info = (EventDetail) arg;
 		// use enum later if needed
+		// add getting day and score if needed
+		
 		// also add sometthing for ingredients stating at the day for enable ingredients thtat are available
 		switch (info.getEventInfo()) {
-			case ("customerQueueUpdate"):
-				currCustomer = (Customer[]) info.getEventChange();
+			case ("removeCustomer0"):
+				currCustomers = (Customer[]) info.getEventChange();
+				customer1.setVisible(false);
+				break;
+			case("removeCustomer1"):   
+				currCustomers = (Customer[]) info.getEventChange();
+				customer2.setVisible(false);
+				break;
+			case ("removeTask0"):
+				currTickets = (Ticket[]) info.getEventChange();
+				ticketsInfoPrep.getChildren().get(0).setVisible(false);
+				ticketsInfoCook.getChildren().get(0).setVisible(false);
+				ticketsInfoServe.getChildren().get(0).setVisible(false);
+				// remove that task from gui
+				break;
+			case("removeTask1"):
+				currTickets = (Ticket[]) info.getEventChange();
+				ticketsInfoPrep.getChildren().get(1).setVisible(false);
+				ticketsInfoCook.getChildren().get(1).setVisible(false);
+				ticketsInfoServe.getChildren().get(1).setVisible(false);
+				//remove that task from gui
+				break;
+			case ("customerQueueUpdate0"):
+				currCustomers = (Customer[]) info.getEventChange();
+				Label cqu0L = (Label) customer1.getChildren().get(0);
+				cqu0L.setText(currCustomers[0].getName());
+				// Image of character changed here, any animation started
+			 	Button cqu0B = (Button) customer1.getChildren().get(1);
+			 	cqu0B.setDisable(false);
+			 	customer1.setVisible(true);
 				// change things in customer1 and customer 2 box
 				break;
-			case("currTasksChanged"):
-				currTickets = (Ticket[]) info.getEventChange();
-				// change things in ticketsInfo  for prep cook and serve
+			case ("customerQueueUpdate1"):
+				currCustomers = (Customer[]) info.getEventChange();
+				Label cqu1L = (Label) customer2.getChildren().get(0);
+				cqu1L.setText(currCustomers[0].getName());
+				// Image of character changed here, any animation started
+			 	Button cqu1B = (Button) customer2.getChildren().get(1);
+			 	cqu1B.setDisable(false);
+			 	customer2.setVisible(true);
+				// change things in customer1 and customer 2 box
 				break;
-			case("undoBurger"):
-				// passing null for now, can bring object if needed
-				// remove last addition to burger
+			case("currTasksChanged0"):
+				currTickets = (Ticket[]) info.getEventChange();
+				//Change from label to something else later. basicly does any gui changes needed
+				for (int i = 0; i < 3; i++) {
+					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().get(0);
+					String temp = "";
+					for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
+						temp += currTickets[0].getToppingsList().get(n).getToppingName()+ "\n";
+					} 
+					ctc0L.setText(temp);
+					ticketsForTabs[i].getChildren().get(0).setVisible(true);
+				}
+				break;
+			case("currTasksChanged1"):
+				currTickets = (Ticket[]) info.getEventChange();
+				//Change from label to something else later. basicly does any gui changes needed
+				for (int i = 0; i < 3; i++) {
+					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().get(0);
+					String temp = "";
+					for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
+						temp += currTickets[0].getToppingsList().get(n).getToppingName()+ "\n";
+					} 
+					ctc0L.setText(temp);
+					ticketsForTabs[i].getChildren().get(1).setVisible(true);
+				}
 				break;
 			case("resetBurger"):
 				// passing null for now, can bring object if needed
@@ -77,6 +135,14 @@ public class RestaurantGUIView extends Application implements Observer {
 				// passing null for now, can bring object if needed
 				// remove toppings from baskets
 				break;
+			case("resetCustomers"):
+				// remove customers
+				currCustomers = (Customer[]) info.getEventChange();
+				break;
+			case("resetTickets"):
+				// remove tickets
+				currTickets = (Ticket[]) info.getEventChange();
+				break;
 			case("addToBurger"):
 				Burger tempBurger = (Burger) info.getEventChange();
 				// add to or change burgers
@@ -85,9 +151,14 @@ public class RestaurantGUIView extends Application implements Observer {
 				Basket<Toppings> tempBasket = (Basket<Toppings>) info.getEventChange();
 				// add to or change burgers
 				break;
-			case(""):
-				
+			case("undoBurger"):
+				// passing null for now, can bring object if needed
+				// remove last addition to burger
 				break;
+			case("daysIngredients"):
+				// enables and disables days ingredients as needed
+				break;
+			
 			
 			default:
 				
@@ -154,6 +225,11 @@ public class RestaurantGUIView extends Application implements Observer {
 			ticketsInfoPrep = makeTicketInfos();
 			ticketsInfoCook = makeTicketInfos();
 			ticketsInfoServe = makeTicketInfos();
+			ticketsForTabs = new VBox[3];
+			ticketsForTabs[0] = ticketsInfoPrep;
+			ticketsForTabs[1] = ticketsInfoCook;
+			ticketsForTabs[2] = ticketsInfoServe;
+			
 			makeOrder(order);
 			makePrep(prep);
 			makeCook(cook, serve);
@@ -203,19 +279,17 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		customer1 = new VBox();
 		Label c1Name = new Label("CustomerName");
-		c1Name.setText(currCustomer[0].getName());
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction((event) -> {
-			controller.updateTaskList(0, currCustomer[0]); //for initial customers which will add to the ticketsInfo after we add observer // check later if we want to have this return tasklist to us
+			controller.updateTaskList(0, currCustomers[0]); //for initial customers which will add to the ticketsInfo after we add observer // check later if we want to have this return tasklist to us
 			c1Button.setDisable(true);
 		});
 		customer1.getChildren().addAll(c1Name, c1Button);
 		customer2 = new VBox();
 		Label c2Name = new Label("CustomerName2");
-		c2Name.setText(currCustomer[0].getName());
 		Button c2Button = new Button("Get Order");
 		c2Button.setOnAction((event) -> {
-			controller.updateTaskList(1, currCustomer[0]); // for initial customers which will add to the ticketsInfo after we add observer
+			controller.updateTaskList(1, currCustomers[0]); // for initial customers which will add to the ticketsInfo after we add observer
 			c2Button.setDisable(true);
 		});
 		customer2.getChildren().addAll(c2Name, c2Button);
@@ -231,8 +305,10 @@ public class RestaurantGUIView extends Application implements Observer {
 	public VBox makeTicketInfos() {
 		VBox ticketsInfo = new VBox();
 		// switch labels with better things later
-		Label ticketOne = new Label("get ticket info later");
-		Label ticketTwo = new Label("get ticket info later");
+		VBox ticketOne = new VBox();
+		ticketOne.getChildren().add( new Label("get ticket info later"));
+		VBox ticketTwo = new VBox();
+		ticketTwo.getChildren().add( new Label("get ticket info later"));
 
 		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
 		return ticketsInfo;
@@ -256,6 +332,8 @@ public class RestaurantGUIView extends Application implements Observer {
 				controller.addToBasket(currTopping); //which will update it in the baskets label and buttons through observer
 				// DELETE LATER for now through im adding things to this label, DELETE AFTER CONTROLLER IMPLEMENTED
 				basket.setText(basket.getText() + "\n" + currTopping.getToppingName());
+				
+				// NEEDS TO DO DOWN TO TOP NOT TOP TO DOWN
 				
 			});
 			if (!controller.getCurrToppings().contains(currTopping)) {

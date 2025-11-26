@@ -6,48 +6,45 @@ import java.util.Observable;
 import java.util.Queue;
 
 /**
- * setChanged();
- * notifyObservers(new EventDetail());
+ * setChanged(); notifyObservers(new EventDetail());
  */
 @SuppressWarnings("deprecation")
-public class RestaurantModel extends Observable{
+public class RestaurantModel extends Observable {
 	private Player player;
 
 	private ArrayList<Toppings> daysIngredients;
 	private Queue<Customer> daysCustomers;
 
 	// things GUI should know
-	private int day; 
+	private int day;
 	private Customer[] currCustomers;
 	private Ticket[] currTaskList;
 	private Basket<Toppings> basket;
 	private Burger burger;
-	
 
 	// change later
 	private static Toppings[] allToppings;
 	private static Customer[] allCustomer;
- 
+
 	RestaurantModel(Player player) {
 		// saveLoad from players file but for now pass in a player starting with day one
 		this.player = player;
-		day = player.getDay(); // if nextDay is the first thing that is called make sure day-1 OR only save day on end of day
+		day = player.getDay(); // if nextDay is the first thing that is called make sure day-1 OR only save day
+								// on end of day
 
 		daysIngredients = new ArrayList<Toppings>();
 		daysCustomers = new LinkedList<Customer>();
-				
+
 		currCustomers = new Customer[2];
-		currTaskList =  new Ticket[2];
+		currTaskList = new Ticket[2];
 		burger = new Burger();
 		basket = new Basket<Toppings>(10);
-		
+
 		allToppings = IngredientsList.TOPPINGLIST;
 		allCustomer = CustomerList.CUSTOMERS;
-		
-		
+
 	}
-	
-	
+
 	public boolean dayOver() {
 		// add something here for player day end score and stuff
 		return (daysCustomers.isEmpty() && currCustomers[0] == null && currCustomers[1] == null);
@@ -60,31 +57,37 @@ public class RestaurantModel extends Observable{
 		// decide ingredients different if want, for now its by day
 		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, day)));
 		// customerLimit for now is day, can be changed later
-		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1+day)));
+		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(
+				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + day)));
 		Collections.shuffle(tempCustomers);
-		daysCustomers = new LinkedList<Customer>(tempCustomers)	;
-		burger.reset();
-		basket.clearBasket();
+		daysCustomers = new LinkedList<Customer>(tempCustomers);
+		setChanged();
+		notifyObservers(new EventDetail("daysIngredients", daysIngredients));
+		resetBurger();
+		clearBasket();
 		currTaskList = new Ticket[2];
+		setChanged();
+		notifyObservers(new EventDetail("resetTickets", currTaskList));
 		currCustomers = new Customer[2];
+		setChanged();
+		notifyObservers(new EventDetail("resetCustomers", currCustomers));
 	}
 
 	public void updateCustomerQueue() {
-		if (currCustomers[0] == null && daysCustomers.isEmpty() || currCustomers[1] == null && daysCustomers.isEmpty()) {
+		if (currCustomers[0] == null && daysCustomers.isEmpty()
+				|| currCustomers[1] == null && daysCustomers.isEmpty()) {
 			return;
-		}
-		else if (currCustomers[0] == null || currCustomers[1] == null) {
-			for (int i = 0; i < 2 ; i++) {
-				if (currCustomers[i] == null && daysCustomers.peek() != null ) {
+		} else if (currCustomers[0] == null || currCustomers[1] == null) {
+			for (int i = 0; i < 2; i++) {
+				if (currCustomers[i] == null && daysCustomers.peek() != null) {
 					currCustomers[i] = (daysCustomers.poll());
+					setChanged();
+					notifyObservers(new EventDetail("customerQueueUpdate" + i, currCustomers));
 				}
 			}
 		}
-		setChanged();
-		notifyObservers(new EventDetail("customerQueueUpdate", currCustomers));
-		
+
 	}
-	
 
 	public Ticket getCustomerTicket(Customer customer) {
 		ArrayList<Toppings> order = customer.getOrder(daysIngredients, day);
@@ -92,24 +95,38 @@ public class RestaurantModel extends Observable{
 		return ticket;
 	}
 
+	public void updateTaskList(int customerInt, Customer customer) {
+		currTaskList[customerInt] = getCustomerTicket(customer);
+		setChanged();
+		notifyObservers(new EventDetail("currTasksChanged"+customerInt, currTaskList));
+	}
+
+	
 	public void addToBasket(Toppings topping) {
 		basket.addIngredient(topping);
 		setChanged();
-		notifyObservers(new EventDetail("addToBasket",basket));
+		notifyObservers(new EventDetail("addToBasket", basket));
 	}
-	
+
 	public void clearBasket() {
 		basket.clearBasket();
 		setChanged();
 		notifyObservers(new EventDetail("resetBasket", null));
 	}
 
+	public void undoBurger() {
+		burger.RemoveLastTopping();
+		setChanged();
+		notifyObservers(new EventDetail("undoBurger", null));
+	}
+
+	
 	public void addToBurger(Toppings topping) {
 		burger.addTopping(topping);
 		setChanged();
-		notifyObservers(new EventDetail("addToBurger",burger));
+		notifyObservers(new EventDetail("addToBurger", burger));
 	}
-	
+
 	public void resetBurger() {
 		for (int i = 0; i < burger.getToppings().size(); i++) {
 			basket.addIngredient(burger.getToppings().get(i));
@@ -118,24 +135,30 @@ public class RestaurantModel extends Observable{
 		setChanged();
 		notifyObservers(new EventDetail("resetBurger", null));
 	}
-	
-	
+
 	public void Serve(int ticketInt, Ticket ticket) {
-		//should we make player pick character too?
+		// should we make player pick character too?
 		player.addScore(checkPrecision(ticket));
+		// ADD notify if gui implemented for score
 		// ADD time precision
 		// ADD price of burger
-		
+
 		currCustomers[ticketInt] = null;
+		setChanged();
+		notifyObservers(new EventDetail("removeCustomer"+ticketInt, currCustomers));
 		currTaskList[ticketInt] = null;
+		setChanged();
+		notifyObservers(new EventDetail("removeTask"+ticketInt, currTaskList));
 		daysCustomers.remove(ticket.getCustomer());
 		burger.reset();
+		setChanged();
+		notifyObservers(new EventDetail("resetBurger", null));
 	}
 
 	private int checkPrecision(Ticket ticket) {
 		int score = 1;
 		// implement a .equals if needed
-		
+
 		// add some trouble shooting stuff like check size, order of ingredients
 		// here is only the implementation for checking if its exact
 		for (int i = 0; i < ticket.getOrderSize(); i++) {
@@ -147,23 +170,13 @@ public class RestaurantModel extends Observable{
 		return score;
 		// maybe using order, correct items, etc.
 	}
+
 	public Basket<Toppings> getBasket() {
 		return basket;
 	}
-	
-	public void undoBurger() {
-		burger.RemoveLastTopping();
-		setChanged();
-		notifyObservers(new EventDetail("undoBurger", null));
-	}
+
 	public Burger getBurger() {
 		return burger;
 	}
-	
-	public void updateTaskList(int customerInt, Customer customer) {
-		currTaskList[customerInt] = getCustomerTicket(customer);
-		setChanged();
-		notifyObservers(new EventDetail("currTasksChanged", currTaskList));
-	}
-	
+
 }
