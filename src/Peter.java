@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
-public class John extends KnownCustomer {
+public class Peter extends KnownCustomer {
 	
-	private Toppings favoriteTopping=new Cheese();
+	private Toppings favoriteTopping=new Lettuce();
 	
-	public John() {
-		super("John","circle","red",new ArrayList<Toppings>(){{add(new Cheese());}});
-		super.setPersonality(Personality.GENEROUS);
+	public Peter() {
+		super("Peter","circle","yellow",new ArrayList<Toppings>(){{add(new Lettuce());}});
+		super.setPersonality(Personality.URGERNT);
 	}
 
 	@Override

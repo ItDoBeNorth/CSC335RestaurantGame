@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
-public class John extends KnownCustomer {
+public class Mariah extends KnownCustomer {
 	
-	private Toppings favoriteTopping=new Cheese();
+	private Toppings favoriteTopping=new Pickle();
 	
-	public John() {
-		super("John","circle","red",new ArrayList<Toppings>(){{add(new Cheese());}});
+	public Mariah() {
+		super("Mariah","triangle","green",new ArrayList<Toppings>(){{add(new Pickle());}});
 		super.setPersonality(Personality.GENEROUS);
 	}
 
