@@ -19,16 +19,17 @@ public abstract class Toppings {
 		return this.toppingName;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-            return true;
-        }
-		if (obj == null || this.getClass() != obj.getClass()) {
-            return false;
-        }
-		Toppings other = (Toppings) obj;
-		return (other.getToppingName() == this.getToppingName());
-	}
+	//DELETE, prolly dont need
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj) {
+//            return true;
+//        }
+//		if (obj == null || this.getClass() != obj.getClass()) {
+//            return false;
+//        }
+//		Toppings other = (Toppings) obj;
+//		return (other.getToppingName() == this.getToppingName());
+//	}
 
 }

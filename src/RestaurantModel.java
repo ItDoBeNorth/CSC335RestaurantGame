@@ -55,10 +55,10 @@ public class RestaurantModel extends Observable {
 		player.nextDay();
 		player.addScore(1);
 		// decide ingredients different if want, for now its by day
-		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, day)));
+		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, Math.min(day, allToppings.length))));
 		// customerLimit for now is day, can be changed later
 		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(
-				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + day)));
+				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(day, allCustomer.length))));
 		Collections.shuffle(tempCustomers);
 		daysCustomers = new LinkedList<Customer>(tempCustomers);
 		setChanged();
@@ -71,22 +71,21 @@ public class RestaurantModel extends Observable {
 		currCustomers = new Customer[2];
 		setChanged();
 		notifyObservers(new EventDetail("resetCustomers", currCustomers));
+		updateCustomerQueue();
 	}
 
 	public void updateCustomerQueue() {
-		if (currCustomers[0] == null && daysCustomers.isEmpty()
-				|| currCustomers[1] == null && daysCustomers.isEmpty()) {
+		if (daysCustomers.isEmpty()) {
 			return;
-		} else if (currCustomers[0] == null || currCustomers[1] == null) {
-			for (int i = 0; i < 2; i++) {
-				if (currCustomers[i] == null && daysCustomers.peek() != null) {
-					currCustomers[i] = (daysCustomers.poll());
-					setChanged();
-					notifyObservers(new EventDetail("customerQueueUpdate" + i, currCustomers));
-				}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (currCustomers[i] == null && daysCustomers.peek() != null) {
+				currCustomers[i] = (daysCustomers.poll());
+				setChanged();
+				notifyObservers(new EventDetail("customerQueueUpdate" + i, currCustomers));
 			}
 		}
-
+		
 	}
 
 	public Ticket getCustomerTicket(Customer customer) {
@@ -98,14 +97,20 @@ public class RestaurantModel extends Observable {
 	public void updateTaskList(int customerInt, Customer customer) {
 		currTaskList[customerInt] = getCustomerTicket(customer);
 		setChanged();
-		notifyObservers(new EventDetail("currTasksChanged"+customerInt, currTaskList));
+		notifyObservers(new EventDetail("currTasksChanged" + customerInt, currTaskList));
 	}
 
-	
-	public void addToBasket(Toppings topping) {
-		basket.addIngredient(topping);
+	public void removeFromBasket(int removeInt) {
+		basket.remove(removeInt);
 		setChanged();
-		notifyObservers(new EventDetail("addToBasket", basket));
+		notifyObservers(new EventDetail("removeFromBasket", removeInt));
+	}
+
+	public void addToBasket(Toppings topping) {
+		if (basket.addIngredient(topping)) {
+			setChanged(); 
+			notifyObservers(new EventDetail("addToBasket", basket));
+		}
 	}
 
 	public void clearBasket() {
@@ -120,7 +125,6 @@ public class RestaurantModel extends Observable {
 		notifyObservers(new EventDetail("undoBurger", null));
 	}
 
-	
 	public void addToBurger(Toppings topping) {
 		burger.addTopping(topping);
 		setChanged();
@@ -129,7 +133,7 @@ public class RestaurantModel extends Observable {
 
 	public void resetBurger() {
 		for (int i = 0; i < burger.getToppings().size(); i++) {
-			basket.addIngredient(burger.getToppings().get(i));
+			addToBasket(burger.getToppings().get(i));
 		}
 		burger.reset();
 		setChanged();
@@ -145,11 +149,10 @@ public class RestaurantModel extends Observable {
 
 		currCustomers[ticketInt] = null;
 		setChanged();
-		notifyObservers(new EventDetail("removeCustomer"+ticketInt, currCustomers));
+		notifyObservers(new EventDetail("removeCustomer" + ticketInt, currCustomers));
 		currTaskList[ticketInt] = null;
 		setChanged();
-		notifyObservers(new EventDetail("removeTask"+ticketInt, currTaskList));
-		daysCustomers.remove(ticket.getCustomer());
+		notifyObservers(new EventDetail("removeTask" + ticketInt, currTaskList));
 		burger.reset();
 		setChanged();
 		notifyObservers(new EventDetail("resetBurger", null));
@@ -161,11 +164,13 @@ public class RestaurantModel extends Observable {
 
 		// add some trouble shooting stuff like check size, order of ingredients
 		// here is only the implementation for checking if its exact
-		for (int i = 0; i < ticket.getOrderSize(); i++) {
-			if (ticket.getToppingsList().get(i) != burger.getToppings().get(i)) {
-				score = 0;
-			}
-		}
+//		for (int i = 0; i < ticket.getOrderSize(); i++) {
+//			// need null pointer exception checks
+//			if (ticket.getToppingsList().get(i) != burger.getToppings().get(i)) {
+//				score = 0;
+//			}
+//		}
+		if (ticket.getToppingsList() != burger.getToppings()) {score = 0;} 
 		// find other way to evaluate score
 		return score;
 		// maybe using order, correct items, etc.
@@ -179,4 +184,7 @@ public class RestaurantModel extends Observable {
 		return burger;
 	}
 
+	public ArrayList<Toppings> getDaysIngredients() {
+		return daysIngredients;
+	}
 }
