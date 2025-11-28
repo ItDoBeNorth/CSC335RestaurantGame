@@ -131,16 +131,6 @@ public class RestaurantGUIView extends Application implements Observer {
 					ticketsForTabs[i].getChildren().get(1).setVisible(true);
 				}
 				break;
-			case("resetBurger"):
-				burgerCook.setText("");
-				burgerServe.setText("");
-				// remove toppings from burgers
-				break;
-			case("resetBasket"):
-				basket.setText("Basket Contents");
-				pickFromBasket.getChildren().clear();
-				// remove toppings from baskets
-				break;
 			case("resetCustomers"):
 				// remove customers
 				currCustomers = (Customer[]) info.getEventChange();
@@ -155,42 +145,6 @@ public class RestaurantGUIView extends Application implements Observer {
 			 		ticketsForTabs[i].getChildren().get(1).setVisible(false);
 			 	}
 				break;
-			case("addToBurger"):
-				Burger tempBurger = (Burger) info.getEventChange();
-				burgerCook.setText(tempBurger.getToppings().getLast().getToppingName() + "\n" + burgerCook.getText());
-				burgerServe.setText(tempBurger.getToppings().getLast().getToppingName() + "\n" + burgerServe.getText());
-
-				break;
-			case("addToBasket"):
-				Basket<Toppings> tempBasket = (Basket<Toppings>) info.getEventChange();
-				// basket Label
-				basket.setText(basket.getText() + "\n" + tempBasket.getList().getLast().getToppingName());
-				// basket Buttons
-				Button topping = new Button(tempBasket.getList().getLast().getToppingName());
-				Toppings currTopping = tempBasket.getList().getLast();
-				topping.setOnAction((event) -> {
-					controller.addToBurger(currTopping); // which will update the burger and basket through observer
-					pickFromBasket.getChildren().remove(topping); // do this better, how?
-					controller.removeFromBasket(tempBasket.getList().indexOf(currTopping));
-				});
-				pickFromBasket.getChildren().add(topping);
-				
-				break;
-			case("removeFromBasket"):
-				String[] tempText = basket.getText().split("\n");
-				tempText[((int)info.getEventChange()) +1] = null;
-				basket.setText(tempText[0]);
-				for (int i = 1; i < tempText.length; i++) {
-					if (tempText[i] != null) {
-						basket.setText(basket.getText()+"\n"+ tempText[i]);
-					}
-				}
-				break;
-			case("undoBurger"):
-				int lastItem = burgerCook.getText().indexOf("\n") + 1;
-				burgerCook.setText(burgerCook.getText().substring(lastItem));
-				burgerServe.setText(burgerServe.getText().substring(lastItem));
-				break;
 			case("daysIngredients"):
 				int n = 0;
 				while (n < IngredientsList.TOPPINGLIST.length){
@@ -201,8 +155,61 @@ public class RestaurantGUIView extends Application implements Observer {
 					n++;
 				}
 				break;
-			
+			case("resetBasket"):
+//				basket.setText("Basket Contents");
+//				pickFromBasket.getChildren().clear();
+				
+				updateBasketGUI();
+				// remove toppings from baskets
+				break;
+			case("addToBasket"):
+//				Basket<Toppings> tempBasket = (Basket<Toppings>) info.getEventChange();
+//				// basket Label
+//				basket.setText(basket.getText() + "\n" + tempBasket.getList().getLast().getToppingName());
+//				// basket Buttons
+//				Button topping = new Button(tempBasket.getList().getLast().getToppingName());
+//				Toppings currTopping = tempBasket.getList().getLast();
+//				topping.setOnAction((event) -> {
+//					controller.addToBurger(currTopping); // which will update the burger and basket through observer
+//					pickFromBasket.getChildren().remove(topping); // do this better, how?
+//					controller.removeFromBasket(tempBasket.getList().indexOf(currTopping));
+//				});
+//				pickFromBasket.getChildren().add(topping);
+//				
+				updateBasketGUI();
+				break;
+			case("removeFromBasket"):
+//				String[] tempText = basket.getText().split("\n");
+//				tempText[((int)info.getEventChange()) +1] = null;
+//				basket.setText(tempText[0]);
+//				for (int i = 1; i < tempText.length; i++) {
+//					if (tempText[i] != null) {
+//						basket.setText(basket.getText()+"\n"+ tempText[i]);
+//					}
+//				}
+				updateBasketGUI();
+				break;
+			case("undoBurger"):
+//				int lastItem = burgerCook.getText().indexOf("\n") + 1;
+//				burgerCook.setText(burgerCook.getText().substring(lastItem));
+//				burgerServe.setText(burgerServe.getText().substring(lastItem));
+				updateBurgerGUI();
+				break;
+			case("resetBurger"):
+//				burgerCook.setText("");
+//				burgerServe.setText("");
+//				// remove toppings from burgers
+//				
+				updateBurgerGUI();
+				break;
+			case("addToBurger"):
+//				Burger tempBurger = (Burger) info.getEventChange();
+//				burgerCook.setText(tempBurger.getToppings().getLast().getToppingName() + "\n" + burgerCook.getText());
+//				burgerServe.setText(tempBurger.getToppings().getLast().getToppingName() + "\n" + burgerServe.getText());
+				updateBurgerGUI();
+				break;
 			default:
+				
 				
 		}
 
@@ -374,7 +381,9 @@ public class RestaurantGUIView extends Application implements Observer {
 		content.setAlignment(Pos.CENTER);
 		pickIngredients = new HBox();
 		pickIngredients.setAlignment(Pos.CENTER);
+		VBox basketBox = new VBox();
 		basket = new Label("Basket Contents");
+		basketBox.getChildren().addAll(new Label("Basket Contents"), basket);
 		basket.setAlignment(Pos.CENTER);
 		int n = 0;
 		while (n < IngredientsList.TOPPINGLIST.length){
@@ -392,7 +401,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		}
 		
 		ScrollPane scroll = new ScrollPane();
-		scroll.setContent(basket);
+		scroll.setContent(basketBox);
 		scroll.setPrefViewportHeight(150);
 		content.getChildren().addAll(pickIngredients, scroll);
 		
@@ -416,23 +425,9 @@ public class RestaurantGUIView extends Application implements Observer {
 		content.setAlignment(Pos.CENTER);
 		pickFromBasket = new HBox(); // also updated when basket updated
 		VBox burgerInfo = new VBox();
-		burgerCook = new Label("");
+		burgerCook = new Label("Cook Burger");
 		Label bun = new Label("Burger");
 		burgerInfo.getChildren().addAll(bun, burgerCook);
-		int n = 0;
-		// THIS CAN ALSO BE HANDELEED DIFFERNTLY WITH OBSERVER
-		Toppings[] currBasket = (Toppings[]) ((controller.getCurrBasket()).getList()).toArray(new Toppings[0]);
-		while (n < currBasket.length){ // this should also be updated by observer
-			Button topping = new Button(currBasket[n].getToppingName());
-			Toppings currTopping = currBasket[n];
-			topping.setOnAction((event) -> {
-				controller.addToBurger(currTopping); // which will update the burger and basket through observer
-				pickFromBasket.getChildren().remove(topping); // do this better if needed, how?
-				controller.removeFromBasket(controller.getCurrBasket().getList().indexOf(currTopping));
-			});
-			pickFromBasket.getChildren().add(topping);
-			n++;
-		}
 		
 		ScrollPane scroll = new ScrollPane();
 		scroll.setContent(burgerInfo);
@@ -442,7 +437,11 @@ public class RestaurantGUIView extends Application implements Observer {
 		VBox options = new VBox();
 		Button undo = new Button("Undo");
 		undo.setOnAction((e) -> {
-			controller.undoBurger(); //which should pop from top of stack of burger and update through observer
+			if (!controller.getBurger().getToppings().isEmpty()) {
+				undo.setDisable(true);
+				controller.undoBurger(); //which should pop from top of stack of burger and update through observer
+				undo.setDisable(false);
+			}
 		});
 		Button reset = new Button("Reset");
 		reset.setOnAction((e) -> {
@@ -496,4 +495,40 @@ public class RestaurantGUIView extends Application implements Observer {
 		serve.setContent(tempPane);
 
 	}
+	
+	public void updateBurgerGUI() {
+		burgerCook.setText("");
+		burgerServe.setText("");
+		ArrayList<Toppings> burgerToppings = controller.getBurger().getToppings();
+		String tempBurger = "";
+		for (Toppings t : burgerToppings) {
+			tempBurger = t.getToppingName() + "\n" + tempBurger;
+		}
+		burgerCook.setText(tempBurger);
+		burgerServe.setText(tempBurger);
+	}
+	
+	public void updateBasketGUI() {
+		basket.setText("");
+		pickFromBasket.getChildren().clear();
+		
+		ArrayList<Toppings> basketToppings = controller.getCurrBasket().getList();
+		String tempBasket = "";
+		for (Toppings t : basketToppings) {
+			tempBasket += t.getToppingName()+"\n";
+			
+			Button topping = new Button(t.getToppingName());
+			topping.setOnAction((e) -> {
+				controller.addToBurger(t);
+				controller.removeFromBasket((controller.getCurrBasket().getList().indexOf(t)));
+			});
+			
+			pickFromBasket.getChildren().add(topping);
+		}
+		basket.setText(tempBasket);
+		
+		
+	}
 }
+
+

@@ -3,7 +3,7 @@ import java.util.*;
 public class Basket<T> {
 	private List<T> list;
 	private int size;
-	private int limit;
+	public int limit;
 	
 	public Basket(int limit) {
 		list = new ArrayList<T>();

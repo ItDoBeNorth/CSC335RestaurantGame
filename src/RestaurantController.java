@@ -110,6 +110,10 @@ public class RestaurantController {
 		return model.getBasket();
 	}
 
+	public Burger getBurger() {
+		return model.getBurger();
+	}
+	
 	public void resetBasket() {
 		model.clearBasket();
 	}

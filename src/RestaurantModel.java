@@ -120,9 +120,12 @@ public class RestaurantModel extends Observable {
 	}
 
 	public void undoBurger() {
-		if (!burger.getToppings().isEmpty()) { 
-			addToBasket(burger.getToppings().getLast());
-			burger.RemoveLastTopping();
+		if (!burger.getToppings().isEmpty()) {
+			basket.limit += 1;
+			basket.addIngredient(burger.RemoveLastTopping());
+			basket.limit = 10;
+			setChanged();
+			notifyObservers(new EventDetail("addToBasket", null));
 			setChanged();
 			notifyObservers(new EventDetail("undoBurger", null));
 		}
@@ -135,9 +138,6 @@ public class RestaurantModel extends Observable {
 	}
 
 	public void resetBurger() {
-		for (int i = 0; i < burger.getToppings().size(); i++) {
-			addToBasket(burger.getToppings().get(i));
-		}
 		burger.reset();
 		setChanged();
 		notifyObservers(new EventDetail("resetBurger", null));
