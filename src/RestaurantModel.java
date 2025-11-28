@@ -100,47 +100,54 @@ public class RestaurantModel extends Observable {
 		notifyObservers(new EventDetail("currTasksChanged" + customerInt, currTaskList));
 	}
 
-	public void removeFromBasket(int removeInt) {
-		basket.remove(removeInt);
+	public void removeFromBasket(Toppings topping) {
+		basket.remove(topping);
 		setChanged();
-		notifyObservers(new EventDetail("removeFromBasket", removeInt));
+		notifyObservers(new EventDetail("updateBasket", basket));
 	}
 
 	public void addToBasket(Toppings topping) {
 		if (basket.addIngredient(topping)) {
 			setChanged(); 
-			notifyObservers(new EventDetail("addToBasket", basket));
+			notifyObservers(new EventDetail("updateBasket", basket));
 		}
 	}
 
 	public void clearBasket() {
 		basket.clearBasket();
 		setChanged();
-		notifyObservers(new EventDetail("resetBasket", null));
+		notifyObservers(new EventDetail("updateBasket", basket));
 	}
 
 	public void undoBurger() {
 		if (!burger.getToppings().isEmpty()) {
 			basket.limit += 1;
-			basket.addIngredient(burger.RemoveLastTopping());
+			System.out.println(basket.addIngredient(burger.RemoveLastTopping()));
 			basket.limit = 10;
 			setChanged();
-			notifyObservers(new EventDetail("addToBasket", null));
+			notifyObservers(new EventDetail("updateBasket", basket));
 			setChanged();
-			notifyObservers(new EventDetail("undoBurger", null));
+			notifyObservers(new EventDetail("updateBurger", null));
 		}
 	}
 
 	public void addToBurger(Toppings topping) {
 		burger.addTopping(topping);
 		setChanged();
-		notifyObservers(new EventDetail("addToBurger", burger));
+		notifyObservers(new EventDetail("updateBurger", null));
 	}
 
 	public void resetBurger() {
+		//basket.limit += burger.getToppings().size();
+		for (Toppings t : burger.getToppings()) {
+			basket.addIngredient(t);
+		}
 		burger.reset();
+		//basket.limit = 10;
 		setChanged();
-		notifyObservers(new EventDetail("resetBurger", null));
+		notifyObservers(new EventDetail("updateBurger", null));
+		setChanged();
+		notifyObservers(new EventDetail("updateBasket", null));
 	}
 
 	public void Serve(int ticketInt, Ticket ticket) {
@@ -158,7 +165,7 @@ public class RestaurantModel extends Observable {
 		notifyObservers(new EventDetail("removeTask" + ticketInt, currTaskList));
 		burger.reset();
 		setChanged();
-		notifyObservers(new EventDetail("resetBurger", null));
+		notifyObservers(new EventDetail("updateBurger", null));
 	}
 
 	private int checkPrecision(Ticket ticket) {

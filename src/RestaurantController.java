@@ -74,8 +74,8 @@ public class RestaurantController {
 		;
 	}
 
-	public void removeFromBasket(int removeInt) {
-		model.removeFromBasket(removeInt);
+	public void removeFromBasket(Toppings topping) {
+		model.removeFromBasket(topping);
 	}
 
 	/**

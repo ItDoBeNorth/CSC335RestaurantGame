@@ -12,7 +12,7 @@ public class Basket<T> {
 	}
 	
 	public boolean addIngredient(T indredient) {
-		if (size != limit) {
+		if (size < limit) {
 			list.add(indredient);
 			size++;
 			return true;
@@ -29,8 +29,9 @@ public class Basket<T> {
 		System.out.println(list);
 	}
 	
-	public void remove(int remove) {
-		list.remove(remove);
+	public void remove(Toppings topping) {
+		list.remove(topping);
+		size --;
 	}
 	
 	public int getSize() {
