@@ -20,8 +20,7 @@ public class BurgerBucketTest {
 	void test2() {
 		Burger a = new Burger();
 		Cheese c = new Cheese(1.00, 0.30, "cheese");
-		Basket b = new Basket();
-		b.addIngredient(a);
+		Basket<Toppings> b = new Basket<Toppings>(10);
 		b.addIngredient(c);
 		b.printList();
 	}

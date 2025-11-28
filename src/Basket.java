@@ -3,15 +3,21 @@ import java.util.*;
 public class Basket<T> {
 	private List<T> list;
 	private int size;
+	public int limit;
 	
-	public Basket() {
+	public Basket(int limit) {
 		list = new ArrayList<T>();
 		size = 0;
+		this.limit = limit;
 	}
 	
-	public void addIngredient(T indredient) {
-		list.add(indredient);
-		size++;
+	public boolean addIngredient(T indredient) {
+		if (size < limit) {
+			list.add(indredient);
+			size++;
+			return true;
+		}	
+		return false;
 	}
 	
 	public void clearBasket() {
@@ -21,6 +27,11 @@ public class Basket<T> {
 	
 	public void printList() {
 		System.out.println(list);
+	}
+	
+	public void remove(Toppings topping) {
+		list.remove(topping);
+		size --;
 	}
 	
 	public int getSize() {

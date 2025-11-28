@@ -9,14 +9,20 @@ public class Burger{
 		toppingList = new Stack<>();
 	}
 	
+	public Burger(Burger burger) {
+		toppingList = new Stack<>();
+		toppingList.addAll(burger.getToppings());
+	}
+
 	public void addTopping(Toppings topping) {
 		toppingList.push(topping);
 	}
 	
-	public void RemoveLastTopping() {
+	public Toppings RemoveLastTopping() {
 		if (!toppingList.isEmpty()) {
-			toppingList.pop();
+			return toppingList.pop();
 		}
+		return null;
 		
 	}
 	

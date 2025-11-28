@@ -29,24 +29,24 @@ public abstract class KnownCustomer implements Customer {
 	public ArrayList<Toppings> getFavoriteOrder(){
 		return favoriteOrder;
 	}
+	//Can be DELETEd i dont think we need this at all
+// 	@Override
+// 	public boolean equals(Object obj) {
+// 		if (this == obj) {
+//             return true;
+//         }
+// 		if (obj == null || this.getClass() != obj.getClass()) {
+//             return false;
+//         }
+// 		GenericCustomer other = (GenericCustomer) obj;
+// 		return (other.getName() == this.getName());
+// 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-            return true;
-        }
-		if (obj == null || this.getClass() != obj.getClass()) {
-            return false;
-        }
-		GenericCustomer other = (GenericCustomer) obj;
-		return (other.getName() == this.getName());
-	}
-	
-	public void setPersonality(Personality p) {
-		personality=p;
-	}
-	public Personality getPersonality() {
-		return personality;
-	}
+// 	public void setPersonality(Personality p) {
+// 		personality=p;
+// 	}
+// 	public Personality getPersonality() {
+// 		return personality;
+// 	}
 	
 }
