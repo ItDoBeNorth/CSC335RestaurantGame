@@ -132,7 +132,8 @@ public class RestaurantController {
 			model.updateCustomerQueue();
 		} else {
 			// should implement switching to next day and end of day screen
-			System.out.print("Day over");
+			System.out.println("Day over");
+			nextDay();
 		}
 	}
 

@@ -251,10 +251,12 @@ public class RestaurantGUIView extends Application implements Observer {
 
 		// make menu
 		// use AnchorPane menuSpace = new AnchorPane(); to set up the gui
+		VBox menuLook= new VBox();
 		HBox horiz = new HBox();
 		Button signIn = new Button("Sign In");
 		TextField textfield = new TextField();
 		textfield.setPromptText("Enter your name");
+		menuLook.getChildren().addAll(new Label("Sign In"), horiz);
 		
 		signIn.setOnAction((e) -> {
 			currTickets = new Ticket[2];
@@ -293,7 +295,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		});
 		// set content to tab, switch this with the pane when made
 		horiz.getChildren().setAll(textfield, signIn);
-		menu.setContent(horiz);
+		menu.setContent(menuLook);
 		
 		
 		// set initial things
@@ -432,8 +434,10 @@ public class RestaurantGUIView extends Application implements Observer {
 			n++;
 		}
 		
-		
-		content.getChildren().addAll(pickFromBasket, burgerInfo);
+		ScrollPane scroll = new ScrollPane();
+		scroll.setContent(burgerInfo);
+		scroll.setPrefViewportHeight(150);
+		content.getChildren().addAll(new Label("Basket"), pickFromBasket, scroll);
 		
 		VBox options = new VBox();
 		Button undo = new Button("Undo");

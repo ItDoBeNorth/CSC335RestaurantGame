@@ -120,9 +120,12 @@ public class RestaurantModel extends Observable {
 	}
 
 	public void undoBurger() {
-		burger.RemoveLastTopping();
-		setChanged();
-		notifyObservers(new EventDetail("undoBurger", null));
+		if (!burger.getToppings().isEmpty()) { 
+			addToBasket(burger.getToppings().getLast());
+			burger.RemoveLastTopping();
+			setChanged();
+			notifyObservers(new EventDetail("undoBurger", null));
+		}
 	}
 
 	public void addToBurger(Toppings topping) {
