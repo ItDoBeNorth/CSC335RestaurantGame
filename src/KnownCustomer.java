@@ -5,13 +5,14 @@ public abstract class KnownCustomer implements Customer {
 	protected String shape;
 	protected String color;
 	protected final ArrayList<Toppings> favoriteOrder;
-	public enum Personality {ACCURATE, URGERNT, GENEROUS;}
+	public enum Personality {ACCURATE, URGENT, GENEROUS;}
 	private Personality personality;
-	public KnownCustomer(String name,String shape, String color, ArrayList<Toppings> favoriteOrder) {
+	public KnownCustomer(String name,String shape, String color, ArrayList<Toppings> favoriteOrder,Personality personality) {
 		this.name=name;
 		this.shape=shape;
 		this.color=color;
 		this.favoriteOrder=favoriteOrder;
+		this.personality=personality;
 	}
 	
 	@Override
@@ -29,24 +30,8 @@ public abstract class KnownCustomer implements Customer {
 	public ArrayList<Toppings> getFavoriteOrder(){
 		return favoriteOrder;
 	}
-	//Can be DELETEd i dont think we need this at all
-// 	@Override
-// 	public boolean equals(Object obj) {
-// 		if (this == obj) {
-//             return true;
-//         }
-// 		if (obj == null || this.getClass() != obj.getClass()) {
-//             return false;
-//         }
-// 		GenericCustomer other = (GenericCustomer) obj;
-// 		return (other.getName() == this.getName());
-// 	}
-	
-// 	public void setPersonality(Personality p) {
-// 		personality=p;
-// 	}
-// 	public Personality getPersonality() {
-// 		return personality;
-// 	}
+	public Personality getPersonality() {
+		return personality;
+	}
 	
 }

@@ -5,8 +5,7 @@ public class Mariah extends KnownCustomer {
 	private Toppings favoriteTopping=new Pickle();
 	
 	public Mariah() {
-		super("Mariah","triangle","green",new ArrayList<Toppings>(){{add(new Pickle());}});
-		super.setPersonality(Personality.GENEROUS);
+		super("Mariah","triangle","green",new ArrayList<Toppings>(){{add(new Pickle());}},Personality.GENEROUS);
 	}
 
 	@Override

@@ -5,8 +5,7 @@ public class Peter extends KnownCustomer {
 	private Toppings favoriteTopping=new Lettuce();
 	
 	public Peter() {
-		super("Peter","circle","yellow",new ArrayList<Toppings>(){{add(new Lettuce());}});
-		super.setPersonality(Personality.URGERNT);
+		super("Peter","circle","yellow",new ArrayList<Toppings>(){{add(new Lettuce());}},Personality.URGENT);
 	}
 
 	@Override
