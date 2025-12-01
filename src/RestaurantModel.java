@@ -50,6 +50,11 @@ public class RestaurantModel extends Observable {
 		return (daysCustomers.isEmpty() && currCustomers[0] == null && currCustomers[1] == null);
 	}
 
+	public void EODScreen() {
+		setChanged();
+		notifyObservers(new EventDetail("updateEndOfDayScreen", null));
+	}
+	
 	public void nextDay() {
 		day++;
 		player.nextDay();

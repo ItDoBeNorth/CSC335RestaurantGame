@@ -52,7 +52,9 @@ public class RestaurantGUIView extends Application implements Observer {
 	private VBox customer1;
 	private VBox customer2;
 	private HBox pickIngredients;	
-	ChoiceBox<String> ticketChoice;
+	private ChoiceBox<String> ticketChoice;
+	private VBox EODcontent;
+	
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -168,6 +170,22 @@ public class RestaurantGUIView extends Application implements Observer {
 			case("updateBurger"):
 				updateBurgerGUI();
 				break;
+			case("updateEndOfDayScreen"):
+				//ADD MORE LATER
+				if (EODcontent == null) return;
+				Label rating = (Label) EODcontent.getChildren().get(0);
+				rating.setText("Rating: " + player.getScore());
+				Label income = (Label) EODcontent.getChildren().get(1);
+				income.setText("Total Income: ");
+				Label accuracy = (Label) EODcontent.getChildren().get(2);
+				accuracy.setText("Accuracy: ");
+				Label timing = (Label) EODcontent.getChildren().get(3);
+				timing.setText("Timing: ");
+				Label newStuff = (Label) EODcontent.getChildren().get(4);
+				newStuff.setText("New Things Next Day: 1 More Customer, 1 More Ingredient");
+				Button next = (Button) EODcontent.getChildren().get(5);
+				next.setText("Next Day: " + (player.getDay()+1));
+				break;
 			default:
 				
 				
@@ -227,6 +245,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		Tab prep = new Tab("Prep");
 		Tab cook = new Tab("Cook");
 		Tab serve = new Tab("Serve");
+		Tab endOfDayScreen = new Tab("End Of Day");
 
 		// make menu
 		// use AnchorPane menuSpace = new AnchorPane(); to set up the gui
@@ -260,7 +279,8 @@ public class RestaurantGUIView extends Application implements Observer {
 			makeOrder(order);
 			makePrep(prep);
 			makeCook(cook, serve);
-			makeServe(serve, order);
+			makeServe(serve, order, endOfDayScreen);
+			makeEODscreen(endOfDayScreen, order, prep, cook, serve);
 			
 			
 
@@ -535,7 +555,7 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 
 	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
-	public void makeServe(Tab serve, Tab order) {
+	public void makeServe(Tab serve, Tab order, Tab endOfDayScreen) {
 		// change pane later
 		BorderPane tempPane = new BorderPane();
 		
@@ -552,10 +572,19 @@ public class RestaurantGUIView extends Application implements Observer {
 		serveBurger.setOnAction((e) -> {
 			if (ticketChoice.getValue() != null) {
 				if (ticketChoice.getValue().equals("Ticket 1") && currTickets[0] != null) {
-					controller.serveBurger(0, currTickets[0]); //in which it should also update customer queue and update that info in customer1 and customer 2
+					if (!controller.serveBurger(0, currTickets[0])) {
+						tabPane.getTabs().clear();
+						tabPane.getTabs().add(endOfDayScreen);
+						tabPane.getSelectionModel().select(endOfDayScreen);
+						//in which it should also update customer queue and update that info in customer1 and customer 2
+					}
 					tabPane.getSelectionModel().select(order); 
 				} else if (ticketChoice.getValue().equals("Ticket 2") && currTickets[1] != null){
-					controller.serveBurger(1, currTickets[1]);
+					if (!controller.serveBurger(1, currTickets[1])) {
+						tabPane.getTabs().clear();
+						tabPane.getTabs().add(endOfDayScreen);
+						tabPane.getSelectionModel().select(endOfDayScreen);
+					}
 					tabPane.getSelectionModel().select(order); 
 				}
 			}
@@ -569,6 +598,32 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		serve.setContent(tempPane);
  
+	}
+	
+	public void makeEODscreen(Tab eodTab, Tab order, Tab prep, Tab cook, Tab serve) {
+		BorderPane tempPane = new BorderPane();
+		
+		EODcontent = new VBox();
+		EODcontent.setAlignment(Pos.CENTER);
+		Label rating = new Label("Rating: ");
+		Label income = new Label("Income: ");
+		Label accuracy = new Label("Accuracy: ");
+		Label timing = new Label("Timing: ");
+		Label newStuff = new Label("New Things Next Day:");
+		Button next = new Button("Next Day");
+		next.setOnAction((e)->{
+			tabPane.getTabs().remove(eodTab);
+			tabPane.getTabs().addAll(order, prep, cook, serve);
+			tabPane.getSelectionModel().select(order);
+			controller.nextDay();
+		});
+		
+		next.setAlignment(Pos.CENTER);
+		
+		EODcontent.getChildren().addAll(rating, income, accuracy, timing, newStuff, next);
+		
+		tempPane.setCenter(EODcontent);
+		eodTab.setContent(tempPane);
 	}
 	
 	public void updateBurgerGUI() {

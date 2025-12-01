@@ -150,14 +150,17 @@ public class RestaurantController {
 	 * 
 	 * @param ticket the current ticket of the current customer
 	 */
-	public void serveBurger(int ticketInt, Ticket ticket) {
+	public boolean serveBurger(int ticketInt, Ticket ticket) {
 		model.Serve(ticketInt, ticket);
 		if (!isDayOver()) {
 			model.updateCustomerQueue();
+			return true;
 		} else {
 			// should implement switching to next day and end of day screen
 			System.out.println("Day over");
-			nextDay();
+			model.EODScreen();
+			return false;
+			//nextDay();
 		}
 	}
 
