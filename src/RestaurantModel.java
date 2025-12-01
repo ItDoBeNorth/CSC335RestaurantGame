@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
 
-/**
+/** 
  * setChanged(); notifyObservers(new EventDetail());
  */
 @SuppressWarnings("deprecation")
@@ -56,9 +56,13 @@ public class RestaurantModel extends Observable {
 	}
 	
 	public void nextDay() {
-		day++;
 		player.nextDay();
 		player.addScore(1);
+		setUpDay();
+	}
+	
+	public void setUpDay() {
+		day++;
 		// decide ingredients different if want, for now its by day
 		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, Math.min(day, allToppings.length))));
 		// customerLimit for now is day, can be changed later

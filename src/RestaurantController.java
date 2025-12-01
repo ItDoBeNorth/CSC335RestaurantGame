@@ -43,6 +43,10 @@ public class RestaurantController {
 		}
 	}
 
+	public PlayerList getPlayerList() {
+		return this.playerList;
+	}
+	
 	public RestaurantModel getModel() {
 		return model;
 	}
@@ -118,11 +122,15 @@ public class RestaurantController {
 		model.updateTaskList(customerInt, customer);
 	}
 
+	public void setUpDay() {
+		model.setUpDay();
+		}
+	
 	public ArrayList<Toppings> getDaysToppings() {
 		return model.getDaysIngredients();
 	}
 
-	public void undoBurger() {
+	public void undoBurger() { 
 		model.undoBurger();
 	}
 
