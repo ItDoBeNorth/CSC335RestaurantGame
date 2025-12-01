@@ -6,7 +6,7 @@ public class Mariah extends KnownCustomer {
 	
 	public Mariah() {
 		super("Mariah","triangle","green",new ArrayList<Toppings>(){{add(new Pickle());}});
-		super.setPersonality(Personality.GENEROUS);
+		//super.setPersonality(Personality.GENEROUS);
 	}
 
 	@Override

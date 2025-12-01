@@ -6,7 +6,7 @@ public class John extends KnownCustomer {
 	
 	public John() {
 		super("John","circle","red",new ArrayList<Toppings>(){{add(new Cheese());}});
-		super.setPersonality(Personality.GENEROUS);
+		//super.setPersonality(Personality.GENEROUS);
 	}
 
 	@Override

@@ -449,7 +449,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		tempPane.setRight(finish);
 		
 		serve.setContent(tempPane);
-
+ 
 	}
 	
 	public void updateBurgerGUI() {

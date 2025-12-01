@@ -6,7 +6,7 @@ public class David extends KnownCustomer {
 	
 	public David() {
 		super("David","triangle","orange",new ArrayList<Toppings>(){{add(new Onion());}});
-		super.setPersonality(Personality.URGERNT);
+		//super.setPersonality(Personality.URGERNT);
 	}
 
 	@Override

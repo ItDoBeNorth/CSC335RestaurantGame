@@ -6,7 +6,7 @@ public class Sarah extends KnownCustomer {
 	
 	public Sarah() {
 		super("Sarah","square","blue",new ArrayList<Toppings>(){{add(new Tomato());}});
-		super.setPersonality(Personality.ACCURATE);
+		//super.setPersonality(Personality.ACCURATE);
 	}
 
 	@Override
