@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
@@ -223,17 +226,17 @@ public class RestaurantGUIView extends Application implements Observer {
 //			}
 //		});
 		//Test if working 
-				/*stage.setOnCloseRequest((WindowEvent e)->{
-					try {
-						ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));
-						PlayerList currPlayerList=controller.GetplayerList();
-						out.writeObject(currPlayerList);
-					} catch (IOException er) {
-						// TODO Auto-generated catch block
-						er.printStackTrace();
-					}
-					});
-				 */
+		stage.setOnCloseRequest((e)->{
+			try {
+				ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));
+				PlayerList currPlayerList= controller.getPlayerList();
+				out.writeObject(currPlayerList);
+			} catch (IOException er) {
+				// TODO Auto-generated catch block
+				er.printStackTrace();
+			}
+			});
+		 		
 
 		// Set up the tabs
 		// note for now using tabs, can use scene changing later
@@ -287,7 +290,7 @@ public class RestaurantGUIView extends Application implements Observer {
 			tabPane.getTabs().remove(menu);
 			tabPane.getTabs().addAll(order, prep, cook, serve);
 			tabPane.getSelectionModel().select(order);
-			controller.nextDay();
+			controller.setUpDay();
 			
 			
 			
