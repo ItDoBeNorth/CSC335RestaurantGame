@@ -1,5 +1,5 @@
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileOutputStream; 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
-
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -49,10 +49,10 @@ public class RestaurantGUIView extends Application implements Observer {
 	private VBox ticketsInfoCook;
 	private VBox ticketsInfoServe;
 	
-	private Label burgerCook;
-	private Label burgerServe;
+	private VBox burgerCook;
+	private VBox burgerServe;
 	
-	private Label basket;
+	private VBox basket;
 	private HBox pickFromBasket;
 	
 	// more observer things but seperate
@@ -420,7 +420,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		pickIngredients = new HBox();
 		pickIngredients.setAlignment(Pos.CENTER);
 		VBox basketBox = new VBox();
-		basket = new Label("Basket Contents");
+		basket = new VBox();
 		basketBox.setStyle(
 			    "-fx-background-color: #f5deb3;" +
 			    "-fx-padding: 10;" +
@@ -431,7 +431,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		basket.setAlignment(Pos.CENTER);
 		int n = 0;
 		while (n < IngredientsList.TOPPINGLIST.length){
-			Button topping = new Button(IngredientsList.TOPPINGLIST[n].getToppingName());
+			Button topping = new Button();
+			Image img = new Image(IngredientsList.TOPPINGLIST[n].getToppingName()+".png");
+			ImageView imgview=new ImageView(img);
+			imgview.setFitWidth(25);
+			imgview.setFitHeight(25);
+			topping.setGraphic(imgview);
 			Toppings currTopping = IngredientsList.TOPPINGLIST[n];
 			topping.setOnAction((event) -> {
 				controller.addToBasket(currTopping); //which will update it in the baskets label and buttons through observer
@@ -481,14 +486,23 @@ public class RestaurantGUIView extends Application implements Observer {
 		pickFromBasket = new HBox(); 
 		
 		VBox burgerInfo = new VBox();
-		burgerCook = new Label("Cook Burger");
+		burgerInfo.setAlignment(Pos.CENTER);
+		burgerCook = new VBox();
 		burgerInfo.setStyle(
 			    "-fx-background-color: #f5deb3;" +
 			    "-fx-padding: 10;" +
 			    "-fx-background-radius: 10;"
 			);
-		Label bunTop = new Label("Top Bun");
-		Label bunBot = new Label("Bottom Bun");
+
+		//Label bunTop = new Label("Top Bun");
+		ImageView bunTop=new ImageView(new Image("topBun.png"));
+		bunTop.setFitHeight(35);
+		bunTop.setFitWidth(50);
+		//Label bunBot = new Label("Bottom Bun");
+		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
+		bunBot.setFitHeight(35);
+		bunBot.setFitWidth(50);
+		
 		burgerInfo.getChildren().addAll(bunTop, burgerCook, bunBot);
 		
 		ScrollPane scroll = new ScrollPane();
@@ -543,11 +557,41 @@ public class RestaurantGUIView extends Application implements Observer {
 		ticketChoice = new ChoiceBox<String>();
 		ticketChoice.getItems().addAll("Ticket 1", "Ticket 2");
 		VBox burgerInfo = new VBox();
-		Label bunTop = new Label("Top Bun");
-		burgerServe = new Label("Burger");
-		Label bunBot = new Label("Bottom Bun");
+
+		//Label bunTop = new Label("Top Bun");
+		ImageView bunTop=new ImageView(new Image("topBun.png"));
+		bunTop.setFitHeight(35);
+		bunTop.setFitWidth(50);
+		burgerServe = new VBox();
+		//Label bunBot = new Label("Bottom Bun");
+		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
+		bunBot.setFitHeight(35);
+		bunBot.setFitWidth(50);
+		
 		burgerInfo.getChildren().addAll(bunTop, burgerServe, bunBot);
+		
+		burgerInfo.setStyle(
+			    "-fx-background-color: #f5deb3;" +
+			    "-fx-padding: 10;" +
+			    "-fx-background-radius: 10;"
+			);
 		burgerInfo.setAlignment(Pos.CENTER);
+		ScrollPane scroll = new ScrollPane();
+		scroll.setContent(burgerInfo);
+		scroll.setStyle(
+			    "-fx-background-color: #d2b48c;" + 
+			    "-fx-border-color: #8b5a2b;" + 
+			    "-fx-border-width: 3;" +
+			    "-fx-background-radius: 10;" +
+			    "-fx-border-radius: 10;" +
+			    "-fx-padding: 5;" +
+			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+			);
+		burgerInfo.setMaxHeight(150); 
+		scroll.setFitToWidth(true);
+		scroll.setFitToHeight(true);
+		scroll.setMaxHeight(150);
+		scroll.setPrefViewportHeight(150);
 		Button serveBurger = new Button("Serve Burger");
 		serveBurger.setOnAction((e) -> {
 			if (ticketChoice.getValue() != null) {
@@ -570,9 +614,9 @@ public class RestaurantGUIView extends Application implements Observer {
 			}
 		});
 		
-		finish.getChildren().addAll(ticketChoice, serveBurger);
+		finish.getChildren().addAll(ticketChoice,serveBurger);
 		
-		tempPane.setCenter(burgerInfo);
+		tempPane.setCenter(scroll);
 		tempPane.setLeft(ticketsInfoServe);
 		tempPane.setRight(finish);
 		
@@ -607,19 +651,33 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 	
 	public void updateBurgerGUI() {
-		burgerCook.setText("");
-		burgerServe.setText("");
+
+		burgerCook.getChildren().clear();
+		burgerCook.setAlignment(Pos.CENTER);
+		burgerServe.getChildren().clear();
+		burgerServe.setAlignment(Pos.CENTER);
 		ArrayList<Toppings> burgerToppings = controller.getBurger().getToppings();
 		String tempBurger = "";
 		for (Toppings t : burgerToppings) {
 			tempBurger = t.getToppingName() + "\n" + tempBurger;
+			
+			Image img = new Image(t.getToppingName()+".png");
+			ImageView imgCookView=new ImageView(img);
+			imgCookView.setFitWidth(50);
+			imgCookView.setFitHeight(35);
+			ImageView imgServeView=new ImageView(img);
+			imgServeView.setFitWidth(50);
+			imgServeView.setFitHeight(35);
+			
+			burgerServe.getChildren().add(imgCookView);
+			burgerCook.getChildren().add(imgServeView);
 		}
-		burgerCook.setText(tempBurger);
-		burgerServe.setText(tempBurger);
+		//burgerCook.setText(tempBurger);
+		//burgerServe.setText(tempBurger);
 	}
 	
 	public void updateBasketGUI() {
-		basket.setText("");
+		basket.getChildren().clear();
 		pickFromBasket.getChildren().clear();
 		
 		ArrayList<Toppings> basketToppings = controller.getCurrBasket().getList();
@@ -627,15 +685,26 @@ public class RestaurantGUIView extends Application implements Observer {
 		for (Toppings t : basketToppings) {
 			tempBasket += t.getToppingName()+"\n";
 			
-			Button topping = new Button(t.getToppingName());
+			Button topping = new Button();
+			Image img = new Image(t.getToppingName()+".png");
+			ImageView imgview=new ImageView(img);
+			imgview.setFitWidth(25);
+			imgview.setFitHeight(25);
+			topping.setGraphic(imgview);
+			
+			ImageView imgBasketView=new ImageView(img);
+			imgBasketView.setFitWidth(50);
+			imgBasketView.setFitHeight(35);
+			
 			topping.setOnAction((e) -> {
 				controller.addToBurger(t);
 				controller.removeFromBasket(t);
 			});
 			
 			pickFromBasket.getChildren().add(topping);
+			basket.getChildren().add(imgBasketView);
 		}
-		basket.setText(tempBasket);
+		//basket.setText(tempBasket);
 		
 		
 	}
