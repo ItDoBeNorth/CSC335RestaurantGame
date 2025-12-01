@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
@@ -18,9 +22,25 @@ public class RestaurantController {
 	 * @param model a model created from the file RestaurantModel that runs the
 	 *              function which the controller display
 	 */
-	public RestaurantController() {
-		playerList = new PlayerList(); // later make it a static and saveload playerList
+	public RestaurantController() { 
+		//playerList = new PlayerList(); // later make it a static and saveload playerList
 		model = null;
+		File gameData= new File("save_game.dat"); 
+		if (gameData.exists()) {
+			try {
+				ObjectInputStream in= new ObjectInputStream(new FileInputStream(gameData));
+				 this.playerList=(PlayerList) in.readObject();
+				 in.close();
+				 
+			}catch (IOException | ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				 e.printStackTrace();
+		}
+			
+		}
+		else {
+			playerList = new PlayerList();
+		}
 	}
 
 	public RestaurantModel getModel() {

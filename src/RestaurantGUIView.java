@@ -204,6 +204,18 @@ public class RestaurantGUIView extends Application implements Observer {
 //			System.exit(0);
 //			}
 //		});
+		//Test if working 
+				/*stage.setOnCloseRequest((WindowEvent e)->{
+					try {
+						ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));
+						PlayerList currPlayerList=controller.GetplayerList();
+						out.writeObject(currPlayerList);
+					} catch (IOException er) {
+						// TODO Auto-generated catch block
+						er.printStackTrace();
+					}
+					});
+				 */
 
 		// Set up the tabs
 		// note for now using tabs, can use scene changing later
