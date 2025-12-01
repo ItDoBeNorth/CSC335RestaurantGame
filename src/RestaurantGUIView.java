@@ -16,9 +16,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class RestaurantGUIView extends Application implements Observer {
@@ -86,7 +89,9 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu0L = (Label) customer1.getChildren().get(0);
 				cqu0L.setText(currCustomers[0].getName());
 				// Image of character changed here, any animation started
-			 	Button cqu0B = (Button) customer1.getChildren().get(1);
+				Circle cqu0Circle = (Circle) customer1.getChildren().get(1);
+				
+			 	Button cqu0B = (Button) customer1.getChildren().get(2);
 			 	cqu0B.setDisable(false);
 			 	customer1.setVisible(true);
 				// change things in customer1 and customer 2 box
@@ -96,7 +101,9 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu1L = (Label) customer2.getChildren().get(0);
 				cqu1L.setText(currCustomers[1].getName());
 				// Image of character changed here, any animation started
-			 	Button cqu1B = (Button) customer2.getChildren().get(1);
+				Circle cqu1Circle = (Circle) customer2.getChildren().get(1);
+				
+			 	Button cqu1B = (Button) customer2.getChildren().get(2);
 			 	cqu1B.setDisable(false);
 			 	customer2.setVisible(true);
 				// change things in customer1 and customer 2 box
@@ -288,22 +295,58 @@ public class RestaurantGUIView extends Application implements Observer {
 		        "-fx-border-radius: 10;"
 		);
 		
-		customer1 = new VBox();
+		customer1 = new VBox(5);
+		customer1.setAlignment(Pos.CENTER);
+
+		// hidden label for name
 		Label c1Name = new Label("Customer");
+		c1Name.setVisible(false);
+
+		// circle for display
+		Circle circle1 = new Circle(25);
+		circle1.setFill(Color.LIGHTBLUE);
+		circle1.setStroke(Color.BLACK);
+
+		// tooltip bound to name label
+		Tooltip tooltip1 = new Tooltip();
+		tooltip1.textProperty().bind(c1Name.textProperty());
+		Tooltip.install(circle1, tooltip1);
+
+		// Get Order button
 		Button c1Button = new Button("Get Order");
-		c1Button.setOnAction((event) -> {
-			controller.updateTaskList(0, currCustomers[0]); //for initial customers which will add to the ticketsInfo after we add observer // check later if we want to have this return tasklist to us
-			c1Button.setDisable(true);
+		c1Button.setOnAction(e -> {
+		    controller.updateTaskList(0, currCustomers[0]);
+		    c1Button.setDisable(true);
 		});
-		customer1.getChildren().addAll(c1Name, c1Button);
-		customer2 = new VBox();
-		Label c2Name = new Label("Customer");
+
+		// add in correct order (VERY IMPORTANT)
+		customer1.getChildren().addAll(c1Name, circle1, c1Button);
+		customer2 = new VBox(5);
+		customer2.setAlignment(Pos.CENTER);
+
+		// hidden label for name
+		Label c2Label = new Label("Customer");
+		c2Label.setVisible(false);
+
+		// circle
+		Circle circle2 = new Circle(25);
+		circle2.setFill(Color.LIGHTGREEN);
+		circle2.setStroke(Color.BLACK);
+
+		// tooltip binds to label
+		Tooltip tooltip2 = new Tooltip();
+		tooltip2.textProperty().bind(c2Label.textProperty());
+		Tooltip.install(circle2, tooltip2);
+
+		// button
 		Button c2Button = new Button("Get Order");
-		c2Button.setOnAction((event) -> {
-			controller.updateTaskList(1, currCustomers[1]); // for initial customers which will add to the ticketsInfo after we add observer
-			c2Button.setDisable(true);
+		c2Button.setOnAction(e -> {
+		    controller.updateTaskList(1, currCustomers[1]);
+		    c2Button.setDisable(true);
 		});
-		customer2.getChildren().addAll(c2Name, c2Button);
+
+		// add in correct order
+		customer2.getChildren().addAll(c2Label, circle2, c2Button);
 		
 		orderBox.setMaxWidth(300);
 		orderBox.setMaxHeight(300);
@@ -316,11 +359,41 @@ public class RestaurantGUIView extends Application implements Observer {
 	public VBox makeTicketInfos() {
 		VBox ticketsInfo = new VBox();
 		// switch labels with better things later
-		VBox ticketOne = new VBox();
-		ticketOne.getChildren().addAll( new Label("Ticket 1"), new Label("get ticket info later"));
+		VBox ticketOne = new VBox(5);
+		ticketOne.setAlignment(Pos.CENTER_LEFT);
+		ticketOne.setStyle(
+		        "-fx-padding: 10;" +
+		        "-fx-background-color: #FFF8DC;" +        // light parchment
+		        "-fx-border-color: #B8860B;" +            // dark goldenrod
+		        "-fx-border-width: 2;" +
+		        "-fx-background-radius: 8;" +
+		        "-fx-border-radius: 8;" +
+		        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+		);
+		Label t1title = new Label("Ticket 1");
+		t1title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+		Label t1body = new Label("get ticket info later");
+		ticketOne.getChildren().addAll(t1title, t1body);
+
+		ticketOne.setVisible(false);
 		// can set visibity to false
-		VBox ticketTwo = new VBox();
-		ticketTwo.getChildren().addAll( new Label ("Ticket 2"), new Label("get ticket info later"));
+		VBox ticketTwo = new VBox(5);
+		ticketTwo.setAlignment(Pos.CENTER_LEFT);
+		ticketTwo.setStyle(
+		        "-fx-padding: 10;" +
+		        "-fx-background-color: #FFF8DC;" +
+		        "-fx-border-color: #B8860B;" +
+		        "-fx-border-width: 2;" +
+		        "-fx-background-radius: 8;" +
+		        "-fx-border-radius: 8;" +
+		        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+		);
+		Label t2title = new Label("Ticket 2");
+		t2title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+		Label t2body = new Label("get ticket info later");
+		ticketTwo.getChildren().addAll(t2title, t2body);
+
+		ticketTwo.setVisible(false);
 
 		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
 		return ticketsInfo;
@@ -336,6 +409,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		pickIngredients.setAlignment(Pos.CENTER);
 		VBox basketBox = new VBox();
 		basket = new Label("Basket Contents");
+		basketBox.setStyle(
+			    "-fx-background-color: #f5deb3;" +
+			    "-fx-padding: 10;" +
+			    "-fx-background-radius: 10;"
+			);
+		basketBox.setFillWidth(true);
 		basketBox.getChildren().addAll(new Label("Basket Contents"), basket);
 		basket.setAlignment(Pos.CENTER);
 		int n = 0;
@@ -355,6 +434,17 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		ScrollPane scroll = new ScrollPane();
 		scroll.setContent(basketBox);
+		scroll.setStyle(
+			    "-fx-background-color: #d2b48c;" + 
+			    "-fx-border-color: #8b5a2b;" + 
+			    "-fx-border-width: 3;" +
+			    "-fx-background-radius: 10;" +
+			    "-fx-border-radius: 10;" +
+			    "-fx-padding: 5;" +
+			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+			);
+		scroll.setFitToWidth(true);
+		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
 		content.getChildren().addAll(pickIngredients, scroll);
 		
@@ -376,15 +466,32 @@ public class RestaurantGUIView extends Application implements Observer {
 
 		VBox content = new VBox();
 		content.setAlignment(Pos.CENTER);
-		pickFromBasket = new HBox(); // also updated when basket updated
+		pickFromBasket = new HBox(); 
+		
 		VBox burgerInfo = new VBox();
 		burgerCook = new Label("Cook Burger");
+		burgerInfo.setStyle(
+			    "-fx-background-color: #f5deb3;" +
+			    "-fx-padding: 10;" +
+			    "-fx-background-radius: 10;"
+			);
 		Label bunTop = new Label("Top Bun");
 		Label bunBot = new Label("Bottom Bun");
 		burgerInfo.getChildren().addAll(bunTop, burgerCook, bunBot);
 		
 		ScrollPane scroll = new ScrollPane();
 		scroll.setContent(burgerInfo);
+		scroll.setStyle(
+			    "-fx-background-color: #d2b48c;" + 
+			    "-fx-border-color: #8b5a2b;" + 
+			    "-fx-border-width: 3;" +
+			    "-fx-background-radius: 10;" +
+			    "-fx-border-radius: 10;" +
+			    "-fx-padding: 5;" +
+			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+			);
+		scroll.setFitToWidth(true);
+		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
 		content.getChildren().addAll(new Label("Basket"), pickFromBasket, scroll);
 		
