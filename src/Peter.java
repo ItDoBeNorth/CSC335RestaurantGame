@@ -6,7 +6,7 @@ public class Peter extends KnownCustomer {
 	
 	public Peter() {
 
-		super("Peter","circle","yellow",new ArrayList<Toppings>(){{add(new Lettuce());}},Personality.URGENT);
+		super("Peter","circle","yellow",new ArrayList<Toppings>(){{add(new Lettuce());}},Personality.URGENT, 2);
 	}
 
 	@Override

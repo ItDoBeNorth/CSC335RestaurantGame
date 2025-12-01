@@ -5,4 +5,5 @@ public interface Customer {
 	public String getName();
 	public String getColor();
 	public String getShape();
+	public int patienceLevel();
 }

@@ -177,15 +177,15 @@ public class RestaurantGUIView extends Application implements Observer {
 				//ADD MORE LATER
 				if (EODcontent == null) return;
 				Label rating = (Label) EODcontent.getChildren().get(0);
-				rating.setText("Rating: " + player.getScore());
+				rating.setText("Score: +" + controller.getDaysScore() + " \n Total: "+ player.getScore());
 				Label income = (Label) EODcontent.getChildren().get(1);
-				income.setText("Total Income: ");
+				income.setText("Days Income: " + controller.getDaysIncome() + "\n Total Income: " + player.getMoney());
 				Label accuracy = (Label) EODcontent.getChildren().get(2);
-				accuracy.setText("Accuracy: ");
+				accuracy.setText("Days Accuracy: " + controller.getDaysAccuracy() + "%");
 				Label timing = (Label) EODcontent.getChildren().get(3);
-				timing.setText("Timing: ");
+				timing.setText("Days Timing: " + controller.getDaysTiming() + "%");
 				Label newStuff = (Label) EODcontent.getChildren().get(4);
-				newStuff.setText("New Things Next Day: 1 More Customer, 1 More Ingredient");
+				newStuff.setText("New Things Next Day:\n" + info.getEventChange());
 				Button next = (Button) EODcontent.getChildren().get(5);
 				next.setText("Next Day: " + (player.getDay()+1));
 				break;
@@ -212,25 +212,17 @@ public class RestaurantGUIView extends Application implements Observer {
 		BorderPane pane = new BorderPane();
 		controller = new RestaurantController();
 
-//		stage.setOnCloseRequest(event -> {
-//			// if closing after completed and unreset game
-//			if (delete) {
-//				File file = new File("save_game.dat");
-//				if (file.exists()) {
-//					file.delete();
-//				}
-//				System.exit(0);
-//			} else {
-//			save();
-//			System.exit(0);
-//			}
-//		});
-		//Test if working 
 		stage.setOnCloseRequest((e)->{
+			if (currTickets != null) {
+			for (Ticket t : currTickets) {
+				if (t!= null) t.stopCountDown();
+			}
+			}
 			try {
 				ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));
 				PlayerList currPlayerList= controller.getPlayerList();
 				out.writeObject(currPlayerList);
+				
 			} catch (IOException er) {
 				// TODO Auto-generated catch block
 				er.printStackTrace();

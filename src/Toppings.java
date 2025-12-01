@@ -5,7 +5,7 @@ public abstract class Toppings {
 	private String toppingName;
 	
 	public Toppings(double price,String toppingName) {
-		// price and name 
+		this.price = price;
 		this.toppingName = toppingName;
 	}
 	

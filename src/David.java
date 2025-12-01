@@ -2,10 +2,10 @@ import java.util.ArrayList;
 
 public class David extends KnownCustomer {
 	
-	private Toppings favoriteTopping=new Onion();
+	private Toppings favoriteTopping=new Pickle();
 	
 	public David() {
-		super("David","triangle","orange",new ArrayList<Toppings>(){{add(new Onion());}},Personality.URGENT);
+		super("David","triangle","orange",new ArrayList<Toppings>(){{add(new Onion());}},Personality.URGENT, 1);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
 
+
 /** 
  * setChanged(); notifyObservers(new EventDetail());
  */
@@ -14,13 +15,21 @@ public class RestaurantModel extends Observable {
 
 	private ArrayList<Toppings> daysIngredients;
 	private Queue<Customer> daysCustomers;
-
+	
 	// things GUI should know
-	private int day;
+	private int currDay;
 	private Customer[] currCustomers;
 	private Ticket[] currTaskList;
 	private Basket<Toppings> basket;
 	private Burger burger;
+	
+	private int daysAccuracy;
+	private int daysTiming;
+	private double daysIncome;
+	private int daysScore;
+	private int customersServed;
+	private String[] newThings = {"New Ingredient: Lettuce\nNew Customer: John(Generous)", "New Ingredient: Onion\nNew Customer: Peter(Hurry)", "New Ingredient: Pickle\nNew Customer: Mariah(Picky)", "New Ingredient: Tomato\nNew Customer: David(Hurry)", "New Customer: Sarah(Patient)"};
+	// new things how
 
 	// change later
 	private static Toppings[] allToppings;
@@ -29,7 +38,7 @@ public class RestaurantModel extends Observable {
 	RestaurantModel(Player player) {
 		// saveLoad from players file but for now pass in a player starting with day one
 		this.player = player;
-		day = player.getDay(); // if nextDay is the first thing that is called make sure day-1 OR only save day
+		currDay = player.getDay(); // if nextDay is the first thing that is called make sure day-1 OR only save day
 								// on end of day
 
 		daysIngredients = new ArrayList<Toppings>();
@@ -42,6 +51,12 @@ public class RestaurantModel extends Observable {
 
 		allToppings = IngredientsList.TOPPINGLIST;
 		allCustomer = CustomerList.CUSTOMERS;
+		
+		daysAccuracy = 0;
+		daysTiming = 0;
+		daysIncome = 0;
+		daysScore = 0;
+		customersServed = 0;
 
 	}
 
@@ -51,8 +66,10 @@ public class RestaurantModel extends Observable {
 	}
 
 	public void EODScreen() {
+		daysAccuracy = daysAccuracy/(customersServed*3);
+		daysTiming = daysTiming/customersServed;
 		setChanged();
-		notifyObservers(new EventDetail("updateEndOfDayScreen", null));
+		notifyObservers(new EventDetail("updateEndOfDayScreen", newThings[Math.min(currDay-1, allToppings.length)]));
 	}
 	
 	public void nextDay() {
@@ -62,12 +79,17 @@ public class RestaurantModel extends Observable {
 	}
 	
 	public void setUpDay() {
-		day++;
+		daysAccuracy = 0;
+		daysTiming = 0;
+		daysIncome = 0;
+		daysScore = 0;
+		customersServed = 0;
+		currDay++;
 		// decide ingredients different if want, for now its by day
-		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, Math.min(day, allToppings.length))));
+		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, Math.min(currDay, allToppings.length))));
 		// customerLimit for now is day, can be changed later
 		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(
-				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(day, allCustomer.length))));
+				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(currDay, allCustomer.length))));
 		Collections.shuffle(tempCustomers);
 		daysCustomers = new LinkedList<Customer>(tempCustomers);
 		setChanged();
@@ -98,7 +120,7 @@ public class RestaurantModel extends Observable {
 	}
 
 	public Ticket getCustomerTicket(Customer customer) {
-		ArrayList<Toppings> order = customer.getOrder(daysIngredients, day);
+		ArrayList<Toppings> order = customer.getOrder(daysIngredients, currDay);
 		Ticket ticket = new Ticket(customer, order);
 		return ticket;
 	}
@@ -160,11 +182,8 @@ public class RestaurantModel extends Observable {
 	}
 
 	public void Serve(int ticketInt, Ticket ticket) {
-		// should we make player pick character too?
-		player.addScore(checkPrecision(ticket));
-		// ADD notify if gui implemented for score
-		// ADD time precision
-		// ADD price of burger
+		customersServed ++;
+		checkScore(ticket);
 
 		currCustomers[ticketInt] = null;
 		setChanged();
@@ -177,24 +196,78 @@ public class RestaurantModel extends Observable {
 		notifyObservers(new EventDetail("updateBurger", null));
 	}
 
-	private int checkPrecision(Ticket ticket) {
+	private void checkScore(Ticket ticket) {
 		int score = 1;
-		// implement a .equals if needed
-
-		// add some trouble shooting stuff like check size, order of ingredients
+		int accuracy = 0;
+		double income = 0;
+		int timing = 0;
+		KnownCustomer.Personality p = null;
+		// stuff based on customer
+		if (ticket.getCustomer() instanceof KnownCustomer) {
+			p = ((KnownCustomer) ticket.getCustomer()).getPersonality();
+		}
+		
+		int elapsed = ticket.stopCountDown();
+		int patienceTime = 10 + ( ticket.getCustomer().patienceLevel() * currDay);
+		
+		if (elapsed > patienceTime){
+			// percent over to the limit of double the patience time
+			double percent = (patienceTime*2 - Math.min(elapsed,patienceTime*2))/patienceTime;
+			timing = (int) Math.max(0, Math.round(percent * 50));
+		} else {timing = 100;}
+		
+		// can add order of ingredients
 		// here is only the implementation for checking if its exact
-//		for (int i = 0; i < ticket.getOrderSize(); i++) {
-//			// need null pointer exception checks
-//			if (ticket.getToppingsList().get(i) != burger.getToppings().get(i)) {
-//				score = 0;
-//			}
-//		}
-		if (ticket.getToppingsList() != burger.getToppings()) {score = 0;} 
-		// find other way to evaluate score
-		return score;
-		// maybe using order, correct items, etc.
+		
+		if (!ticket.getToppingsList().equals(burger.getToppings())) {
+			ArrayList<Toppings> ordered =  new ArrayList<Toppings>(ticket.getToppingsList());
+			ArrayList<Toppings> served = new ArrayList<Toppings>(burger.getToppings());
+			int numItems = (int) Math.max(0,100- Math.round((Math.abs(ordered.size()-served.size())/(double)ordered.size()) * 100)) ;
+			// correct kinds of items
+			int contains = 0;
+			for (Toppings t: ordered) {
+				if (served.contains(t)) {contains++;}
+			}
+			int itemsS = (int) Math.round((contains/(double)ordered.size()) * 100);
+			
+			int order = 0;
+			if (numItems + itemsS > 100) {order = 50;}
+			accuracy = numItems + itemsS + order;
+			if (p == KnownCustomer.Personality.ACCURATE) {
+				if (accuracy < 200) {
+					System.out.println(accuracy);
+					accuracy = 0;
+				}
+			}
+			
+		} else {
+			accuracy = 300;
+		}
+		
+		income = getPrice(burger.getToppings()) * ((accuracy+timing)/4.0);
+		if (p == KnownCustomer.Personality.GENEROUS) {
+			income = income * 2;
+		}
+		
+		daysAccuracy += accuracy;
+		daysIncome += income;
+		daysTiming += timing;
+		score += accuracy+timing;
+		daysScore += score;
+		
+		player.addScore(score);
+		player.addMoney(income);
+		
 	}
 
+	public double getPrice(ArrayList<Toppings> toppings) {
+		int amount = 0;
+		for (Toppings t: toppings) {
+			amount += t.getPrice();
+		}
+		return amount;
+	}
+	
 	public Basket<Toppings> getBasket() {
 		return basket;
 	}
@@ -205,5 +278,21 @@ public class RestaurantModel extends Observable {
 
 	public ArrayList<Toppings> getDaysIngredients() {
 		return daysIngredients;
+	}
+
+	public int getDaysAccuracy() {
+		return daysAccuracy;
+	}
+
+	public int getDaysTiming() {
+		return daysTiming;
+	}
+
+	public int getDaysScore() {
+		return daysScore;
+	}
+
+	public double getDaysIncome() {
+		return daysIncome;
 	}
 }

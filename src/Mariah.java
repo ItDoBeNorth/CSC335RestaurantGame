@@ -2,11 +2,11 @@ import java.util.ArrayList;
 
 public class Mariah extends KnownCustomer {
 	
-	private Toppings favoriteTopping=new Pickle();
+	private Toppings favoriteTopping=new Onion();
 	
 	public Mariah() {
 
-		super("Mariah","triangle","green",new ArrayList<Toppings>(){{add(new Pickle());}},Personality.GENEROUS);
+		super("Mariah","triangle","green",new ArrayList<Toppings>(){{add(new Pickle());}},Personality.ACCURATE, 5);
 	}
 
 	@Override

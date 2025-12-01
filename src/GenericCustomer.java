@@ -9,6 +9,8 @@ public class GenericCustomer implements Customer{
 	private String shape;
 	private String color;
 	private String name;
+	// mult by day to get time patience + 10 sec
+	private int patienceLevel;
 	
 	public GenericCustomer() {
 		//customer shape and color (for GUI Implementation)
@@ -16,6 +18,8 @@ public class GenericCustomer implements Customer{
 		shape=shapes[r.nextInt(shapes.length)];
 		color=colors[r.nextInt(colors.length)];
 		name=names[r.nextInt(names.length)];
+		patienceLevel = r.nextInt(6,15);
+	
 	}
 	
 	@Override
@@ -40,5 +44,10 @@ public class GenericCustomer implements Customer{
 	@Override
 	public String getColor() {
 		return color;
+	}
+
+	@Override
+	public int patienceLevel() {
+		return patienceLevel;
 	}
 }

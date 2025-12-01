@@ -183,4 +183,11 @@ public class RestaurantController {
 		return currPlayer;
 	}
 
+	public int getDaysAccuracy() { return model.getDaysAccuracy();}
+	public int getDaysTiming() {return model.getDaysTiming();}
+	public int getDaysScore() {return model.getDaysScore();}
+	public double getDaysIncome() {return model.getDaysIncome();}
+	
+	
+	
 }

@@ -2,14 +2,17 @@ import java.util.*;
 
 public class Countdown{
 	private Timer timer;
+	public int elapsed = 0;
+	public double timeLeft;
+	public boolean timeUp;
 	
 	public boolean startCountdown(double seconds) {
-		if (seconds < 0) {
-			return false;
-		}
+		if (seconds < 0) return false;
+		stopTimer();
+		timeLeft = seconds;
+		timeUp = false;
 		timer = new Timer();
 		TimerTask task = new TimerTask() {
-			double timeLeft = seconds;
 			@Override
 			public void run() {
 				System.out.println("Time left: " + timeLeft);
@@ -18,6 +21,7 @@ public class Countdown{
 					System.out.println("5 seconds left");
 				}
 				if (timeLeft <= 0) {
+					timeUp = true;
 					System.out.println("Done");
 					timer.cancel();
 				}
@@ -32,8 +36,8 @@ public class Countdown{
 	public void startStopwatch() {
 		stopTimer();
 		timer = new Timer();
+		elapsed = 0;
 		TimerTask task = new TimerTask() {
-			int elapsed = 0;
 			@Override
 			public void run() {
 				System.out.println(elapsed);
@@ -47,6 +51,6 @@ public class Countdown{
 	public void stopTimer() {
 		 if (timer != null) {
 	            timer.cancel();
-	        }
+		 }
 	}
 }

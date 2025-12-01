@@ -3,6 +3,7 @@ import java.io.Serializable;
 public class Player implements Serializable {
 	private int day;
 	private int score;
+	private double money;
 	private String name;
 
 	/**
@@ -14,6 +15,7 @@ public class Player implements Serializable {
 		this.name = name;
 		score = 0;
 		day = 0;
+		money = 0;
 	}
 
 	/**
@@ -22,11 +24,13 @@ public class Player implements Serializable {
 	 * @param name  the name chosen for the player by the user.
 	 * @param day   the current day the player is on.
 	 * @param score the current score of the player.
+	 * @param money 
 	 */
-	public Player(String name, int day, int score) {
+	public Player(String name, int day, int score, int money) {
 		this.name = name;
 		this.day = day;
 		this.score = score;
+		this.money = money;
 	}
 
 	/**
@@ -37,12 +41,21 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * adds the daily score to player's score
+	 * adds the score to player's score
 	 * 
-	 * @param dailyScore the score earned for the current day
+	 * @param the score earned
 	 */
-	public void addScore(int dailyScore) {
-		score += dailyScore;
+	public void addScore(int score) {
+		this.score += score;
+	}
+	
+	/**
+	 * adds the income score to player's money
+	 * 
+	 * @param the income earned
+	 */
+	public void addMoney(double income) {
+		this.money += income;
 	}
 
 	/**
@@ -58,6 +71,14 @@ public class Player implements Serializable {
 	 */
 	public int getScore() {
 		return score;
+	}
+	
+	/**
+	 * 
+	 * @return current money of the player
+	 */
+	public double getMoney() {
+		return money;
 	}
 
 	/**
