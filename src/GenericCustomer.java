@@ -5,7 +5,7 @@ public class GenericCustomer implements Customer{
 	private static Random r =new Random();
 	private String[] shapes={"circle","square","triangle"};
 	private String[] colors= {"blue","green","red","yellow","orange"};
-	private String[] names= {"Sarah","Peter","David","Al"}; //will add more 
+	private String[] names= {"Madison","Henry","Dany","Al"}; //will add more 
 	private String shape;
 	private String color;
 	private String name;
