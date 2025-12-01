@@ -6,7 +6,7 @@ public class Patty extends CookableToppings {
 	}
 	
 	public Patty() {
-		super(1.00, .30, "onion");
+		super(1.00, .10, "onion");
 	}
 
 }

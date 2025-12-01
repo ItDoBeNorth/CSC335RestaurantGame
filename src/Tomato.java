@@ -1,13 +1,13 @@
 
 public class Tomato extends Toppings {
 
-	public Tomato(double price, double prepTime, String toppingName) {
+	public Tomato(double price,  String toppingName) {
 		super(price, toppingName);
 		
 	}
 	
 	public Tomato() {
-		super(1.00, "tomato");
+		super(.75, "tomato");
 	}
 
 }
