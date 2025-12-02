@@ -97,7 +97,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu0L = (Label) customer1.getChildren().get(0);
 				cqu0L.setText(currCustomers[0].getName());
 				// Image of character changed here, any animation started
-				customer1.getChildren().set(1, getShape(currCustomers[0].getShape(), cqu0L, Color.LIGHTBLUE));
+				customer1.getChildren().set(1, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
 				
 			 	Button cqu0B = (Button) customer1.getChildren().get(2);
 			 	cqu0B.setDisable(false);
@@ -110,7 +110,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				cqu1L.setText(currCustomers[1].getName());
 				// Image of character changed here, any animation started
 				
-			    customer2.getChildren().set(1, getShape(currCustomers[1].getShape(), cqu1L, Color.LIGHTBLUE));
+			    customer2.getChildren().set(1, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
 				
 			 	Button cqu1B = (Button) customer2.getChildren().get(2);
 			 	cqu1B.setDisable(false);
