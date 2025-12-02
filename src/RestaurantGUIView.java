@@ -725,8 +725,8 @@ public class RestaurantGUIView extends Application implements Observer {
 			imgServeView.setFitWidth(50);
 			imgServeView.setFitHeight(35);
 			
-			burgerServe.getChildren().add(imgCookView);
-			burgerCook.getChildren().add(imgServeView);
+			burgerServe.getChildren().addFirst(imgCookView);
+			burgerCook.getChildren().addFirst(imgServeView);
 		}
 		//burgerCook.setText(tempBurger);
 		//burgerServe.setText(tempBurger);
