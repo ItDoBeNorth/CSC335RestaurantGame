@@ -94,7 +94,13 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu0L = (Label) customer1.getChildren().get(0);
 				cqu0L.setText(currCustomers[0].getName());
 				// Image of character changed here, any animation started
-				Circle cqu0Circle = (Circle) customer1.getChildren().get(1);
+				Circle newCircle1 = new Circle(25);
+				newCircle1.setFill(Color.LIGHTBLUE);
+				newCircle1.setStroke(Color.BLACK);
+				
+				Tooltip tooltip1 = new Tooltip(cqu0L.getText());
+				Tooltip.install(newCircle1, tooltip1);
+				customer1.getChildren().set(1, newCircle1);
 				
 			 	Button cqu0B = (Button) customer1.getChildren().get(2);
 			 	cqu0B.setDisable(false);
@@ -106,7 +112,13 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu1L = (Label) customer2.getChildren().get(0);
 				cqu1L.setText(currCustomers[1].getName());
 				// Image of character changed here, any animation started
-				Circle cqu1Circle = (Circle) customer2.getChildren().get(1);
+				Circle newCircle2 = new Circle(25);
+			    newCircle2.setFill(Color.LIGHTGREEN);
+			    newCircle2.setStroke(Color.BLACK);
+			    
+			    Tooltip tooltip2 = new Tooltip(cqu1L.getText());
+			    Tooltip.install(newCircle2, tooltip2);
+			    customer2.getChildren().set(1, newCircle2);
 				
 			 	Button cqu1B = (Button) customer2.getChildren().get(2);
 			 	cqu1B.setDisable(false);
@@ -325,20 +337,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		customer1 = new VBox(5);
 		customer1.setAlignment(Pos.CENTER);
 
-		// hidden label for name
 		Label c1Name = new Label("Customer");
 		c1Name.setVisible(false);
 
-		// circle for display
-		Circle circle1 = new Circle(25);
-		circle1.setFill(Color.LIGHTBLUE);
-		circle1.setStroke(Color.BLACK);
-
-		// tooltip bound to name label
-		Tooltip tooltip1 = new Tooltip();
-		tooltip1.textProperty().bind(c1Name.textProperty());
-		Tooltip.install(circle1, tooltip1);
-
+		
 		// Get Order button
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction(e -> {
@@ -346,25 +348,16 @@ public class RestaurantGUIView extends Application implements Observer {
 		    c1Button.setDisable(true);
 		});
 
-		// add in correct order (VERY IMPORTANT)
-		customer1.getChildren().addAll(c1Name, circle1, c1Button);
+		Label placeholder1 = new Label("");
+		customer1.getChildren().addAll(c1Name, placeholder1, c1Button);
 		customer2 = new VBox(5);
 		customer2.setAlignment(Pos.CENTER);
 
-		// hidden label for name
+	
 		Label c2Label = new Label("Customer");
 		c2Label.setVisible(false);
 
-		// circle
-		Circle circle2 = new Circle(25);
-		circle2.setFill(Color.LIGHTGREEN);
-		circle2.setStroke(Color.BLACK);
-
-		// tooltip binds to label
-		Tooltip tooltip2 = new Tooltip();
-		tooltip2.textProperty().bind(c2Label.textProperty());
-		Tooltip.install(circle2, tooltip2);
-
+	
 		// button
 		Button c2Button = new Button("Get Order");
 		c2Button.setOnAction(e -> {
@@ -372,8 +365,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		    c2Button.setDisable(true);
 		});
 
-		// add in correct order
-		customer2.getChildren().addAll(c2Label, circle2, c2Button);
+		Label placeholder2 = new Label("");
+		customer2.getChildren().addAll(c2Label, placeholder2, c2Button);
 		
 		orderBox.setMaxWidth(300);
 		orderBox.setMaxHeight(300);
