@@ -25,6 +25,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
 
 public class RestaurantGUIView extends Application implements Observer {
@@ -57,7 +61,6 @@ public class RestaurantGUIView extends Application implements Observer {
 	private HBox pickIngredients;	
 	private ChoiceBox<String> ticketChoice;
 	private VBox EODcontent;
-	
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -94,13 +97,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu0L = (Label) customer1.getChildren().get(0);
 				cqu0L.setText(currCustomers[0].getName());
 				// Image of character changed here, any animation started
-				Circle newCircle1 = new Circle(25);
-				newCircle1.setFill(Color.LIGHTBLUE);
-				newCircle1.setStroke(Color.BLACK);
-				
-				Tooltip tooltip1 = new Tooltip(cqu0L.getText());
-				Tooltip.install(newCircle1, tooltip1);
-				customer1.getChildren().set(1, newCircle1);
+				customer1.getChildren().set(1, getShape(currCustomers[0].getShape(), cqu0L, Color.LIGHTBLUE));
 				
 			 	Button cqu0B = (Button) customer1.getChildren().get(2);
 			 	cqu0B.setDisable(false);
@@ -112,13 +109,8 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu1L = (Label) customer2.getChildren().get(0);
 				cqu1L.setText(currCustomers[1].getName());
 				// Image of character changed here, any animation started
-				Circle newCircle2 = new Circle(25);
-			    newCircle2.setFill(Color.LIGHTGREEN);
-			    newCircle2.setStroke(Color.BLACK);
-			    
-			    Tooltip tooltip2 = new Tooltip(cqu1L.getText());
-			    Tooltip.install(newCircle2, tooltip2);
-			    customer2.getChildren().set(1, newCircle2);
+				
+			    customer2.getChildren().set(1, getShape(currCustomers[1].getShape(), cqu1L, Color.LIGHTBLUE));
 				
 			 	Button cqu1B = (Button) customer2.getChildren().get(2);
 			 	cqu1B.setDisable(false);
@@ -647,6 +639,59 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		
 	}
+	
+	
+	private Shape getShape(String shape, Label cqu0L, Color color) {
+		if (shape.equals("circle")){
+			return createCircle(cqu0L, color);
+		}
+		else if (shape.equals("triangle")) {
+			return createTriangle(cqu0L, color);
+		}
+		else
+			return createRectangle(cqu0L, color);
+	}
+	
+	
+	private Circle createCircle(Label cqu0L, Color color) {
+		Circle newCircle = new Circle(20);
+		newCircle.setFill(color);
+		newCircle.setStroke(Color.BLACK);
+		
+		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
+		Tooltip.install(newCircle, tooltip1);
+		return newCircle;
+	}
+	
+	private Polygon createTriangle(Label cqu0L, Color color) {
+		Polygon triangle = new Polygon();
+		triangle.getPoints().addAll(new Double[]{
+			    25.0, 0.0,
+			    50.0, 40.0,
+			    5.0, 40.0 });
+		triangle.setFill(color);
+		triangle.setStroke(Color.BLACK);
+		
+		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
+		Tooltip.install(triangle, tooltip1);
+		
+		return triangle;
+	}
+	
+	private Rectangle createRectangle(Label cqu0L, Color color) {
+		Rectangle rectangle = new Rectangle();
+		rectangle.setX(20);
+		rectangle.setY(20);
+		rectangle.setWidth(40);
+		rectangle.setHeight(40);
+		rectangle.setFill(color);
+		rectangle.setStroke(Color.BLACK);
+		
+		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
+		Tooltip.install(rectangle, tooltip1);
+		return rectangle;
+	}
+	
 }
 
 
