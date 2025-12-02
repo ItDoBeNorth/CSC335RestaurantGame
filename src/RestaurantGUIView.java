@@ -367,7 +367,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		order.setContent(tempPane);
 
 	}
-	
+	private int selectedTicket=0;
 	public VBox makeTicketInfos() {
 		VBox ticketsInfo = new VBox();
 		// switch labels with better things later
@@ -386,7 +386,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		t1title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 		Label t1body = new Label("get ticket info later");
 		ticketOne.getChildren().addAll(t1title, t1body);
-
+		
 		ticketOne.setVisible(false);
 		// can set visibity to false
 		VBox ticketTwo = new VBox(5);
@@ -406,9 +406,64 @@ public class RestaurantGUIView extends Application implements Observer {
 		ticketTwo.getChildren().addAll(t2title, t2body);
 
 		ticketTwo.setVisible(false);
-
+		
 		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
+		
+		ticketOne.setOnMouseClicked(e->{
+			selectedTicket=1;
+			updateTicketGui(ticketsInfo);
+		});
+		ticketTwo.setOnMouseClicked(e->{
+			selectedTicket=2;
+			updateTicketGui(ticketsInfo);
+		});
 		return ticketsInfo;
+	}
+
+	private void updateTicketGui(VBox ticketsInfo) {
+		VBox ticketOne=(VBox) ticketsInfo.getChildren().get(0);
+		VBox ticketTwo=(VBox) ticketsInfo.getChildren().get(1);
+		if (selectedTicket==1) {
+			ticketOne.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +        // light parchment
+			        "-fx-border-color: red;" +            // dark goldenrod
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+			ticketTwo.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+		}
+		else if(selectedTicket==2) {
+			ticketTwo.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +     // light parchment
+			        "-fx-border-color: red;" +            // dark goldenrod
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+			ticketOne.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+		}
+		
 	}
 
 	public void makePrep(Tab prep) {
@@ -547,7 +602,6 @@ public class RestaurantGUIView extends Application implements Observer {
 		cook.setContent(tempPane);
 
 	}
-
 	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
 	public void makeServe(Tab serve, Tab order, Tab endOfDayScreen) {
 		// change pane later
@@ -594,8 +648,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		scroll.setPrefViewportHeight(150);
 		Button serveBurger = new Button("Serve Burger");
 		serveBurger.setOnAction((e) -> {
-			if (ticketChoice.getValue() != null) {
-				if (ticketChoice.getValue().equals("Ticket 1") && currTickets[0] != null) {
+			if (selectedTicket != 0) {
+				if (selectedTicket==1 && currTickets[0] != null) {
 					if (!controller.serveBurger(0, currTickets[0])) {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
@@ -603,18 +657,20 @@ public class RestaurantGUIView extends Application implements Observer {
 						//in which it should also update customer queue and update that info in customer1 and customer 2
 					}
 					tabPane.getSelectionModel().select(order); 
-				} else if (ticketChoice.getValue().equals("Ticket 2") && currTickets[1] != null){
+					selectedTicket=0;
+				} else if (selectedTicket==2 && currTickets[1] != null){
 					if (!controller.serveBurger(1, currTickets[1])) {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
 					}
 					tabPane.getSelectionModel().select(order); 
+					selectedTicket=0;
 				}
 			}
 		});
 		
-		finish.getChildren().addAll(ticketChoice,serveBurger);
+		finish.getChildren().addAll(serveBurger);
 		
 		tempPane.setCenter(scroll);
 		tempPane.setLeft(ticketsInfoServe);
