@@ -462,6 +462,27 @@ public class RestaurantGUIView extends Application implements Observer {
 			        "-fx-border-radius: 8;" +
 			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 			);
+			
+		}
+		else {
+			ticketOne.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+			ticketTwo.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
 		}
 		
 	}
@@ -667,6 +688,9 @@ public class RestaurantGUIView extends Application implements Observer {
 					tabPane.getSelectionModel().select(order); 
 					selectedTicket=0;
 				}
+				updateTicketGui(ticketsInfoPrep);
+				updateTicketGui(ticketsInfoCook);
+				updateTicketGui(ticketsInfoServe);
 			}
 		});
 		
