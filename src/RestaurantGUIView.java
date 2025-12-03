@@ -20,7 +20,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -311,16 +322,27 @@ public class RestaurantGUIView extends Application implements Observer {
 		// change pane later
 		BorderPane tempPane = new BorderPane();
 		
+		Image dinerBack = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
+		BackgroundImage dinerBackView = new BackgroundImage(dinerBack, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+		
+		Image woodenFloor = new Image(getClass().getResourceAsStream("/woodenfloor.jpg"));
+		BackgroundImage woodenFloorView = new BackgroundImage(woodenFloor, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+		
 		HBox orderBox = new HBox(10);
 		orderBox.setAlignment(Pos.CENTER);
+		
+		tempPane.setBackground(new Background(dinerBackView));
+		orderBox.setBackground(new Background(woodenFloorView));
+		
 		orderBox.setStyle(
-		        "-fx-background-color: white;" +
 		        "-fx-padding: 20;" +
 		        "-fx-border-color: black;" +
-		        "-fx-border-width: 2;" +
-		        "-fx-background-radius: 10;" +
-		        "-fx-border-radius: 10;"
+		        "-fx-border-width: 4;" 
 		);
+		orderBox.setMaxWidth(200);
+		orderBox.setMaxHeight(200);
 		
 		customer1 = new VBox(5);
 		customer1.setAlignment(Pos.CENTER);
@@ -375,8 +397,6 @@ public class RestaurantGUIView extends Application implements Observer {
 		// add in correct order
 		customer2.getChildren().addAll(c2Label, circle2, c2Button);
 		
-		orderBox.setMaxWidth(300);
-		orderBox.setMaxHeight(300);
 		orderBox.getChildren().addAll(customer1, customer2);
 		tempPane.setCenter(orderBox);
 		order.setContent(tempPane);
