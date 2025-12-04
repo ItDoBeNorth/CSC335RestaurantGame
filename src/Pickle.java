@@ -1,7 +1,7 @@
 
 public class Pickle extends Toppings {
 
-	public Pickle(double price, double prepTime, String toppingName) {
+	public Pickle(double price, String toppingName) {
 		super(price, toppingName);
 		
 	}

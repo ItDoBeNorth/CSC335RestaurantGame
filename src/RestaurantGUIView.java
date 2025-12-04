@@ -1,5 +1,5 @@
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileOutputStream; 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
-
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -36,6 +36,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
 
 public class RestaurantGUIView extends Application implements Observer {
@@ -56,10 +60,10 @@ public class RestaurantGUIView extends Application implements Observer {
 	private VBox ticketsInfoCook;
 	private VBox ticketsInfoServe;
 	
-	private Label burgerCook;
-	private Label burgerServe;
+	private VBox burgerCook;
+	private VBox burgerServe;
 	
-	private Label basket;
+	private VBox basket;
 	private HBox pickFromBasket;
 	
 	// more observer things but seperate
@@ -68,7 +72,6 @@ public class RestaurantGUIView extends Application implements Observer {
 	private HBox pickIngredients;	
 	private ChoiceBox<String> ticketChoice;
 	private VBox EODcontent;
-	
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -105,7 +108,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu0L = (Label) customer1.getChildren().get(0);
 				cqu0L.setText(currCustomers[0].getName());
 				// Image of character changed here, any animation started
-				Circle cqu0Circle = (Circle) customer1.getChildren().get(1);
+				customer1.getChildren().set(1, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
 				
 			 	Button cqu0B = (Button) customer1.getChildren().get(2);
 			 	cqu0B.setDisable(false);
@@ -117,7 +120,8 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu1L = (Label) customer2.getChildren().get(0);
 				cqu1L.setText(currCustomers[1].getName());
 				// Image of character changed here, any animation started
-				Circle cqu1Circle = (Circle) customer2.getChildren().get(1);
+				
+			    customer2.getChildren().set(1, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
 				
 			 	Button cqu1B = (Button) customer2.getChildren().get(2);
 			 	cqu1B.setDisable(false);
@@ -371,20 +375,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		customer1 = new VBox(5);
 		customer1.setAlignment(Pos.CENTER);
 
-		// hidden label for name
 		Label c1Name = new Label("Customer");
 		c1Name.setVisible(false);
 
-		// circle for display
-		Circle circle1 = new Circle(25);
-		circle1.setFill(Color.LIGHTBLUE);
-		circle1.setStroke(Color.BLACK);
-
-		// tooltip bound to name label
-		Tooltip tooltip1 = new Tooltip();
-		tooltip1.textProperty().bind(c1Name.textProperty());
-		Tooltip.install(circle1, tooltip1);
-
+		
 		// Get Order button
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction(e -> {
@@ -392,27 +386,17 @@ public class RestaurantGUIView extends Application implements Observer {
 		    c1Button.setDisable(true);
 		});
 
-		// add in correct order (VERY IMPORTANT)
-		customer1.getChildren().addAll(c1Name, circle1, c1Button);
-		
-		//make customer 2
+		Label placeholder1 = new Label("");
+		customer1.getChildren().addAll(c1Name, placeholder1, c1Button);
+    
 		customer2 = new VBox(5);
 		customer2.setAlignment(Pos.CENTER);
 
-		// hidden label for name
+	
 		Label c2Label = new Label("Customer");
 		c2Label.setVisible(false);
 
-		// circle
-		Circle circle2 = new Circle(25);
-		circle2.setFill(Color.LIGHTGREEN);
-		circle2.setStroke(Color.BLACK);
-
-		// tooltip binds to label
-		Tooltip tooltip2 = new Tooltip();
-		tooltip2.textProperty().bind(c2Label.textProperty());
-		Tooltip.install(circle2, tooltip2);
-
+	
 		// button
 		Button c2Button = new Button("Get Order");
 		c2Button.setOnAction(e -> {
@@ -420,8 +404,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		    c2Button.setDisable(true);
 		});
 
-		// add in correct order
-		customer2.getChildren().addAll(c2Label, circle2, c2Button);
+		Label placeholder2 = new Label("");
+		customer2.getChildren().addAll(c2Label, placeholder2, c2Button);
 		
 		orderBox.getChildren().addAll(customer1, customer2);
 		orderCounterBox.setCenter(orderBox);
@@ -430,7 +414,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		order.setContent(tempPane);
 
 	}
-	
+	private int selectedTicket=0;
 	public VBox makeTicketInfos() {
 		VBox ticketsInfo = new VBox();
 		// switch labels with better things later
@@ -449,7 +433,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		t1title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 		Label t1body = new Label("get ticket info later");
 		ticketOne.getChildren().addAll(t1title, t1body);
-
+		
 		ticketOne.setVisible(false);
 		// can set visibity to false
 		VBox ticketTwo = new VBox(5);
@@ -469,9 +453,85 @@ public class RestaurantGUIView extends Application implements Observer {
 		ticketTwo.getChildren().addAll(t2title, t2body);
 
 		ticketTwo.setVisible(false);
-
+		
 		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
+		
+		ticketOne.setOnMouseClicked(e->{
+			selectedTicket=1;
+			updateTicketGui(ticketsInfo);
+		});
+		ticketTwo.setOnMouseClicked(e->{
+			selectedTicket=2;
+			updateTicketGui(ticketsInfo);
+		});
 		return ticketsInfo;
+	}
+
+	private void updateTicketGui(VBox ticketsInfo) {
+		VBox ticketOne=(VBox) ticketsInfo.getChildren().get(0);
+		VBox ticketTwo=(VBox) ticketsInfo.getChildren().get(1);
+		if (selectedTicket==1) {
+			ticketOne.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +        // light parchment
+			        "-fx-border-color: red;" +            // dark goldenrod
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+			ticketTwo.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+		}
+		else if(selectedTicket==2) {
+			ticketTwo.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +     // light parchment
+			        "-fx-border-color: red;" +            // dark goldenrod
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+			ticketOne.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+			
+		}
+		else {
+			ticketOne.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+			ticketTwo.setStyle(
+			        "-fx-padding: 10;" +
+			        "-fx-background-color: #FFF8DC;" +
+			        "-fx-border-color: #B8860B;" +
+			        "-fx-border-width: 2;" +
+			        "-fx-background-radius: 8;" +
+			        "-fx-border-radius: 8;" +
+			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+			);
+		}
+		
 	}
 
 	public void makePrep(Tab prep) {
@@ -483,7 +543,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		pickIngredients = new HBox();
 		pickIngredients.setAlignment(Pos.CENTER);
 		VBox basketBox = new VBox();
-		basket = new Label("Basket Contents");
+		basket = new VBox();
 		basketBox.setStyle(
 			    "-fx-background-color: #f5deb3;" +
 			    "-fx-padding: 10;" +
@@ -494,7 +554,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		basket.setAlignment(Pos.CENTER);
 		int n = 0;
 		while (n < IngredientsList.TOPPINGLIST.length){
-			Button topping = new Button(IngredientsList.TOPPINGLIST[n].getToppingName());
+			Button topping = new Button();
+			Image img = new Image(IngredientsList.TOPPINGLIST[n].getToppingName()+".png");
+			ImageView imgview=new ImageView(img);
+			imgview.setFitWidth(25);
+			imgview.setFitHeight(25);
+			topping.setGraphic(imgview);
 			Toppings currTopping = IngredientsList.TOPPINGLIST[n];
 			topping.setOnAction((event) -> {
 				controller.addToBasket(currTopping); //which will update it in the baskets label and buttons through observer
@@ -544,14 +609,23 @@ public class RestaurantGUIView extends Application implements Observer {
 		pickFromBasket = new HBox(); 
 		
 		VBox burgerInfo = new VBox();
-		burgerCook = new Label("Cook Burger");
+		burgerInfo.setAlignment(Pos.CENTER);
+		burgerCook = new VBox();
 		burgerInfo.setStyle(
 			    "-fx-background-color: #f5deb3;" +
 			    "-fx-padding: 10;" +
 			    "-fx-background-radius: 10;"
 			);
-		Label bunTop = new Label("Top Bun");
-		Label bunBot = new Label("Bottom Bun");
+
+		//Label bunTop = new Label("Top Bun");
+		ImageView bunTop=new ImageView(new Image("topBun.png"));
+		bunTop.setFitHeight(35);
+		bunTop.setFitWidth(50);
+		//Label bunBot = new Label("Bottom Bun");
+		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
+		bunBot.setFitHeight(35);
+		bunBot.setFitWidth(50);
+		
 		burgerInfo.getChildren().addAll(bunTop, burgerCook, bunBot);
 		
 		ScrollPane scroll = new ScrollPane();
@@ -596,7 +670,6 @@ public class RestaurantGUIView extends Application implements Observer {
 		cook.setContent(tempPane);
 
 	}
-
 	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
 	public void makeServe(Tab serve, Tab order, Tab endOfDayScreen) {
 		// change pane later
@@ -606,15 +679,45 @@ public class RestaurantGUIView extends Application implements Observer {
 		ticketChoice = new ChoiceBox<String>();
 		ticketChoice.getItems().addAll("Ticket 1", "Ticket 2");
 		VBox burgerInfo = new VBox();
-		Label bunTop = new Label("Top Bun");
-		burgerServe = new Label("Burger");
-		Label bunBot = new Label("Bottom Bun");
+
+		//Label bunTop = new Label("Top Bun");
+		ImageView bunTop=new ImageView(new Image("topBun.png"));
+		bunTop.setFitHeight(35);
+		bunTop.setFitWidth(50);
+		burgerServe = new VBox();
+		//Label bunBot = new Label("Bottom Bun");
+		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
+		bunBot.setFitHeight(35);
+		bunBot.setFitWidth(50);
+		
 		burgerInfo.getChildren().addAll(bunTop, burgerServe, bunBot);
+		
+		burgerInfo.setStyle(
+			    "-fx-background-color: #f5deb3;" +
+			    "-fx-padding: 10;" +
+			    "-fx-background-radius: 10;"
+			);
 		burgerInfo.setAlignment(Pos.CENTER);
+		ScrollPane scroll = new ScrollPane();
+		scroll.setContent(burgerInfo);
+		scroll.setStyle(
+			    "-fx-background-color: #d2b48c;" + 
+			    "-fx-border-color: #8b5a2b;" + 
+			    "-fx-border-width: 3;" +
+			    "-fx-background-radius: 10;" +
+			    "-fx-border-radius: 10;" +
+			    "-fx-padding: 5;" +
+			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+			);
+		burgerInfo.setMaxHeight(150); 
+		scroll.setFitToWidth(true);
+		scroll.setFitToHeight(true);
+		scroll.setMaxHeight(150);
+		scroll.setPrefViewportHeight(150);
 		Button serveBurger = new Button("Serve Burger");
 		serveBurger.setOnAction((e) -> {
-			if (ticketChoice.getValue() != null) {
-				if (ticketChoice.getValue().equals("Ticket 1") && currTickets[0] != null) {
+			if (selectedTicket != 0) {
+				if (selectedTicket==1 && currTickets[0] != null) {
 					if (!controller.serveBurger(0, currTickets[0])) {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
@@ -622,20 +725,25 @@ public class RestaurantGUIView extends Application implements Observer {
 						//in which it should also update customer queue and update that info in customer1 and customer 2
 					}
 					tabPane.getSelectionModel().select(order); 
-				} else if (ticketChoice.getValue().equals("Ticket 2") && currTickets[1] != null){
+					selectedTicket=0;
+				} else if (selectedTicket==2 && currTickets[1] != null){
 					if (!controller.serveBurger(1, currTickets[1])) {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
 					}
 					tabPane.getSelectionModel().select(order); 
+					selectedTicket=0;
 				}
+				updateTicketGui(ticketsInfoPrep);
+				updateTicketGui(ticketsInfoCook);
+				updateTicketGui(ticketsInfoServe);
 			}
 		});
 		
-		finish.getChildren().addAll(ticketChoice, serveBurger);
+		finish.getChildren().addAll(serveBurger);
 		
-		tempPane.setCenter(burgerInfo);
+		tempPane.setCenter(scroll);
 		tempPane.setLeft(ticketsInfoServe);
 		tempPane.setRight(finish);
 		
@@ -670,19 +778,33 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 	
 	public void updateBurgerGUI() {
-		burgerCook.setText("");
-		burgerServe.setText("");
+
+		burgerCook.getChildren().clear();
+		burgerCook.setAlignment(Pos.CENTER);
+		burgerServe.getChildren().clear();
+		burgerServe.setAlignment(Pos.CENTER);
 		ArrayList<Toppings> burgerToppings = controller.getBurger().getToppings();
 		String tempBurger = "";
 		for (Toppings t : burgerToppings) {
 			tempBurger = t.getToppingName() + "\n" + tempBurger;
+			
+			Image img = new Image(t.getToppingName()+".png");
+			ImageView imgCookView=new ImageView(img);
+			imgCookView.setFitWidth(50);
+			imgCookView.setFitHeight(35);
+			ImageView imgServeView=new ImageView(img);
+			imgServeView.setFitWidth(50);
+			imgServeView.setFitHeight(35);
+			
+			burgerServe.getChildren().addFirst(imgCookView);
+			burgerCook.getChildren().addFirst(imgServeView);
 		}
-		burgerCook.setText(tempBurger);
-		burgerServe.setText(tempBurger);
+		//burgerCook.setText(tempBurger);
+		//burgerServe.setText(tempBurger);
 	}
 	
 	public void updateBasketGUI() {
-		basket.setText("");
+		basket.getChildren().clear();
 		pickFromBasket.getChildren().clear();
 		
 		ArrayList<Toppings> basketToppings = controller.getCurrBasket().getList();
@@ -690,18 +812,82 @@ public class RestaurantGUIView extends Application implements Observer {
 		for (Toppings t : basketToppings) {
 			tempBasket += t.getToppingName()+"\n";
 			
-			Button topping = new Button(t.getToppingName());
+			Button topping = new Button();
+			Image img = new Image(t.getToppingName()+".png");
+			ImageView imgview=new ImageView(img);
+			imgview.setFitWidth(25);
+			imgview.setFitHeight(25);
+			topping.setGraphic(imgview);
+			
+			ImageView imgBasketView=new ImageView(img);
+			imgBasketView.setFitWidth(50);
+			imgBasketView.setFitHeight(35);
+			
 			topping.setOnAction((e) -> {
 				controller.addToBurger(t);
 				controller.removeFromBasket(t);
 			});
 			
 			pickFromBasket.getChildren().add(topping);
+			basket.getChildren().add(imgBasketView);
 		}
-		basket.setText(tempBasket);
+		//basket.setText(tempBasket);
 		
 		
 	}
+	
+	
+	private Shape getShape(String shape, Label cqu0L, Color color) {
+		if (shape.equals("circle")){
+			return createCircle(cqu0L, color);
+		}
+		else if (shape.equals("triangle")) {
+			return createTriangle(cqu0L, color);
+		}
+		else
+			return createRectangle(cqu0L, color);
+	}
+	
+	
+	private Circle createCircle(Label cqu0L, Color color) {
+		Circle newCircle = new Circle(20);
+		newCircle.setFill(color);
+		newCircle.setStroke(Color.BLACK);
+		
+		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
+		Tooltip.install(newCircle, tooltip1);
+		return newCircle;
+	}
+	
+	private Polygon createTriangle(Label cqu0L, Color color) {
+		Polygon triangle = new Polygon();
+		triangle.getPoints().addAll(new Double[]{
+			    25.0, 0.0,
+			    50.0, 40.0,
+			    5.0, 40.0 });
+		triangle.setFill(color);
+		triangle.setStroke(Color.BLACK);
+		
+		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
+		Tooltip.install(triangle, tooltip1);
+		
+		return triangle;
+	}
+	
+	private Rectangle createRectangle(Label cqu0L, Color color) {
+		Rectangle rectangle = new Rectangle();
+		rectangle.setX(20);
+		rectangle.setY(20);
+		rectangle.setWidth(40);
+		rectangle.setHeight(40);
+		rectangle.setFill(color);
+		rectangle.setStroke(Color.BLACK);
+		
+		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
+		Tooltip.install(rectangle, tooltip1);
+		return rectangle;
+	}
+	
 }
 
 

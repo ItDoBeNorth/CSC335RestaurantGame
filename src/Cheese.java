@@ -1,13 +1,13 @@
 
 public class Cheese extends Toppings {
 	
-	public Cheese(double price, double prepTime, String toppingName) {
+	public Cheese(double price, String toppingName) {
 		super(price, toppingName);
 		
 	}
 	
 	public Cheese() {
-		super(1.00, "cheese");
+		super(.50, "cheese");
 	}
 	
 	

@@ -1,12 +1,14 @@
 import java.util.ArrayList;
 
+import javafx.scene.paint.Color;
+
 public class Peter extends KnownCustomer {
 	
 	private Toppings favoriteTopping=new Lettuce();
 	
 	public Peter() {
 
-		super("Peter","circle","yellow",new ArrayList<Toppings>(){{add(new Lettuce());}},Personality.URGENT, 2);
+		super("Peter","square",Color.GREENYELLOW,new ArrayList<Toppings>(){{add(new Lettuce());}},Personality.URGENT, 2);
 	}
 
 	@Override

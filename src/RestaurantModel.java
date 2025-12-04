@@ -54,7 +54,7 @@ public class RestaurantModel extends Observable {
 		
 		daysAccuracy = 0;
 		daysTiming = 0;
-		daysIncome = 0;
+		daysIncome = 0.0;
 		daysScore = 0;
 		customersServed = 0;
 
@@ -81,7 +81,7 @@ public class RestaurantModel extends Observable {
 	public void setUpDay() {
 		daysAccuracy = 0;
 		daysTiming = 0;
-		daysIncome = 0;
+		daysIncome = 0.0;
 		daysScore = 0;
 		customersServed = 0;
 		currDay++;
@@ -244,7 +244,7 @@ public class RestaurantModel extends Observable {
 			accuracy = 300;
 		}
 		
-		income = getPrice(burger.getToppings()) * ((accuracy+timing)/4.0);
+		income = 5 + (getPrice(burger.getToppings()) * ((accuracy+timing)/400.0));
 		if (p == KnownCustomer.Personality.GENEROUS) {
 			income = income * 2;
 		}
@@ -261,7 +261,7 @@ public class RestaurantModel extends Observable {
 	}
 
 	public double getPrice(ArrayList<Toppings> toppings) {
-		int amount = 0;
+		double amount = 0;
 		for (Toppings t: toppings) {
 			amount += t.getPrice();
 		}

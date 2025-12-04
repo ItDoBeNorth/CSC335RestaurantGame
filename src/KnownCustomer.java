@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 
+import javafx.scene.paint.Color;
+
 public abstract class KnownCustomer implements Customer {
 	protected String name;
 	protected String shape;
-	protected String color;
+	protected Color color;
 	
 	protected final ArrayList<Toppings> favoriteOrder;
 	public enum Personality {ACCURATE, URGENT, GENEROUS, PATIENT;}
@@ -12,7 +14,7 @@ public abstract class KnownCustomer implements Customer {
 	private int patienceLevel;
 	
 	
-	public KnownCustomer(String name,String shape, String color, ArrayList<Toppings> favoriteOrder,Personality personality, int patienceLevel) {
+	public KnownCustomer(String name,String shape, Color color, ArrayList<Toppings> favoriteOrder,Personality personality, int patienceLevel) {
 		this.name=name;
 		this.shape=shape;
 		this.color=color;
@@ -30,7 +32,7 @@ public abstract class KnownCustomer implements Customer {
 		return shape;
 	}
 	@Override
-	public String getColor() {
+	public Color getColor() {
 		return color;
 	}
 	public ArrayList<Toppings> getFavoriteOrder(){

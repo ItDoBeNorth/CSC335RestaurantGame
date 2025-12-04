@@ -1,13 +1,15 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import javafx.scene.paint.Color;
+
 public class GenericCustomer implements Customer{
 	private static Random r =new Random();
-	private String[] shapes={"circle","square","triangle"};
-	private String[] colors= {"blue","green","red","yellow","orange"};
+	private String[] shapes={"circle"};
+	private Color[] colors= {Color.PINK,Color.PURPLE,Color.BLUEVIOLET,Color.DARKBLUE};
 	private String[] names= {"Madison","Henry","Dany","Al"}; //will add more 
 	private String shape;
-	private String color;
+	private Color color;
 	private String name;
 	// mult by day to get time patience + 10 sec
 	private int patienceLevel;
@@ -42,7 +44,7 @@ public class GenericCustomer implements Customer{
 		return shape;
 	}
 	@Override
-	public String getColor() {
+	public Color getColor() {
 		return color;
 	}
 
