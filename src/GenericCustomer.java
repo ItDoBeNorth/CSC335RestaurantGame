@@ -72,4 +72,9 @@ public class GenericCustomer implements Customer{
 		countdown.stopTimer();
 		
 	}
+	
+	@Override
+	public boolean CDisRunning() {
+		return countdown.countDownIsRunning;
+	}
 }

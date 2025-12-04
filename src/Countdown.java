@@ -5,9 +5,12 @@ public class Countdown{
 	public int elapsed = 0;
 	public double timeLeft;
 	public boolean timeUp;
+	public boolean countDownIsRunning;
 	
 	public boolean startCountdown(double seconds) {
-		if (seconds < 0) return false;
+		if (seconds < 0) {
+			countDownIsRunning = false;
+			return false;}
 		stopTimer();
 		timeLeft = seconds;
 		timeUp = false;
@@ -15,6 +18,7 @@ public class Countdown{
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
+				countDownIsRunning = true;
 				System.out.println("Time left: " + timeLeft);
 				timeLeft -= 1;
 				if (timeLeft == 5.0) {
@@ -23,6 +27,7 @@ public class Countdown{
 				if (timeLeft <= 0) {
 					timeUp = true;
 					System.out.println("Done");
+					countDownIsRunning = false;
 					timer.cancel();
 				}
 				
@@ -50,7 +55,13 @@ public class Countdown{
 	
 	public void stopTimer() {
 		 if (timer != null) {
+			 	countDownIsRunning = false;
 	            timer.cancel();
 		 }
 	}
+	
+	public boolean countDownIsRunning() {
+		return countDownIsRunning;
+	}
+	
 }
