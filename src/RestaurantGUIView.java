@@ -228,6 +228,9 @@ public class RestaurantGUIView extends Application implements Observer {
 			for (Ticket t : currTickets) {
 				if (t!= null) t.stopCountDown();
 			}
+			for (Customer c : currCustomers) {
+				if (c!= null) c.stopTimer();
+			}
 			}
 			try {
 				ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));
