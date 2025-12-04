@@ -9,6 +9,8 @@ import java.util.Observable;
 import java.util.Observer;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -33,6 +35,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class RestaurantGUIView extends Application implements Observer {
 	private RestaurantController controller;
@@ -347,7 +350,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction(e -> {
 		    controller.updateTaskList(0, currCustomers[0]);
-		    startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0]);
+		    startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0], 1);
 		    c1Button.setDisable(true);
 		});
 
@@ -366,7 +369,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		Button c2Button = new Button("Get Order");
 		c2Button.setOnAction(e -> {
 		    controller.updateTaskList(1, currCustomers[1]);
-		    startPatienceTimer(controller.getCurrDay(), currCustomers[1].patienceLevel(), currCustomers[1]);
+		    startPatienceTimer(controller.getCurrDay(), currCustomers[1].patienceLevel(), currCustomers[1], 2);
 		    c2Button.setDisable(true);
 		});
 		
@@ -840,7 +843,7 @@ public class RestaurantGUIView extends Application implements Observer {
 	
 	private Group makeSmileyFace() {
 	    Circle head = new Circle(12);
-	    head.setFill(Color.YELLOW);
+	    head.setFill(Color.GREEN);
 	    head.setStroke(Color.BLACK);
 
 	    Circle eye1 = new Circle(2);
@@ -860,9 +863,35 @@ public class RestaurantGUIView extends Application implements Observer {
 	    return new Group(head, eye1, eye2, smile);
 	}
 	
-	private void startPatienceTimer(int day, int patienceLevel, Customer customer) {
+	private void startPatienceTimer(int day, int patienceLevel, Customer customer, int customerNum) {
 		double patienceTime = 10 + patienceLevel * day;
-		customer.startTimer(patienceTime);
+		Circle face;
+		if (customerNum == 1) {
+			face = (Circle) ((Group) customer1.getChildren().get(1)).getChildren().get(0);
+
+		} else {
+			face = (Circle) ((Group) customer2.getChildren().get(1)).getChildren().get(0);
+
+		} 
+		customer.startTimer(patienceTime*2);
+		Timeline timeline = new Timeline(
+			    new KeyFrame(Duration.millis(patienceTime*1000), e -> {
+			        if (customer.CDisRunning()) {
+			            face.setFill(Color.YELLOW);
+			        }
+			    }),
+			    new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
+			        if (customer.CDisRunning()) {
+			            face.setFill(Color.ORANGE);
+			        }
+			    }),
+			    new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
+			        if (customer.CDisRunning()) {
+			            face.setFill(Color.RED);
+			        }
+			    })
+			);
+			timeline.play();
 		
 	}
 

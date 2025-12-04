@@ -64,4 +64,9 @@ public abstract class KnownCustomer implements Customer {
 		
 	}
 	
+	@Override
+	public boolean CDisRunning() {
+		return countdown.countDownIsRunning;
+	}
+	
 }

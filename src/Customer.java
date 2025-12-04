@@ -11,4 +11,5 @@ public interface Customer {
 	public double timeleft();
 	public void startTimer(double time);
 	public void stopTimer();
+	public boolean CDisRunning();
 }
