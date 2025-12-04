@@ -20,7 +20,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -315,17 +326,52 @@ public class RestaurantGUIView extends Application implements Observer {
 		// change pane later
 		BorderPane tempPane = new BorderPane();
 		
+		//make images
+		Image dinerBack = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
+		BackgroundImage dinerBackView = new BackgroundImage(dinerBack, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+		
+		Image woodenFloor = new Image(getClass().getResourceAsStream("/woodenfloor.jpg"));
+		BackgroundImage woodenFloorView = new BackgroundImage(woodenFloor, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+		
+		Image counter = new Image(getClass().getResourceAsStream("/counter.png"));
+		ImageView counterView = new ImageView(counter);
+		
+		//makes panes for customers, counter
+		BorderPane orderCounterBox = new BorderPane();
+		
 		HBox orderBox = new HBox(10);
-		orderBox.setAlignment(Pos.CENTER);
-		orderBox.setStyle(
-		        "-fx-background-color: white;" +
-		        "-fx-padding: 20;" +
-		        "-fx-border-color: black;" +
-		        "-fx-border-width: 2;" +
-		        "-fx-background-radius: 10;" +
-		        "-fx-border-radius: 10;"
+		
+		//customize BorderPane
+		tempPane.setBackground(new Background(dinerBackView));
+		
+		//customize orderCounterBox
+		orderCounterBox.setBackground(new Background(woodenFloorView));
+		
+		orderCounterBox.setMaxHeight(275);
+		orderCounterBox.setMaxWidth(200);
+		
+		orderCounterBox.setStyle(
+				"-fx-padding: 20;" +
+				"-fx-border-color: black;" +
+				"-fx-border-width: 4;" 
 		);
 		
+		//customize orderBox
+		orderBox.setAlignment(Pos.CENTER);
+		
+		orderBox.setStyle(
+				"-fx-background: transparent"
+		);
+		orderBox.setMaxWidth(200);
+		orderBox.setMaxHeight(200);
+		
+		//customize counterView 
+		counterView.setFitHeight(75);
+		counterView.setFitWidth(200);
+		
+		//make customer 1
 		customer1 = new VBox(5);
 		customer1.setAlignment(Pos.CENTER);
 
@@ -342,6 +388,7 @@ public class RestaurantGUIView extends Application implements Observer {
 
 		Label placeholder1 = new Label("");
 		customer1.getChildren().addAll(c1Name, placeholder1, c1Button);
+    
 		customer2 = new VBox(5);
 		customer2.setAlignment(Pos.CENTER);
 
@@ -360,10 +407,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		Label placeholder2 = new Label("");
 		customer2.getChildren().addAll(c2Label, placeholder2, c2Button);
 		
-		orderBox.setMaxWidth(300);
-		orderBox.setMaxHeight(300);
 		orderBox.getChildren().addAll(customer1, customer2);
-		tempPane.setCenter(orderBox);
+		orderCounterBox.setCenter(orderBox);
+		orderCounterBox.setBottom(counterView);
+		tempPane.setCenter(orderCounterBox);
 		order.setContent(tempPane);
 
 	}
