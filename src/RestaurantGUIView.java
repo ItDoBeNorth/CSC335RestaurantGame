@@ -30,7 +30,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.TriangleMesh;
@@ -863,31 +865,118 @@ public class RestaurantGUIView extends Application implements Observer {
 	    return new Group(head, eye1, eye2, smile);
 	}
 	
+	
+	
+	private Group makeFlatFace() {
+	    Circle head = new Circle(12);
+	    head.setFill(Color.YELLOW);
+	    head.setStroke(Color.BLACK);
+
+	    Circle eye1 = new Circle(2, Color.BLACK);
+	    eye1.setTranslateX(-4);
+	    eye1.setTranslateY(-3);
+
+	    Circle eye2 = new Circle(2, Color.BLACK);
+	    eye2.setTranslateX(4);
+	    eye2.setTranslateY(-3);
+
+	    Line mouth = new Line(-6, 4, 6, 4);
+	    mouth.setStroke(Color.BLACK);
+	    mouth.setStrokeWidth(2);
+
+	    return new Group(head, eye1, eye2, mouth);
+	}
+	
+	private Group makeUpsetFace() {
+	    Circle head = new Circle(12);
+	    head.setFill(Color.ORANGE);
+	    head.setStroke(Color.BLACK);
+
+	    Circle eye1 = new Circle(2, Color.BLACK);
+	    eye1.setTranslateX(-4);
+	    eye1.setTranslateY(-3);
+
+	    Circle eye2 = new Circle(2, Color.BLACK);
+	    eye2.setTranslateX(4);
+	    eye2.setTranslateY(-3);
+
+	    Line brow1 = new Line(-7, -7, -3, -6);
+	    brow1.setStrokeWidth(2);
+
+	    Line brow2 = new Line(7, -7, 3, -6);
+	    brow2.setStrokeWidth(2);
+
+	    Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
+	    mouth.setType(ArcType.OPEN);
+	    mouth.setStroke(Color.BLACK);
+	    mouth.setFill(Color.TRANSPARENT);
+	    mouth.setStrokeWidth(2);
+
+	    return new Group(head, eye1, eye2, brow1, brow2, mouth);
+	}
+	
+	private Group makeAngryFace() {
+	    Circle head = new Circle(12);
+	    head.setFill(Color.RED);
+	    head.setStroke(Color.BLACK);
+	    
+
+	    Circle eye1 = new Circle(2, Color.BLACK);
+	    eye1.setTranslateX(-4);
+	    eye1.setTranslateY(-3);
+
+	    Circle eye2 = new Circle(2, Color.BLACK);
+	    eye2.setTranslateX(4);
+	    eye2.setTranslateY(-3);
+
+	    Line brow1 = new Line(-7, -7, -1, -5);
+	    brow1.setStrokeWidth(2);
+
+	    Line brow2 = new Line(7, -7, 1, -5);
+	    brow2.setStrokeWidth(2);
+
+	    Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
+	    mouth.setType(ArcType.OPEN);
+	    mouth.setFill(Color.TRANSPARENT);
+	    mouth.setStroke(Color.BLACK);
+	    mouth.setStrokeWidth(2);
+	   
+
+	    return new Group(head, eye1, eye2, brow1, brow2, mouth);
+	}
+
+
+
+	
 	private void startPatienceTimer(int day, int patienceLevel, Customer customer, int customerNum) {
 		double patienceTime = 10 + patienceLevel * day;
-		Circle face;
-		if (customerNum == 1) {
-			face = (Circle) ((Group) customer1.getChildren().get(1)).getChildren().get(0);
-
-		} else {
-			face = (Circle) ((Group) customer2.getChildren().get(1)).getChildren().get(0);
-
-		} 
 		customer.startTimer(patienceTime*2);
 		Timeline timeline = new Timeline(
 			    new KeyFrame(Duration.millis(patienceTime*1000), e -> {
 			        if (customer.CDisRunning()) {
-			            face.setFill(Color.YELLOW);
+			            if (customerNum == 1) {
+		                    customer1.getChildren().set(1, makeFlatFace());
+		                } else {
+		                    customer2.getChildren().set(1, makeFlatFace());
+		                }
 			        }
 			    }),
 			    new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
 			        if (customer.CDisRunning()) {
-			            face.setFill(Color.ORANGE);
+			            if (customerNum == 1) {
+		                    customer1.getChildren().set(1, makeUpsetFace());
+		                } else {
+		                    customer2.getChildren().set(1, makeUpsetFace());
+		                }
 			        }
 			    }),
 			    new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
 			        if (customer.CDisRunning()) {
-			            face.setFill(Color.RED);
+			            if (customerNum == 1) {
+		                    customer1.getChildren().set(1, makeAngryFace());
+		                } else {
+		                    customer2.getChildren().set(1, makeAngryFace());
+		                }
 			        }
 			    })
 			);
