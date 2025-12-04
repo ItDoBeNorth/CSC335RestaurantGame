@@ -8,4 +8,7 @@ public interface Customer {
 	public Color getColor();
 	public String getShape();
 	public int patienceLevel();
+	public double timeleft();
+	public void startTimer(double time);
+	public void stopTimer();
 }

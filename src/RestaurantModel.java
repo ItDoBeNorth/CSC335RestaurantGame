@@ -295,4 +295,8 @@ public class RestaurantModel extends Observable {
 	public double getDaysIncome() {
 		return daysIncome;
 	}
+	
+	public int getCurrDay() {
+		return currDay;
+	}
 }

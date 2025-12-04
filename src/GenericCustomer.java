@@ -13,6 +13,7 @@ public class GenericCustomer implements Customer{
 	private String name;
 	// mult by day to get time patience + 10 sec
 	private int patienceLevel;
+	private Countdown countdown;
 	
 	public GenericCustomer() {
 		//customer shape and color (for GUI Implementation)
@@ -21,6 +22,7 @@ public class GenericCustomer implements Customer{
 		color=colors[r.nextInt(colors.length)];
 		name=names[r.nextInt(names.length)];
 		patienceLevel = r.nextInt(6,15);
+		this.countdown = new Countdown();
 	
 	}
 	
@@ -51,5 +53,23 @@ public class GenericCustomer implements Customer{
 	@Override
 	public int patienceLevel() {
 		return patienceLevel;
+	}
+
+	@Override
+	public double timeleft() {
+		// TODO Auto-generated method stub
+		return countdown.timeLeft;
+	}
+
+	@Override
+	public void startTimer(double time) {
+		countdown.startCountdown(time);
+		
+	}
+
+	@Override
+	public void stopTimer() {
+		countdown.stopTimer();
+		
 	}
 }
