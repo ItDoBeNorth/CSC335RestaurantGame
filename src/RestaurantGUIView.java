@@ -322,6 +322,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		// change pane later
 		BorderPane tempPane = new BorderPane();
 		
+		//make images
 		Image dinerBack = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
 		BackgroundImage dinerBackView = new BackgroundImage(dinerBack, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
 		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
@@ -330,20 +331,43 @@ public class RestaurantGUIView extends Application implements Observer {
 		BackgroundImage woodenFloorView = new BackgroundImage(woodenFloor, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
 		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
 		
+		Image counter = new Image(getClass().getResourceAsStream("/counter.png"));
+		ImageView counterView = new ImageView(counter);
+		
+		//makes panes for customers, counter
+		BorderPane orderCounterBox = new BorderPane();
+		
 		HBox orderBox = new HBox(10);
+		
+		//customize BorderPane
+		tempPane.setBackground(new Background(dinerBackView));
+		
+		//customize orderCounterBox
+		orderCounterBox.setBackground(new Background(woodenFloorView));
+		
+		orderCounterBox.setMaxHeight(275);
+		orderCounterBox.setMaxWidth(200);
+		
+		orderCounterBox.setStyle(
+				"-fx-padding: 20;" +
+				"-fx-border-color: black;" +
+				"-fx-border-width: 4;" 
+		);
+		
+		//customize orderBox
 		orderBox.setAlignment(Pos.CENTER);
 		
-		tempPane.setBackground(new Background(dinerBackView));
-		orderBox.setBackground(new Background(woodenFloorView));
-		
 		orderBox.setStyle(
-		        "-fx-padding: 20;" +
-		        "-fx-border-color: black;" +
-		        "-fx-border-width: 4;" 
+				"-fx-background: transparent"
 		);
 		orderBox.setMaxWidth(200);
 		orderBox.setMaxHeight(200);
 		
+		//customize counterView 
+		counterView.setFitHeight(75);
+		counterView.setFitWidth(200);
+		
+		//make customer 1
 		customer1 = new VBox(5);
 		customer1.setAlignment(Pos.CENTER);
 
@@ -370,6 +394,8 @@ public class RestaurantGUIView extends Application implements Observer {
 
 		// add in correct order (VERY IMPORTANT)
 		customer1.getChildren().addAll(c1Name, circle1, c1Button);
+		
+		//make customer 2
 		customer2 = new VBox(5);
 		customer2.setAlignment(Pos.CENTER);
 
@@ -398,7 +424,9 @@ public class RestaurantGUIView extends Application implements Observer {
 		customer2.getChildren().addAll(c2Label, circle2, c2Button);
 		
 		orderBox.getChildren().addAll(customer1, customer2);
-		tempPane.setCenter(orderBox);
+		orderCounterBox.setCenter(orderBox);
+		orderCounterBox.setBottom(counterView);
+		tempPane.setCenter(orderCounterBox);
 		order.setContent(tempPane);
 
 	}
