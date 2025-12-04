@@ -9,8 +9,11 @@ import java.util.Observable;
 import java.util.Observer;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -35,12 +38,17 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class RestaurantGUIView extends Application implements Observer {
 	private RestaurantController controller;
@@ -108,11 +116,15 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu0L = (Label) customer1.getChildren().get(0);
 				cqu0L.setText(currCustomers[0].getName());
 				// Image of character changed here, any animation started
-				customer1.getChildren().set(1, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
+				customer1.getChildren().set(1, makeSmileyFace());
 				
-			 	Button cqu0B = (Button) customer1.getChildren().get(2);
+				customer1.getChildren().set(2, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
+				
+			 	Button cqu0B = (Button) customer1.getChildren().get(3);
 			 	cqu0B.setDisable(false);
 			 	customer1.setVisible(true);
+			 	
+			 
 				// change things in customer1 and customer 2 box
 				break;
 			case ("customerQueueUpdate1"):
@@ -120,10 +132,10 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label cqu1L = (Label) customer2.getChildren().get(0);
 				cqu1L.setText(currCustomers[1].getName());
 				// Image of character changed here, any animation started
+				customer2.getChildren().set(1, makeSmileyFace());
+			    customer2.getChildren().set(2, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
 				
-			    customer2.getChildren().set(1, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
-				
-			 	Button cqu1B = (Button) customer2.getChildren().get(2);
+			 	Button cqu1B = (Button) customer2.getChildren().get(3);
 			 	cqu1B.setDisable(false);
 			 	customer2.setVisible(true);
 				// change things in customer1 and customer 2 box
@@ -231,6 +243,9 @@ public class RestaurantGUIView extends Application implements Observer {
 			if (currTickets != null) {
 			for (Ticket t : currTickets) {
 				if (t!= null) t.stopCountDown();
+			}
+			for (Customer c : currCustomers) {
+				if (c!= null) c.stopTimer();
 			}
 			}
 			try {
@@ -383,12 +398,15 @@ public class RestaurantGUIView extends Application implements Observer {
 		Button c1Button = new Button("Get Order");
 		c1Button.setOnAction(e -> {
 		    controller.updateTaskList(0, currCustomers[0]);
+		    startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0], 1);
 		    c1Button.setDisable(true);
 		});
 
 		Label placeholder1 = new Label("");
-		customer1.getChildren().addAll(c1Name, placeholder1, c1Button);
-    
+
+		Label smileyFacePlaceholder1 = new Label("");
+		customer1.getChildren().addAll(c1Name, smileyFacePlaceholder1, placeholder1, c1Button);
+
 		customer2 = new VBox(5);
 		customer2.setAlignment(Pos.CENTER);
 
@@ -401,11 +419,13 @@ public class RestaurantGUIView extends Application implements Observer {
 		Button c2Button = new Button("Get Order");
 		c2Button.setOnAction(e -> {
 		    controller.updateTaskList(1, currCustomers[1]);
+		    startPatienceTimer(controller.getCurrDay(), currCustomers[1].patienceLevel(), currCustomers[1], 2);
 		    c2Button.setDisable(true);
 		});
-
+		
 		Label placeholder2 = new Label("");
-		customer2.getChildren().addAll(c2Label, placeholder2, c2Button);
+		Label smileyFacePlaceholder2 = new Label("");
+		customer2.getChildren().addAll(c2Label, smileyFacePlaceholder2, placeholder2, c2Button);
 		
 		orderBox.getChildren().addAll(customer1, customer2);
 		orderCounterBox.setCenter(orderBox);
@@ -716,17 +736,23 @@ public class RestaurantGUIView extends Application implements Observer {
 		scroll.setPrefViewportHeight(150);
 		Button serveBurger = new Button("Serve Burger");
 		serveBurger.setOnAction((e) -> {
+			
 			if (selectedTicket != 0) {
 				if (selectedTicket==1 && currTickets[0] != null) {
+					currCustomers[0].stopTimer();
 					if (!controller.serveBurger(0, currTickets[0])) {
+						
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
+						//currCustomers[0].stopTimer();
 						//in which it should also update customer queue and update that info in customer1 and customer 2
 					}
 					tabPane.getSelectionModel().select(order); 
+					
 					selectedTicket=0;
 				} else if (selectedTicket==2 && currTickets[1] != null){
+					currCustomers[1].stopTimer();
 					if (!controller.serveBurger(1, currTickets[1])) {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
@@ -887,6 +913,149 @@ public class RestaurantGUIView extends Application implements Observer {
 		Tooltip.install(rectangle, tooltip1);
 		return rectangle;
 	}
+	
+	
+	private Group makeSmileyFace() {
+	    Circle head = new Circle(12);
+	    head.setFill(Color.GREEN);
+	    head.setStroke(Color.BLACK);
+
+	    Circle eye1 = new Circle(2);
+	    eye1.setTranslateX(-4);
+	    eye1.setTranslateY(-3);
+
+	    Circle eye2 = new Circle(2);
+	    eye2.setTranslateX(4);
+	    eye2.setTranslateY(-3);
+
+	    Arc smile = new Arc(0, 2, 6, 4, 180, 180);
+	    smile.setType(ArcType.OPEN);
+	    smile.setStroke(Color.BLACK);
+	    smile.setFill(Color.TRANSPARENT);
+	    smile.setStrokeWidth(2);
+
+	    return new Group(head, eye1, eye2, smile);
+	}
+	
+	
+	
+	private Group makeFlatFace() {
+	    Circle head = new Circle(12);
+	    head.setFill(Color.YELLOW);
+	    head.setStroke(Color.BLACK);
+
+	    Circle eye1 = new Circle(2, Color.BLACK);
+	    eye1.setTranslateX(-4);
+	    eye1.setTranslateY(-3);
+
+	    Circle eye2 = new Circle(2, Color.BLACK);
+	    eye2.setTranslateX(4);
+	    eye2.setTranslateY(-3);
+
+	    Line mouth = new Line(-6, 4, 6, 4);
+	    mouth.setStroke(Color.BLACK);
+	    mouth.setStrokeWidth(2);
+
+	    return new Group(head, eye1, eye2, mouth);
+	}
+	
+	private Group makeUpsetFace() {
+	    Circle head = new Circle(12);
+	    head.setFill(Color.ORANGE);
+	    head.setStroke(Color.BLACK);
+
+	    Circle eye1 = new Circle(2, Color.BLACK);
+	    eye1.setTranslateX(-4);
+	    eye1.setTranslateY(-3);
+
+	    Circle eye2 = new Circle(2, Color.BLACK);
+	    eye2.setTranslateX(4);
+	    eye2.setTranslateY(-3);
+
+	    Line brow1 = new Line(-7, -7, -3, -6);
+	    brow1.setStrokeWidth(2);
+
+	    Line brow2 = new Line(7, -7, 3, -6);
+	    brow2.setStrokeWidth(2);
+
+	    Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
+	    mouth.setType(ArcType.OPEN);
+	    mouth.setStroke(Color.BLACK);
+	    mouth.setFill(Color.TRANSPARENT);
+	    mouth.setStrokeWidth(2);
+
+	    return new Group(head, eye1, eye2, brow1, brow2, mouth);
+	}
+	
+	private Group makeAngryFace() {
+	    Circle head = new Circle(12);
+	    head.setFill(Color.RED);
+	    head.setStroke(Color.BLACK);
+	    
+
+	    Circle eye1 = new Circle(2, Color.BLACK);
+	    eye1.setTranslateX(-4);
+	    eye1.setTranslateY(-3);
+
+	    Circle eye2 = new Circle(2, Color.BLACK);
+	    eye2.setTranslateX(4);
+	    eye2.setTranslateY(-3);
+
+	    Line brow1 = new Line(-7, -7, -1, -5);
+	    brow1.setStrokeWidth(2);
+
+	    Line brow2 = new Line(7, -7, 1, -5);
+	    brow2.setStrokeWidth(2);
+
+	    Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
+	    mouth.setType(ArcType.OPEN);
+	    mouth.setFill(Color.TRANSPARENT);
+	    mouth.setStroke(Color.BLACK);
+	    mouth.setStrokeWidth(2);
+	   
+
+	    return new Group(head, eye1, eye2, brow1, brow2, mouth);
+	}
+
+
+
+	
+	private void startPatienceTimer(int day, int patienceLevel, Customer customer, int customerNum) {
+		double patienceTime = 10 + patienceLevel * day;
+		customer.startTimer(patienceTime*2);
+		Timeline timeline = new Timeline(
+			    new KeyFrame(Duration.millis(patienceTime*1000), e -> {
+			        if (customer.CDisRunning()) {
+			            if (customerNum == 1) {
+		                    customer1.getChildren().set(1, makeFlatFace());
+		                } else {
+		                    customer2.getChildren().set(1, makeFlatFace());
+		                }
+			        }
+			    }),
+			    new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
+			        if (customer.CDisRunning()) {
+			            if (customerNum == 1) {
+		                    customer1.getChildren().set(1, makeUpsetFace());
+		                } else {
+		                    customer2.getChildren().set(1, makeUpsetFace());
+		                }
+			        }
+			    }),
+			    new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
+			        if (customer.CDisRunning()) {
+			            if (customerNum == 1) {
+		                    customer1.getChildren().set(1, makeAngryFace());
+		                } else {
+		                    customer2.getChildren().set(1, makeAngryFace());
+		                }
+			        }
+			    })
+			);
+			timeline.play();
+		
+	}
+
 	
 }
 
