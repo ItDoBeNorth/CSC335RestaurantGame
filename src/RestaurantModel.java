@@ -244,8 +244,10 @@ public class RestaurantModel extends Observable {
 		
 		// can add order of ingredients
 		// here is only the implementation for checking if its exact
-		
-		if (!ticket.getToppingsList().equals(burger.getToppings())) {
+		System.out.println(isTheSameOrder(ticket.getToppingsList(),burger.getToppings()));
+		System.out.println(ticket.getToppingsList());
+		System.out.println(burger.getToppings());
+		if (!isTheSameOrder(ticket.getToppingsList(),burger.getToppings())) {
 			ArrayList<Toppings> ordered =  new ArrayList<Toppings>(ticket.getToppingsList());
 			ArrayList<Toppings> served = new ArrayList<Toppings>(burger.getToppings());
 			int numItems = (int) Math.max(0,100- Math.round((Math.abs(ordered.size()-served.size())/(double)ordered.size()) * 100)) ;
@@ -292,6 +294,17 @@ public class RestaurantModel extends Observable {
 			amount += t.getPrice();
 		}
 		return amount;
+	}
+	public boolean isTheSameOrder(ArrayList<Toppings> ticketIngredients,ArrayList<Toppings> orderIngredients) {
+		if(ticketIngredients.size()!=orderIngredients.size()) {
+			return false;
+		}
+		for (int i=0;i<ticketIngredients.size();i++) {
+			if (!ticketIngredients.get(i).isTheSameIngredient(orderIngredients.get(i))){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public Basket<Toppings> getBasket() {

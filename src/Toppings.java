@@ -18,6 +18,13 @@ public abstract class Toppings {
 	public String getToppingName() {
 		return this.toppingName;
 	}
+	
+	public boolean isTheSameIngredient(Toppings obj) {
+		if(obj!=null && this.getClass() == obj.getClass()&& obj.getToppingName() == this.getToppingName()) {
+			return true;
+		}
+		return false;
+	}
 	/*
 	@Override
 	public boolean equals(Object obj) {
