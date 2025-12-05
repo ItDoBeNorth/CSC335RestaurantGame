@@ -179,7 +179,7 @@ public class RestaurantModel extends Observable {
 	public void undoBurger() {
 		if (!burger.getToppings().isEmpty()) {
 			basket.limit += 1;
-			//System.out.println(basket.addIngredient(burger.RemoveLastTopping()));
+			System.out.println(basket.addIngredient(burger.RemoveLastTopping()));
 			basket.limit = 10;
 			setChanged();
 			notifyObservers(new EventDetail("updateBasket", basket));
