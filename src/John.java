@@ -7,7 +7,7 @@ public class John extends KnownCustomer {
 	private Toppings favoriteTopping=new Cheese();
 	
 	public John() {
-		super("John","triangle",Color.ORANGE,new ArrayList<Toppings>(){{add(new Cheese());}},Personality.GENEROUS, 3);
+		super("John","triangle",Color.ORANGE,new ArrayList<Toppings>(){{add (new Patty());add(new Cheese());}},Personality.GENEROUS, 3);
 	}
 
 	@Override

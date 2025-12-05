@@ -27,7 +27,8 @@ public class GenericCustomer implements Customer{
 	@Override
 	public ArrayList<Toppings> getOrder(ArrayList<Toppings> ingredientsList, int maxPick) {
 		ArrayList<Toppings> order=new ArrayList<>();
-		
+		Patty newPatty=new Patty();
+		order.add(newPatty);
 		for (int i=0;i<maxPick;i++) {
 			Toppings currTopping=ingredientsList.get(r.nextInt(ingredientsList.size()));
 			order.add(currTopping);

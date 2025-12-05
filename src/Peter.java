@@ -8,7 +8,7 @@ public class Peter extends KnownCustomer {
 	
 	public Peter() {
 
-		super("Peter","square",Color.GREENYELLOW,new ArrayList<Toppings>(){{add(new Lettuce());}},Personality.URGENT, 2);
+		super("Peter","square",Color.GREENYELLOW,new ArrayList<Toppings>(){{add (new Patty());add(new Lettuce());}},Personality.URGENT, 2);
 	}
 
 	@Override
