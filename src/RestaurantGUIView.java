@@ -9,6 +9,9 @@ import java.util.Observable;
 import java.util.Observer;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -30,6 +33,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class RestaurantGUIView extends Application implements Observer {
 	private RestaurantController controller;
@@ -55,10 +59,14 @@ public class RestaurantGUIView extends Application implements Observer {
 	private VBox basket;
 	private HBox pickFromBasket;
 	
+	private VBox oven;
+	private HBox pickFromOven;
+	
 	// more observer things but seperate
 	private VBox customer1;
 	private VBox customer2;
 	private HBox pickIngredients;	
+	private HBox pickPatty;
 	private ChoiceBox<String> ticketChoice;
 	private VBox EODcontent;
 	
@@ -160,7 +168,7 @@ public class RestaurantGUIView extends Application implements Observer {
 			 		ticketsForTabs[i].getChildren().get(0).setVisible(false);
 			 		ticketsForTabs[i].getChildren().get(1).setVisible(false);
 			 	}
-				break;
+				break; 
 			case("daysIngredients"):
 				int n = 0;
 				while (n < IngredientsList.TOPPINGLIST.length){
@@ -173,6 +181,9 @@ public class RestaurantGUIView extends Application implements Observer {
 				break;
 			case("updateBasket"):
 				updateBasketGUI();
+				break;
+			case("updateOven"):
+				updateOvenGUI();
 				break;
 			case("updateBurger"):
 				updateBurgerGUI();
@@ -201,6 +212,8 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 
 	// add VM arguements before testing
+
+	
 
 	/**
 	 *
@@ -368,6 +381,7 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	}
 	private int selectedTicket=0;
+	
 	public VBox makeTicketInfos() {
 		VBox ticketsInfo = new VBox();
 		// switch labels with better things later
@@ -505,6 +519,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		basketBox.setFillWidth(true);
 		basketBox.getChildren().addAll(new Label("Basket Contents"), basket);
 		basket.setAlignment(Pos.CENTER);
+		
 		int n = 0;
 		while (n < IngredientsList.TOPPINGLIST.length){
 			Button topping = new Button();
@@ -524,12 +539,11 @@ public class RestaurantGUIView extends Application implements Observer {
 			pickIngredients.getChildren().add(topping);
 			n++;
 		}
-		
 		ScrollPane scroll = new ScrollPane();
 		scroll.setContent(basketBox);
 		scroll.setStyle(
 			    "-fx-background-color: #d2b48c;" + 
-			    "-fx-border-color: #8b5a2b;" + 
+			    "-fx-border-color: #8b5a2b;" +  
 			    "-fx-border-width: 3;" +
 			    "-fx-background-radius: 10;" +
 			    "-fx-border-radius: 10;" +
@@ -539,7 +553,48 @@ public class RestaurantGUIView extends Application implements Observer {
 		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
-		content.getChildren().addAll(pickIngredients, scroll);
+		
+		VBox ovenBox = new VBox();
+		oven = new VBox();
+		ovenBox.setStyle(
+			    "-fx-background-color: #d3d3d3;" +
+			    "-fx-padding: 10;" +
+			    "-fx-background-radius: 10;"
+			);
+		ovenBox.setFillWidth(true);
+		ovenBox.getChildren().addAll(new Label("Oven Contents"), oven);
+		oven.setAlignment(Pos.CENTER);
+		Button patty=new Button();
+		Image imgPatty = new Image("uncookedPatty.png");
+		ImageView imgviewPatty=new ImageView(imgPatty);
+		imgviewPatty.setFitWidth(25);
+		imgviewPatty.setFitHeight(25);
+		patty.setGraphic(imgviewPatty);
+		patty.setOnAction((event) -> {
+			Patty currPatty=new Patty();
+			controller.addToOven(currPatty); //which will update it in the baskets label and buttons through observer
+			currPatty.startCooking();
+		});
+		pickPatty = new HBox();
+		pickPatty.setAlignment(Pos.CENTER);
+		pickPatty.getChildren().add(patty);
+		
+		ScrollPane ovenscroll = new ScrollPane();
+		ovenscroll.setContent(ovenBox);
+		ovenscroll.setStyle(
+			    "-fx-background-color: #b0b0b0;" + 
+			    "-fx-border-color: #808080;" + 
+			    "-fx-border-width: 3;" +
+			    "-fx-background-radius: 10;" +
+			    "-fx-border-radius: 10;" +
+			    "-fx-padding: 5;" +
+			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+			);
+		ovenscroll.setFitToWidth(true);
+		ovenscroll.setFitToHeight(true);
+		ovenscroll.setPrefViewportHeight(150);
+		
+		content.getChildren().addAll(pickIngredients, scroll,pickPatty,ovenscroll);
 		
 		Button reset = new Button("Reset");
 		reset.setOnAction((event) -> {
@@ -551,6 +606,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		tempPane.setRight(reset);
 		
 		prep.setContent(tempPane);
+		startOvenTimer();
 	}
 
 	public void makeCook(Tab cook, Tab serve) {
@@ -731,7 +787,6 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 	
 	public void updateBurgerGUI() {
-
 		burgerCook.getChildren().clear();
 		burgerCook.setAlignment(Pos.CENTER);
 		burgerServe.getChildren().clear();
@@ -739,9 +794,15 @@ public class RestaurantGUIView extends Application implements Observer {
 		ArrayList<Toppings> burgerToppings = controller.getBurger().getToppings();
 		String tempBurger = "";
 		for (Toppings t : burgerToppings) {
-			tempBurger = t.getToppingName() + "\n" + tempBurger;
-			
-			Image img = new Image(t.getToppingName()+".png");
+			String imgStr="";
+			if(t instanceof Patty) {
+				Patty currPatty=(Patty)t;
+				imgStr=currPatty.getPattyImage();
+			}
+			else {
+				imgStr=t.getToppingName()+".png";
+			}
+			Image img = new Image(imgStr);
 			ImageView imgCookView=new ImageView(img);
 			imgCookView.setFitWidth(50);
 			imgCookView.setFitHeight(35);
@@ -761,12 +822,20 @@ public class RestaurantGUIView extends Application implements Observer {
 		pickFromBasket.getChildren().clear();
 		
 		ArrayList<Toppings> basketToppings = controller.getCurrBasket().getList();
-		String tempBasket = "";
+		//String tempBasket = "";
 		for (Toppings t : basketToppings) {
-			tempBasket += t.getToppingName()+"\n";
-			
+			final Toppings currTopping=t;
+			String imgStr="";
 			Button topping = new Button();
-			Image img = new Image(t.getToppingName()+".png");
+			if(currTopping instanceof Patty) {
+				Patty currPatty=(Patty)currTopping;
+				//System.out.println("Patty: "+currPatty+",cookingTime:"+currPatty.getCookingTime()+",CookingState:"+currPatty.getCookingState());
+				imgStr=currPatty.getPattyImage();
+			}
+			else {
+				imgStr=t.getToppingName()+".png";
+			}
+			Image img = new Image(imgStr);
 			ImageView imgview=new ImageView(img);
 			imgview.setFitWidth(25);
 			imgview.setFitHeight(25);
@@ -775,10 +844,11 @@ public class RestaurantGUIView extends Application implements Observer {
 			ImageView imgBasketView=new ImageView(img);
 			imgBasketView.setFitWidth(50);
 			imgBasketView.setFitHeight(35);
-			
+			 
 			topping.setOnAction((e) -> {
-				controller.addToBurger(t);
-				controller.removeFromBasket(t);
+				controller.addToBurger(currTopping);
+				controller.removeFromBasket(currTopping);
+				controller.getCurrBasket().printList();		
 			});
 			
 			pickFromBasket.getChildren().add(topping);
@@ -788,7 +858,42 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		
 	}
-	
+	private void updateOvenGUI() { 
+		// TODO Auto-generated method stub
+		oven.getChildren().clear();
+		//pickFromBasket.getChildren().clear();
+		
+		ArrayList<Toppings> ovenToppings = controller.getCurrOven().getList();
+		for (Toppings t : ovenToppings) {
+
+			Button patty = new Button();
+			Patty currPatty=(Patty)t;
+			currPatty.updateState();
+			String imgStr=currPatty.getPattyImage();
+			Image img = new Image(imgStr);
+			ImageView imgview=new ImageView(img);
+			imgview.setFitWidth(25);
+			imgview.setFitHeight(25);
+			patty.setGraphic(imgview);
+			
+			ImageView imgOvenView=new ImageView(img);
+			imgOvenView.setFitWidth(50);
+			imgOvenView.setFitHeight(35);
+			
+			imgOvenView.setOnMouseClicked(e->{
+				controller.removeFromOven(t);
+						
+				updateBasketGUI();
+			});
+			
+		
+			//pickFromBasket.getChildren().add(patty);
+			oven.getChildren().add(imgOvenView);
+		}
+		//basket.setText(tempBasket);
+		
+		
+	}
 	
 	private Shape getShape(String shape, Label cqu0L, Color color) {
 		if (shape.equals("circle")){
@@ -840,6 +945,15 @@ public class RestaurantGUIView extends Application implements Observer {
 		Tooltip.install(rectangle, tooltip1);
 		return rectangle;
 	}
+	
+	private void startOvenTimer() {
+		Timeline ovenTimeline = new Timeline(new KeyFrame(Duration.seconds(1),e->{
+			updateOvenGUI();
+		})); 
+		ovenTimeline.setCycleCount(Animation.INDEFINITE);
+		ovenTimeline.play();
+	}
+
 	
 }
 

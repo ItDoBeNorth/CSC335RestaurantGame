@@ -18,7 +18,7 @@ public abstract class Toppings {
 	public String getToppingName() {
 		return this.toppingName;
 	}
-	
+	/*
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -30,5 +30,5 @@ public abstract class Toppings {
 		Toppings other = (Toppings) obj;
 		return (other.getToppingName() == this.getToppingName());
 	}
-
+*/
 }

@@ -21,6 +21,7 @@ public class RestaurantModel extends Observable {
 	private Customer[] currCustomers;
 	private Ticket[] currTaskList;
 	private Basket<Toppings> basket;
+	private Oven<Toppings> oven;
 	private Burger burger;
 	
 	private int daysAccuracy;
@@ -48,6 +49,7 @@ public class RestaurantModel extends Observable {
 		currTaskList = new Ticket[2];
 		burger = new Burger();
 		basket = new Basket<Toppings>(10);
+		oven=new Oven<Toppings>(5);
 
 		allToppings = IngredientsList.TOPPINGLIST;
 		allCustomer = CustomerList.CUSTOMERS;
@@ -143,7 +145,31 @@ public class RestaurantModel extends Observable {
 			notifyObservers(new EventDetail("updateBasket", basket));
 		}
 	}
+	public void removeFromOven(Toppings topping) {
+		Toppings currIngredient=oven.remove(topping);
+		Patty currPatty=(Patty)currIngredient;
+		currPatty.stopCooking();
+		basket.addIngredient(currIngredient);
+		
+		setChanged();
+		notifyObservers(new EventDetail("updateOven", oven));
+		notifyObservers(new EventDetail("updateBasket", basket));
+	}
 
+	public void addToOven(Toppings topping) {
+		
+		if (oven.addIngredient(topping)) {
+			Patty currPatty=(Patty)topping;
+			currPatty.startCooking();
+			setChanged(); 
+			notifyObservers(new EventDetail("updateOven", oven));
+		}
+	}
+	public void clearOven() {
+		oven.clearOven();
+		setChanged();
+		notifyObservers(new EventDetail("updateOven", oven));
+	}
 	public void clearBasket() {
 		basket.clearBasket();
 		setChanged();
@@ -153,7 +179,7 @@ public class RestaurantModel extends Observable {
 	public void undoBurger() {
 		if (!burger.getToppings().isEmpty()) {
 			basket.limit += 1;
-			System.out.println(basket.addIngredient(burger.RemoveLastTopping()));
+			//System.out.println(basket.addIngredient(burger.RemoveLastTopping()));
 			basket.limit = 10;
 			setChanged();
 			notifyObservers(new EventDetail("updateBasket", basket));
@@ -270,6 +296,9 @@ public class RestaurantModel extends Observable {
 	
 	public Basket<Toppings> getBasket() {
 		return basket;
+	}
+	public Oven<Toppings> getOven(){
+		return oven;
 	}
 
 	public Burger getBurger() {
