@@ -198,7 +198,7 @@ public class RestaurantController {
 	public int getDaysTiming() {return model.getDaysTiming();}
 	public int getDaysScore() {return model.getDaysScore();}
 	public double getDaysIncome() {return model.getDaysIncome();}
-	
+	public int getCurrDay() {return model.getCurrDay();}
 	
 	
 }

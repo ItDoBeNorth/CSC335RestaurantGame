@@ -12,7 +12,7 @@ public abstract class KnownCustomer implements Customer {
 	private Personality personality;
 	// mult by day to get time patience + 10 sec
 	private int patienceLevel;
-	
+	private Countdown countdown;
 	
 	public KnownCustomer(String name,String shape, Color color, ArrayList<Toppings> favoriteOrder,Personality personality, int patienceLevel) {
 		this.name=name;
@@ -21,6 +21,7 @@ public abstract class KnownCustomer implements Customer {
 		this.favoriteOrder=favoriteOrder;
 		this.personality=personality;
 		this.patienceLevel = patienceLevel;
+		this.countdown = new Countdown();
 	}
 	
 	@Override
@@ -44,6 +45,28 @@ public abstract class KnownCustomer implements Customer {
 	@Override
 	public int patienceLevel() {
 		return patienceLevel;
+	}
+	
+	@Override
+	public double timeleft() {
+		return countdown.timeLeft;
+	}
+	
+	@Override
+	public void startTimer(double time) {
+		countdown.startCountdown(time);
+		
+	}
+	
+	@Override
+	public void stopTimer() {
+		countdown.stopTimer();
+		
+	}
+	
+	@Override
+	public boolean CDisRunning() {
+		return countdown.countDownIsRunning;
 	}
 	
 }
