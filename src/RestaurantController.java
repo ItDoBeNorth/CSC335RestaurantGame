@@ -101,6 +101,14 @@ public class RestaurantController {
 	public void removeFromBasket(Toppings topping) {
 		model.removeFromBasket(topping);
 	}
+	public void addToOven(Toppings topping) {
+		model.addToOven(topping);
+		;
+	}
+
+	public void removeFromOven(Toppings topping) {
+		model.removeFromOven(topping);
+	}
 
 	/**
 	 * clears the player's basket
@@ -137,7 +145,10 @@ public class RestaurantController {
 	public Basket<Toppings> getCurrBasket() {
 		return model.getBasket();
 	}
-
+	
+	public Oven<Toppings> getCurrOven() {
+		return model.getOven();
+	}
 	public Burger getBurger() {
 		return model.getBurger();
 	}

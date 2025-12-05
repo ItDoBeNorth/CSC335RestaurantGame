@@ -7,7 +7,7 @@ public class David extends KnownCustomer {
 	private Toppings favoriteTopping=new Pickle();
 	
 	public David() {
-		super("David","square",Color.DARKGREEN,new ArrayList<Toppings>(){{add(new Onion());}},Personality.URGENT, 1);
+		super("David","square",Color.DARKGREEN,new ArrayList<Toppings>(){{add (new Patty());add(new Onion());}},Personality.URGENT, 1);
 	}
 
 	@Override
