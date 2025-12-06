@@ -149,7 +149,14 @@ public class RestaurantGUIView extends Application implements Observer {
 				currTickets = (Ticket[]) info.getEventChange();
 				//Change from label to something else later. basicly does any gui changes needed
 				for (int i = 0; i < 3; i++) {
+					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(0);
+					
+
+					double totalTime = currCustomers[0].patienceLevel() * controller.getCurrDay() + 10;
+					animateTicketFace(ticketBox, totalTime);
 					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().get(1);
+					ticketBox.getChildren().set(2, makeSmileyFace());
+						
 					String temp = "";
 					for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
 						temp += currTickets[0].getToppingsList().get(n).getToppingName()+ "\n";
@@ -164,7 +171,11 @@ public class RestaurantGUIView extends Application implements Observer {
 				currTickets = (Ticket[]) info.getEventChange();
 				//Change from label to something else later. basicly does any gui changes needed
 				for (int i = 0; i < 3; i++) {
+					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(1);
+					double totalTime = currCustomers[1].patienceLevel() * controller.getCurrDay() + 10;
+					animateTicketFace(ticketBox, totalTime);
 					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().get(1);
+					ticketBox.getChildren().set(2, makeSmileyFace());
 					String temp = "";
 					for (int n = 0; n < currTickets[1].getToppingsList().size(); n++) {
 						temp += currTickets[1].getToppingsList().get(n).getToppingName()+ "\n";
@@ -463,7 +474,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		Label t1title = new Label("Ticket 1");
 		t1title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 		Label t1body = new Label("get ticket info later");
-		ticketOne.getChildren().addAll(t1title, t1body);
+		Group ticket1Face = makeSmileyFace();
+		ticketOne.getChildren().addAll(t1title, t1body, ticket1Face);
 		
 		ticketOne.setVisible(false);
 		// can set visibity to false
@@ -481,7 +493,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		Label t2title = new Label("Ticket 2");
 		t2title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 		Label t2body = new Label("get ticket info later");
-		ticketTwo.getChildren().addAll(t2title, t2body);
+		Group ticket2Face = makeSmileyFace();
+		ticketTwo.getChildren().addAll(t2title, t2body, ticket2Face);
 
 		ticketTwo.setVisible(false);
 		
@@ -1137,9 +1150,11 @@ public class RestaurantGUIView extends Application implements Observer {
 			        if (customer.CDisRunning()) {
 			            if (customerNum == 1) {
 		                    customer1.getChildren().set(1, makeFlatFace());
+		                    
 		                } else {
 		                    customer2.getChildren().set(1, makeFlatFace());
 		                }
+			           
 			        }
 			    }),
 			    new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
@@ -1149,6 +1164,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		                } else {
 		                    customer2.getChildren().set(1, makeUpsetFace());
 		                }
+			            
 			        }
 			    }),
 			    new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
@@ -1158,11 +1174,30 @@ public class RestaurantGUIView extends Application implements Observer {
 		                } else {
 		                    customer2.getChildren().set(1, makeAngryFace());
 		                }
+		
 			        }
 			    })
 			);
 			timeline.play();
 	}
+	
+	private void animateTicketFace(VBox ticketBox, double patienceTime) {
+	    Timeline timeline = new Timeline(
+	        new KeyFrame(Duration.millis(patienceTime*1000), e -> {
+	            ticketBox.getChildren().set(2, makeFlatFace());
+	        }),
+	        new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
+	            ticketBox.getChildren().set(2, makeUpsetFace());
+	        }),
+	        new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
+	            ticketBox.getChildren().set(2, makeAngryFace());
+	        })
+	    );
+	    timeline.play();
+	}
+
+	
+	
 
 	
 }
