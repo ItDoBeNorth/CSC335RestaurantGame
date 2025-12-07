@@ -268,6 +268,9 @@ public class RestaurantGUIView extends Application implements Observer {
 			for (Customer c : currCustomers) {
 				if (c!= null) c.stopTimer();
 			}
+			for (Toppings b : controller.getCurrOven().getList()) {
+				if (b!= null) controller.removeFromOven(b);
+			}
 			}
 			try {
 				ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));

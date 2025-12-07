@@ -250,7 +250,7 @@ public class RestaurantModel extends Observable {
 		if (!isTheSameOrder(ticket.getToppingsList(),burger.getToppings())) {
 			ArrayList<Toppings> ordered =  new ArrayList<Toppings>(ticket.getToppingsList());
 			ArrayList<Toppings> served = new ArrayList<Toppings>(burger.getToppings());
-			int numItems = (int) Math.max(0,100- Math.round((Math.abs(ordered.size()-served.size())/(double)ordered.size()) * 100)) ;
+			int numItems = (int) Math.max(0,50- Math.round((Math.abs(ordered.size()-served.size())/(double)ordered.size()) * 50)) ;
 			// correct kinds of items
 			int contains = 0;
 			for (Toppings t: ordered) {
@@ -269,8 +269,9 @@ public class RestaurantModel extends Observable {
 			}
 			
 		} else {
-			accuracy = 300;
+			accuracy = 250;
 		}
+		accuracy += pattyAccuracy(new ArrayList<Toppings>(ticket.getToppingsList()));
 		
 		income = 5 + (getPrice(burger.getToppings()) * ((accuracy+timing)/400.0));
 		if (p == KnownCustomer.Personality.GENEROUS) {
@@ -288,6 +289,27 @@ public class RestaurantModel extends Observable {
 		
 	}
 
+	public int pattyAccuracy(ArrayList<Toppings> served) {
+		int undercooked = 0;
+		int cooked = 0;
+		int overcooked = 0;
+		for (Toppings p: served) {
+			if (p instanceof Patty) {
+				if (((Patty) p).getCookingState() == Patty.CookingState.UNDERCOOKED){
+					undercooked ++;
+				} else if ( (((Patty) p).getCookingState() == Patty.CookingState.COOKED)) {
+					cooked ++;
+				} else {
+					overcooked ++;
+				}
+			}
+		}
+		int total = undercooked+cooked+overcooked;
+		if (total == 0) {return 50;}
+		return (int) ((50*((double)cooked/total))+(15*((double)undercooked/total))+(25*((double)overcooked/total)));
+		
+	}
+	
 	public double getPrice(ArrayList<Toppings> toppings) {
 		double amount = 0;
 		for (Toppings t: toppings) {
