@@ -158,7 +158,7 @@ public class RestaurantGUIView extends Application implements Observer {
 					
 
 					double totalTime = currCustomers[0].patienceLevel() * controller.getCurrDay() + 10;
-					animateTicketFace(ticketBox, totalTime);
+					//animateTicketFace(ticketBox, totalTime);
 					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().get(1);
 					ticketBox.getChildren().set(2, makeSmileyFace());
 						
@@ -178,7 +178,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				for (int i = 0; i < 3; i++) {
 					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(1);
 					double totalTime = currCustomers[1].patienceLevel() * controller.getCurrDay() + 10;
-					animateTicketFace(ticketBox, totalTime);
+					//animateTicketFace(ticketBox, totalTime);
 					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().get(1);
 					ticketBox.getChildren().set(2, makeSmileyFace());
 					String temp = "";
@@ -241,7 +241,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				newStuff.setText("New Things Next Day:\n" + info.getEventChange());
 				System.out.println(controller.getDayMilestones());
 				Button next = (Button) EODcontent.getChildren().get(6);
-				next.setText("Next Day: " + (player.getDay()+1));
+				next.setText("Next Day: " + (player.getDay()+2));
 				break;
 			default:
 				
@@ -1231,9 +1231,15 @@ public class RestaurantGUIView extends Application implements Observer {
 			        if (customer.CDisRunning()) {
 			            if (customerNum == 1) {
 		                    customer1.getChildren().set(1, makeFlatFace());
+		                    for (int i = 0; i < 3; i++) {
+		                    	((VBox)ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeFlatFace());
+		                    }
 		                    
 		                } else {
 		                    customer2.getChildren().set(1, makeFlatFace());
+		                    for (int i = 0; i < 3; i++) {
+		                    	((VBox)ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeFlatFace());
+		                    }
 		                }
 			           
 			        }
@@ -1242,8 +1248,14 @@ public class RestaurantGUIView extends Application implements Observer {
 			        if (customer.CDisRunning()) {
 			            if (customerNum == 1) {
 		                    customer1.getChildren().set(1, makeUpsetFace());
+		                    for (int i = 0; i < 3; i++) {
+		                    	((VBox)ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeUpsetFace());
+		                    }
 		                } else {
 		                    customer2.getChildren().set(1, makeUpsetFace());
+		                    for (int i = 0; i < 3; i++) {
+		                    	((VBox)ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeUpsetFace());
+		                    }
 		                }
 			            
 			        }
@@ -1252,8 +1264,14 @@ public class RestaurantGUIView extends Application implements Observer {
 			        if (customer.CDisRunning()) {
 			            if (customerNum == 1) {
 		                    customer1.getChildren().set(1, makeAngryFace());
+		                    for (int i = 0; i < 3; i++) {
+		                    	((VBox)ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeAngryFace());
+		                    }
 		                } else {
 		                    customer2.getChildren().set(1, makeAngryFace());
+		                    for (int i = 0; i < 3; i++) {
+		                    	((VBox)ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeAngryFace());
+		                    }
 		                }
 		
 			        }
@@ -1262,20 +1280,20 @@ public class RestaurantGUIView extends Application implements Observer {
 			timeline.play();
 	}
 	
-	private void animateTicketFace(VBox ticketBox, double patienceTime) {
-	    Timeline timeline = new Timeline(
-	        new KeyFrame(Duration.millis(patienceTime*1000), e -> {
-	            ticketBox.getChildren().set(2, makeFlatFace());
-	        }),
-	        new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
-	            ticketBox.getChildren().set(2, makeUpsetFace());
-	        }),
-	        new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
-	            ticketBox.getChildren().set(2, makeAngryFace());
-	        })
-	    );
-	    timeline.play();
-	}
+//	private void animateTicketFace(VBox ticketBox, double patienceTime) {
+//	    Timeline timeline = new Timeline(
+//	        new KeyFrame(Duration.millis(patienceTime*1000), e -> {
+//	            ticketBox.getChildren().set(2, makeFlatFace());
+//	        }),
+//	        new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
+//	            ticketBox.getChildren().set(2, makeUpsetFace());
+//	        }),
+//	        new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
+//	            ticketBox.getChildren().set(2, makeAngryFace());
+//	        })
+//	    );
+//	    timeline.play();
+//	}
 
 	
 	
