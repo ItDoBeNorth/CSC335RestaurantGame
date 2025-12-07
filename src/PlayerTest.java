@@ -33,6 +33,20 @@ class PlayerTest {
 		sarah.nextDay();
 		assertEquals(sarah.getDay(),4);
 		assertEquals(sarah.getMoney(),15);
+		sarah.addMoney(2);
+		assertEquals(sarah.getMoney(),17);
+	}
+	
+	@Test
+	void equalsTest() {
+		Player sarah=new Player("Sarah",3,600,15);
+		Player sarah2=new Player("Sarah",3,600,15);
+		Player otherPlayer=new Player("otherPlayer",3,600,15);
+		Player nonPlayer = null;
+		assertTrue(sarah.equals(sarah));
+		assertTrue(sarah.equals(sarah2));
+		assertFalse(sarah.equals(otherPlayer));
+		assertFalse(sarah.equals(nonPlayer));
 	}
 
 }
