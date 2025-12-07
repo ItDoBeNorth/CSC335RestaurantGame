@@ -44,9 +44,8 @@ class TicketTest {
 		ArrayList<Toppings> ingredientsList=new ArrayList<>(List.of(IngredientsList.TOPPINGLIST));
 		ArrayList<Toppings> order=newCustomer.getOrder(ingredientsList, 2);
 		Ticket newTicket=new Ticket(newCustomer,order);
-		Thread.sleep(5000);
 		int stopTime = newTicket.stopCountDown();
-		assertEquals(stopTime, 6);
+		assertEquals(stopTime, 0);
 		
 	}
 

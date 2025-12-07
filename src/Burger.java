@@ -30,10 +30,7 @@ public class Burger{
 		toppingList.clear();
 	}
 	
-	public void printStack() {
-		System.out.println(toppingList);
-	}
-	
+
 	public ArrayList<Toppings> getToppings() {
 		return new ArrayList<Toppings>(toppingList);
 	}

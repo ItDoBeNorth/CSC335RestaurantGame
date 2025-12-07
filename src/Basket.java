@@ -11,9 +11,9 @@ public class Basket<T> {
 		this.limit = limit;
 	}
 	
-	public boolean addIngredient(T indredient) {
+	public boolean addIngredient(T ingredient) {
 		if (size < limit) {
-			list.add(indredient);
+			list.add(ingredient);
 			size++;
 			return true;
 		}	
