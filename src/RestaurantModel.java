@@ -228,56 +228,62 @@ public class RestaurantModel extends Observable {
 		double income = 0;
 		int timing = 0;
 		KnownCustomer.Personality p = null;
-		// stuff based on customer
+		// for stuff based on customer
 		if (ticket.getCustomer() instanceof KnownCustomer) {
 			p = ((KnownCustomer) ticket.getCustomer()).getPersonality();
 		}
 		
+		// get patienceTime and how much time prepping the order took
 		int elapsed = ticket.stopCountDown();
 		int patienceTime = 10 + ( ticket.getCustomer().patienceLevel() * currDay);
 		
+		// 100 points max from patience time 
 		if (elapsed > patienceTime){
-			// percent over to the limit of double the patience time
+			// percent over to the limit of double the patience time, the longer it goes on after the lower the points 
 			double percent = (patienceTime*2 - Math.min(elapsed,patienceTime*2))/patienceTime;
 			timing = (int) Math.max(0, Math.round(percent * 50));
 		} else {timing = 100;}
 		
-		// can add order of ingredients
-		// here is only the implementation for checking if its exact
-		System.out.println(isTheSameOrder(ticket.getToppingsList(),burger.getToppings()));
-		System.out.println(ticket.getToppingsList());
-		System.out.println(burger.getToppings());
+		// max of 250 points from the order
 		if (!isTheSameOrder(ticket.getToppingsList(),burger.getToppings())) {
+			// num of items, if correct items are present, and an estimate on order without the correct serve
 			ArrayList<Toppings> ordered =  new ArrayList<Toppings>(ticket.getToppingsList());
 			ArrayList<Toppings> served = new ArrayList<Toppings>(burger.getToppings());
+			// 50 points from correct num of items
 			int numItems = (int) Math.max(0,50- Math.round((Math.abs(ordered.size()-served.size())/(double)ordered.size()) * 50)) ;
 			// correct kinds of items
 			int contains = 0;
 			for (Toppings t: ordered) {
 				if (served.contains(t)) {contains++;}
 			}
+			// 100 points from if correct items are contained
 			int itemsS = (int) Math.round((contains/(double)ordered.size()) * 100);
 			
 			int order = 0;
+			// estimate on order
 			if (numItems + itemsS > 100) {order = 50;}
 			accuracy = numItems + itemsS + order;
 			if (p == KnownCustomer.Personality.ACCURATE) {
+				// more accurate needed for customer
 				if (accuracy < 200) {
 					System.out.println(accuracy);
 					accuracy = 0;
 				}
 			}
-			
 		} else {
 			accuracy = 250;
 		}
+		
+		//50 points from accuracy of the patties
 		accuracy += pattyAccuracy(new ArrayList<Toppings>(ticket.getToppingsList()));
 		
+		// income based on total accuracy and price of ingredients
 		income = 5 + (getPrice(burger.getToppings()) * ((accuracy+timing)/400.0));
 		if (p == KnownCustomer.Personality.GENEROUS) {
 			income = income * 2;
 		}
 		
+		// add to where its needed
 		daysAccuracy += accuracy;
 		daysIncome += income;
 		daysTiming += timing;
@@ -290,6 +296,7 @@ public class RestaurantModel extends Observable {
 	}
 
 	public int pattyAccuracy(ArrayList<Toppings> served) {
+		// checks for patties
 		int undercooked = 0;
 		int cooked = 0;
 		int overcooked = 0;
@@ -304,6 +311,7 @@ public class RestaurantModel extends Observable {
 				}
 			}
 		}
+		// scores accordingly, 50 for all cooked, 25 for all burnt, 15 for all uncooked
 		int total = undercooked+cooked+overcooked;
 		if (total == 0) {return 50;}
 		return (int) ((50*((double)cooked/total))+(15*((double)undercooked/total))+(25*((double)overcooked/total)));
