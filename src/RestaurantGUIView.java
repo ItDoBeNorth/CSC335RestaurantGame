@@ -230,13 +230,13 @@ public class RestaurantGUIView extends Application implements Observer {
 				Label rating = (Label) EODcontent.getChildren().get(0);
 				rating.setText("Score: +" + controller.getDaysScore() + " \n Total: "+ player.getScore());
 				Label income = (Label) EODcontent.getChildren().get(1);
-				income.setText("Days Income: " + controller.getDaysIncome() + "\n Total Income: " + player.getMoney());
+				income.setText("Days Income: " + String.format("%.2f", controller.getDaysIncome()) + "\n Total Income: " + String.format("%.2f", player.getMoney()));
 				Label accuracy = (Label) EODcontent.getChildren().get(2);
 				accuracy.setText("Days Accuracy: " + controller.getDaysAccuracy() + "%");
 				Label timing = (Label) EODcontent.getChildren().get(3);
 				timing.setText("Days Timing: " + controller.getDaysTiming() + "%");
 				Label milestones = (Label) EODcontent.getChildren().get(4);
-				milestones.setText("Days Miletstones: " +controller.getDayMilestones());
+				milestones.setText("Days Milestones: " +controller.getDayMilestones());
 				Label newStuff = (Label) EODcontent.getChildren().get(5);
 				newStuff.setText("New Things Next Day:\n" + info.getEventChange());
 				System.out.println(controller.getDayMilestones());
