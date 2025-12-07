@@ -622,7 +622,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		basketView.setPreserveRatio(false);
 		
-		basketView.setFitWidth(240);
+		basketView.setFitWidth(230);
 		basketView.setFitHeight(160);
 		
 		StackPane basketandBackBox = new StackPane();
