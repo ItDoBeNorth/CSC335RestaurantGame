@@ -46,7 +46,7 @@ class TicketTest {
 		Ticket newTicket=new Ticket(newCustomer,order);
 		int stopTime = newTicket.stopCountDown();
 		assertEquals(stopTime, 0);
-		
+
 	}
 
 }

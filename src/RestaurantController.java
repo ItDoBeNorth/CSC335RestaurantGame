@@ -163,6 +163,8 @@ public class RestaurantController {
 	public void resetBurger() {
 		model.resetBurger();
 	}
+	
+	
 
 	/**
 	 * serve the order to the customer
@@ -199,6 +201,6 @@ public class RestaurantController {
 	public int getDaysScore() {return model.getDaysScore();}
 	public double getDaysIncome() {return model.getDaysIncome();}
 	public int getCurrDay() {return model.getCurrDay();}
-	
+	public String getDayMilestones(){return model.getDayMilestones();}
 	
 }
