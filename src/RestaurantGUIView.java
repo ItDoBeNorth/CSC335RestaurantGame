@@ -235,9 +235,12 @@ public class RestaurantGUIView extends Application implements Observer {
 				accuracy.setText("Days Accuracy: " + controller.getDaysAccuracy() + "%");
 				Label timing = (Label) EODcontent.getChildren().get(3);
 				timing.setText("Days Timing: " + controller.getDaysTiming() + "%");
-				Label newStuff = (Label) EODcontent.getChildren().get(4);
+				Label milestones = (Label) EODcontent.getChildren().get(4);
+				milestones.setText("Days Miletstones: " +controller.getDayMilestones());
+				Label newStuff = (Label) EODcontent.getChildren().get(5);
 				newStuff.setText("New Things Next Day:\n" + info.getEventChange());
-				Button next = (Button) EODcontent.getChildren().get(5);
+				System.out.println(controller.getDayMilestones());
+				Button next = (Button) EODcontent.getChildren().get(6);
 				next.setText("Next Day: " + (player.getDay()+1));
 				break;
 			default:
@@ -930,17 +933,18 @@ public class RestaurantGUIView extends Application implements Observer {
 		Label accuracy = new Label("Accuracy: ");
 		Label timing = new Label("Timing: ");
 		Label newStuff = new Label("New Things Next Day:");
+		Label milestones = new Label("Milestones:");
 		Button next = new Button("Next Day");
 		next.setOnAction((e)->{
 			tabPane.getTabs().remove(eodTab);
 			tabPane.getTabs().addAll(order, prep, cook, serve);
 			tabPane.getSelectionModel().select(order);
 			controller.nextDay();
-		});
+		}); 
 		
 		next.setAlignment(Pos.CENTER);
 		
-		EODcontent.getChildren().addAll(rating, income, accuracy, timing, newStuff, next);
+		EODcontent.getChildren().addAll(rating, income, accuracy, timing, milestones, newStuff,next);
 		
 		tempPane.setCenter(EODcontent);
 		eodTab.setContent(tempPane);

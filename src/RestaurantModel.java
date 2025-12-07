@@ -28,6 +28,8 @@ public class RestaurantModel extends Observable {
 	private int daysTiming;
 	private double daysIncome;
 	private int daysScore;
+	private ArrayList<String> dayMilestones;
+	
 	private int customersServed;
 	private String[] newThings = {"New Ingredient: Lettuce\nNew Customer: John(Generous)", "New Ingredient: Onion\nNew Customer: Peter(Hurry)", "New Ingredient: Pickle\nNew Customer: Mariah(Picky)", "New Ingredient: Tomato\nNew Customer: David(Hurry)", "New Customer: Sarah(Patient)"};
 	// new things how
@@ -70,6 +72,20 @@ public class RestaurantModel extends Observable {
 	public void EODScreen() {
 		daysAccuracy = daysAccuracy/(customersServed*3);
 		daysTiming = daysTiming/customersServed;
+
+		if (daysAccuracy==100) {
+			player.addPerfectAccuracy();
+		}
+		else {
+			player.resetPerfectAccuracy();
+		}
+		if (daysTiming==100) {
+			player.addPerfectTiming();
+		}
+		else {
+			player.resetPerfectTiming();
+		}
+		dayMilestones=player.milestones();
 		setChanged();
 		notifyObservers(new EventDetail("updateEndOfDayScreen", newThings[Math.min(currDay-1, allToppings.length)]));
 	}
@@ -209,6 +225,7 @@ public class RestaurantModel extends Observable {
 
 	public void Serve(int ticketInt, Ticket ticket) {
 		customersServed ++;
+		player.addCustomerServed();
 		checkScore(ticket);
 
 		currCustomers[ticketInt] = null;
@@ -220,6 +237,7 @@ public class RestaurantModel extends Observable {
 		burger.reset();
 		setChanged();
 		notifyObservers(new EventDetail("updateBurger", null));
+		
 	}
 
 	private void checkScore(Ticket ticket) {
@@ -289,7 +307,6 @@ public class RestaurantModel extends Observable {
 		daysTiming += timing;
 		score += accuracy+timing;
 		daysScore += score;
-		
 		player.addScore(score);
 		player.addMoney(income);
 		
@@ -367,7 +384,15 @@ public class RestaurantModel extends Observable {
 	public double getDaysIncome() {
 		return daysIncome;
 	}
-	
+	public String getDayMilestones(){
+		String milestoneStr="";
+		for(int i=0;i<dayMilestones.size();i++) {
+			milestoneStr+=dayMilestones.get(i)+"\n";
+		}
+		milestoneStr.trim();
+		return milestoneStr;
+		
+	}
 	public int getCurrDay() {
 		return currDay;
 	}
