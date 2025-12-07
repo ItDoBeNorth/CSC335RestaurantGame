@@ -268,7 +268,8 @@ public class RestaurantGUIView extends Application implements Observer {
 			for (Customer c : currCustomers) {
 				if (c!= null) c.stopTimer();
 			}
-			for (Toppings b : controller.getCurrOven().getList()) {
+			List<Toppings> oven = new ArrayList<>(controller.getCurrOven().getList());
+			for (Toppings b : oven) {
 				if (b!= null) controller.removeFromOven(b);
 			}
 			}
