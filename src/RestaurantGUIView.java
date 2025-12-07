@@ -684,7 +684,7 @@ public class RestaurantGUIView extends Application implements Observer {
 			    "-fx-padding: 5;" +
 			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
 			);
-		scroll.setFitToWidth(true);
+		scroll.setFitToWidth(false);
 		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
 		
@@ -706,7 +706,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		oven.setAlignment(Pos.CENTER);
 		
-		Button patty=new Button();
+		Button patty = new Button();
 		patty.setStyle(
 				"-fx-border-color: black;" +
 				"-fx-border-width: 1;" +
@@ -772,26 +772,44 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 
 	public void makeCook(Tab cook, Tab serve) {
+		Image prepRoom = new Image(getClass().getResourceAsStream("/preproom.jpg"));
+		BackgroundImage prepRoomView = new BackgroundImage(prepRoom, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+		
+		Image boardimg = new Image(getClass().getResourceAsStream("/cuttingboard.jpg"));
+		ImageView boardView = new ImageView(boardimg);
+		
 		// contents
-		BorderPane tempPane = new BorderPane();
+		BorderPane cookPane = new BorderPane();
+		cookPane.setBackground(new Background(prepRoomView));
 
 		VBox content = new VBox();
 		content.setAlignment(Pos.CENTER);
+		
 		pickFromBasket = new HBox(); 
 		
 		VBox burgerInfo = new VBox();
 		burgerInfo.setAlignment(Pos.CENTER);
+		
 		burgerCook = new VBox();
+		
 		burgerInfo.setStyle(
-			    "-fx-background-color: #f5deb3;" +
-			    "-fx-padding: 10;" +
-			    "-fx-background-radius: 10;"
+			    "-fx-background-color: transparent"
 			);
+		
+		boardView.setPreserveRatio(false);
+		
+		boardView.setFitWidth(230.25);
+		boardView.setFitHeight(162.27);
+		
+		StackPane burgerandBackBox = new StackPane();
+		burgerandBackBox.getChildren().addAll(boardView, burgerInfo);
 
 		//Label bunTop = new Label("Top Bun");
 		ImageView bunTop=new ImageView(new Image("topBun.png"));
 		bunTop.setFitHeight(35);
 		bunTop.setFitWidth(50);
+		
 		//Label bunBot = new Label("Bottom Bun");
 		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
 		bunBot.setFitHeight(35);
@@ -800,7 +818,9 @@ public class RestaurantGUIView extends Application implements Observer {
 		burgerInfo.getChildren().addAll(bunTop, burgerCook, bunBot);
 		
 		ScrollPane scroll = new ScrollPane();
-		scroll.setContent(burgerInfo);
+		
+		scroll.setContent(burgerandBackBox);
+		
 		scroll.setStyle(
 			    "-fx-background-color: #d2b48c;" + 
 			    "-fx-border-color: #8b5a2b;" + 
@@ -810,13 +830,29 @@ public class RestaurantGUIView extends Application implements Observer {
 			    "-fx-padding: 5;" +
 			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
 			);
+		
 		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
-		content.getChildren().addAll(new Label("Basket"), pickFromBasket, scroll);
+		
+		scroll.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> {
+		    boardView.setFitHeight(newVal.getHeight());
+		});
+		
+		content.getChildren().addAll(pickFromBasket, scroll);
 		
 		VBox options = new VBox();
+		options.setAlignment(Pos.TOP_RIGHT);
+		
 		Button undo = new Button("Undo");
+		undo.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
+		undo.setFont(new Font("Comic Sans MS Bold", 12));
+		
 		undo.setOnAction((e) -> {
 			if (!controller.getBurger().getToppings().isEmpty()) {
 				undo.setDisable(true);
@@ -824,21 +860,42 @@ public class RestaurantGUIView extends Application implements Observer {
 				undo.setDisable(false);
 			}
 		});
+		
 		Button reset = new Button("Reset");
+		reset.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
+		reset.setFont(new Font("Comic Sans MS Bold", 12));
+		
 		reset.setOnAction((e) -> {
 			controller.resetBurger(); // which will update the basket and burger through observer
 		});
+		
 		Button serveB = new Button("Serve");
+		serveB.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
+		serveB.setFont(new Font("Comic Sans MS Bold", 12));
+		
 		serveB.setOnAction((e) -> {
 			tabPane.getSelectionModel().select(serve);
 		});
+		
 		options.getChildren().addAll(undo, reset, serveB);
 		
-		tempPane.setLeft(ticketsInfoCook);
-		tempPane.setCenter(content);
-		tempPane.setRight(options);
+		cookPane.setLeft(ticketsInfoCook);
+		cookPane.setCenter(content);
+		cookPane.setRight(options);
 		
-		cook.setContent(tempPane);
+		cook.setContent(cookPane);
+
+
 
 	}
 	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
