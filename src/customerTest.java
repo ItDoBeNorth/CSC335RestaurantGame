@@ -39,11 +39,6 @@ class customerTest {
 		assertEquals(John.getFavoriteOrder().get(1).getClass(),favOrder.get(0).getClass());
 		assertEquals(John.patienceLevel(), 3);
 
-// 		John.startTimer(2);
-// 		assertEquals(John.timeleft(), 2);
-// 		John.stopTimer();
-// 		assertFalse(John.CDisRunning());
-		
 		
 	}
 	@Test
