@@ -38,11 +38,7 @@ class customerTest {
 		assertEquals(newOrder.size(),3);
 		assertEquals(John.getFavoriteOrder().get(1).getClass(),favOrder.get(0).getClass());
 		assertEquals(John.patienceLevel(), 3);
-		John.startTimer(2);
-		assertEquals(John.timeleft(), 2);
-		John.stopTimer();
-		assertFalse(John.CDisRunning());
-		
+
 		
 	}
 	@Test
@@ -119,6 +115,25 @@ class customerTest {
 			assertEquals(peter.getFavoriteOrder().get(i).getClass(),favOrder.get(i).getClass());
 		}
 		assertEquals(peter.getPersonality(),KnownCustomer.Personality.URGENT);
+	}
+	
+	@Test
+	void test() throws InterruptedException {
+		John John=new John();
+		John.startTimer(2);
+		//assertTrue(John.CDisRunning());
+		
+		assertEquals(John.timeleft(), 2);
+		Thread.sleep(3000);
+		assertFalse(John.CDisRunning());
+		
+		
+		John.startTimer(10);
+		Thread.sleep(1000);
+		John.stopTimer();
+		Thread.sleep(1000);
+		assertFalse(John.CDisRunning());
+		
 	}
 
 }

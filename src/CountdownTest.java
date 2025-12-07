@@ -8,8 +8,16 @@ public class CountdownTest {
 	void test1() throws InterruptedException {
 		Countdown countdown = new Countdown();
 		assertTrue(countdown.startCountdown(10.0));
-		Thread.sleep(15000);
+		Thread.sleep(1000);
+		assertTrue(countdown.countDownIsRunning());
+		Thread.sleep(1000);
 		countdown.stopTimer();
+		Thread.sleep(1000);
+		assertFalse(countdown.countDownIsRunning());
+		Countdown countdown1 = new Countdown();
+		countdown1.startCountdown(6);
+		Thread.sleep(7000);
+		assertFalse(countdown.countDownIsRunning());
 		
 	}
 	
@@ -24,9 +32,7 @@ public class CountdownTest {
 	void test3() throws InterruptedException {
 		Countdown countdown = new Countdown();
 		countdown.startStopwatch();
-		Thread.sleep(10000);
-		countdown.stopTimer();
-		Thread.sleep(15000);
+		assertEquals(countdown.elapsed, 0);
 		
 		
 	}
