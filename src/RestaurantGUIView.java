@@ -13,6 +13,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -37,6 +39,8 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -48,6 +52,7 @@ import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -462,42 +467,56 @@ public class RestaurantGUIView extends Application implements Observer {
 	private int selectedTicket=0;
 	
 	public VBox makeTicketInfos() {
+		//make images
+		Image notebook = new Image(getClass().getResourceAsStream("/notebook.png"));
+		BackgroundImage notebookView = new BackgroundImage(notebook, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+						
 		VBox ticketsInfo = new VBox();
-		// switch labels with better things later
+
+		//make ticket 1
 		VBox ticketOne = new VBox(5);
-		ticketOne.setAlignment(Pos.CENTER_LEFT);
+		ticketOne.setBackground(new Background(notebookView));
+		ticketOne.setMinHeight(110);
+		ticketOne.setMaxWidth(102);
+						
+		ticketOne.setAlignment(Pos.TOP_LEFT);
 		ticketOne.setStyle(
 		        "-fx-padding: 10;" +
-		        "-fx-background-color: #FFF8DC;" +        // light parchment
 		        "-fx-border-color: #B8860B;" +            // dark goldenrod
 		        "-fx-border-width: 2;" +
-		        "-fx-background-radius: 8;" +
-		        "-fx-border-radius: 8;" +
 		        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 		);
 		Label t1title = new Label("Ticket 1");
-		t1title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-		Label t1body = new Label("get ticket info later");
+		t1title.setFont(new Font("Comic Sans MS Bold", 14));
 		Group ticket1Face = makeSmileyFace();
+		
+		Label t1body = new Label("get ticket info later");
+		t1body.setFont(new Font("Comic Sans MS", 12));
 		ticketOne.getChildren().addAll(t1title, t1body, ticket1Face);
 		
 		ticketOne.setVisible(false);
+	
+		//make ticket 2
 		// can set visibity to false
 		VBox ticketTwo = new VBox(5);
-		ticketTwo.setAlignment(Pos.CENTER_LEFT);
+		ticketTwo.setBackground(new Background(notebookView));
+		ticketTwo.setMinHeight(110);
+		ticketTwo.setMaxWidth(102);
+						
+		ticketTwo.setAlignment(Pos.TOP_LEFT);
 		ticketTwo.setStyle(
-		        "-fx-padding: 10;" +
-		        "-fx-background-color: #FFF8DC;" +
-		        "-fx-border-color: #B8860B;" +
-		        "-fx-border-width: 2;" +
-		        "-fx-background-radius: 8;" +
-		        "-fx-border-radius: 8;" +
-		        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
+				"-fx-padding: 10;" +
+				"-fx-border-color: #B8860B;" +
+				"-fx-border-width: 2;" +
+				"-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 		);
 		Label t2title = new Label("Ticket 2");
-		t2title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-		Label t2body = new Label("get ticket info later");
+		t2title.setFont(new Font("Comic Sans MS Bold", 14));
 		Group ticket2Face = makeSmileyFace();
+						
+		Label t2body = new Label("get ticket info later");
+		t2body.setFont(new Font("Comic Sans MS", 12));
 		ticketTwo.getChildren().addAll(t2title, t2body, ticket2Face);
 
 		ticketTwo.setVisible(false);
@@ -516,45 +535,45 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 
 	private void updateTicketGui(VBox ticketsInfo) {
+		Image notebook = new Image(getClass().getResourceAsStream("/notebook.png"));
+		BackgroundImage notebookView = new BackgroundImage(notebook, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+	
 		VBox ticketOne=(VBox) ticketsInfo.getChildren().get(0);
 		VBox ticketTwo=(VBox) ticketsInfo.getChildren().get(1);
+		
+		ticketOne.setBackground(new Background(notebookView));
+		ticketOne.setMinHeight(110);
+		ticketOne.setMaxWidth(102);
+		ticketTwo.setBackground(new Background(notebookView));
+		ticketTwo.setMinHeight(110);
+		ticketTwo.setMaxWidth(102);
+		
 		if (selectedTicket==1) {
 			ticketOne.setStyle(
 			        "-fx-padding: 10;" +
-			        "-fx-background-color: #FFF8DC;" +        // light parchment
 			        "-fx-border-color: red;" +            // dark goldenrod
 			        "-fx-border-width: 2;" +
-			        "-fx-background-radius: 8;" +
-			        "-fx-border-radius: 8;" +
 			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 			);
 			ticketTwo.setStyle(
 			        "-fx-padding: 10;" +
-			        "-fx-background-color: #FFF8DC;" +
 			        "-fx-border-color: #B8860B;" +
 			        "-fx-border-width: 2;" +
-			        "-fx-background-radius: 8;" +
-			        "-fx-border-radius: 8;" +
 			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 			);
 		}
 		else if(selectedTicket==2) {
 			ticketTwo.setStyle(
 			        "-fx-padding: 10;" +
-			        "-fx-background-color: #FFF8DC;" +     // light parchment
 			        "-fx-border-color: red;" +            // dark goldenrod
 			        "-fx-border-width: 2;" +
-			        "-fx-background-radius: 8;" +
-			        "-fx-border-radius: 8;" +
 			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 			);
 			ticketOne.setStyle(
 			        "-fx-padding: 10;" +
-			        "-fx-background-color: #FFF8DC;" +
 			        "-fx-border-color: #B8860B;" +
 			        "-fx-border-width: 2;" +
-			        "-fx-background-radius: 8;" +
-			        "-fx-border-radius: 8;" +
 			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 			);
 			
@@ -562,54 +581,79 @@ public class RestaurantGUIView extends Application implements Observer {
 		else {
 			ticketOne.setStyle(
 			        "-fx-padding: 10;" +
-			        "-fx-background-color: #FFF8DC;" +
 			        "-fx-border-color: #B8860B;" +
 			        "-fx-border-width: 2;" +
-			        "-fx-background-radius: 8;" +
-			        "-fx-border-radius: 8;" +
 			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 			);
 			ticketTwo.setStyle(
 			        "-fx-padding: 10;" +
-			        "-fx-background-color: #FFF8DC;" +
 			        "-fx-border-color: #B8860B;" +
 			        "-fx-border-width: 2;" +
-			        "-fx-background-radius: 8;" +
-			        "-fx-border-radius: 8;" +
 			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
 			);
 		}
-		
 	}
 
 	public void makePrep(Tab prep) {
-		// change pane later
-		BorderPane tempPane = new BorderPane();
+		//make images
+		Image prepRoom = new Image(getClass().getResourceAsStream("/preproom.jpg"));
+		BackgroundImage prepRoomView = new BackgroundImage(prepRoom, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+				
+		Image basketimg = new Image(getClass().getResourceAsStream("/basketbottom.PNG"));
+		ImageView basketView = new ImageView(basketimg);
+		
+		Image ovenimg = new Image(getClass().getResourceAsStream("/oven.jpg"));
+		ImageView ovenView = new ImageView(ovenimg);
+		
+		BorderPane prepPane = new BorderPane();
+		prepPane.setBackground(new Background(prepRoomView));
 
 		VBox content = new VBox();
 		content.setAlignment(Pos.CENTER);
+		
 		pickIngredients = new HBox();
 		pickIngredients.setAlignment(Pos.CENTER);
+		
 		VBox basketBox = new VBox();
-		basket = new VBox();
 		basketBox.setStyle(
-			    "-fx-background-color: #f5deb3;" +
-			    "-fx-padding: 10;" +
-			    "-fx-background-radius: 10;"
-			);
-		basketBox.setFillWidth(true);
-		basketBox.getChildren().addAll(new Label("Basket Contents"), basket);
+				"-fx-background-color: transparent;"
+				);
+		
+		basketView.setPreserveRatio(false);
+		
+		basketView.setFitWidth(240);
+		basketView.setFitHeight(160);
+		
+		StackPane basketandBackBox = new StackPane();
+		basketandBackBox.getChildren().add(basketView);
+		basketandBackBox.getChildren().add(basketBox);
+		
+		basket = new VBox();
+		
+		basketBox.getChildren().addAll(basket);
+		
 		basket.setAlignment(Pos.CENTER);
 		
 		int n = 0;
 		while (n < IngredientsList.TOPPINGLIST.length){
 			Button topping = new Button();
+			topping.setStyle(
+					"-fx-border-color: black;" +
+					"-fx-border-width: 1;" +
+					"-fx-border-radius: 3;" +
+					"-fx-background-color: #b1d6f0" 
+			);
+			
 			Image img = new Image(IngredientsList.TOPPINGLIST[n].getToppingName()+".png");
-			ImageView imgview=new ImageView(img);
+			ImageView imgview = new ImageView(img);
 			imgview.setFitWidth(25);
 			imgview.setFitHeight(25);
+			
 			topping.setGraphic(imgview);
+			
 			Toppings currTopping = IngredientsList.TOPPINGLIST[n];
+			
 			topping.setOnAction((event) -> {
 				controller.addToBasket(currTopping); //which will update it in the baskets label and buttons through observer
 				
@@ -620,11 +664,12 @@ public class RestaurantGUIView extends Application implements Observer {
 			pickIngredients.getChildren().add(topping);
 			n++;
 		}
+		
 		ScrollPane scroll = new ScrollPane();
-		scroll.setContent(basketBox);
+		scroll.setContent(basketandBackBox);
 		scroll.setStyle(
 			    "-fx-background-color: #d2b48c;" + 
-			    "-fx-border-color: #8b5a2b;" +  
+			    "-fx-border-color: #8b5a2b;" + 
 			    "-fx-border-width: 3;" +
 			    "-fx-background-radius: 10;" +
 			    "-fx-border-radius: 10;" +
@@ -637,31 +682,50 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		VBox ovenBox = new VBox();
 		oven = new VBox();
+		
 		ovenBox.setStyle(
-			    "-fx-background-color: #d3d3d3;" +
-			    "-fx-padding: 10;" +
-			    "-fx-background-radius: 10;"
+			    "-fx-background-color: transparent;"
 			);
-		ovenBox.setFillWidth(true);
-		ovenBox.getChildren().addAll(new Label("Oven Contents"), oven);
+		
+		ovenView.setPreserveRatio(false);
+		ovenView.setFitHeight(160);
+		ovenView.setFitWidth(230);
+		
+		StackPane ovenandBackBox = new StackPane();
+		ovenandBackBox.getChildren().addAll(ovenView, ovenBox);
+		
+		ovenBox.getChildren().addAll(oven);
+		
 		oven.setAlignment(Pos.CENTER);
+		
 		Button patty=new Button();
+		patty.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
+		
 		Image imgPatty = new Image("uncookedPatty.png");
 		ImageView imgviewPatty=new ImageView(imgPatty);
+		
 		imgviewPatty.setFitWidth(25);
 		imgviewPatty.setFitHeight(25);
+		
 		patty.setGraphic(imgviewPatty);
+		
 		patty.setOnAction((event) -> {
 			Patty currPatty=new Patty();
 			controller.addToOven(currPatty); //which will update it in the baskets label and buttons through observer
 			currPatty.startCooking();
 		});
+		
 		pickPatty = new HBox();
 		pickPatty.setAlignment(Pos.CENTER);
 		pickPatty.getChildren().add(patty);
 		
 		ScrollPane ovenscroll = new ScrollPane();
-		ovenscroll.setContent(ovenBox);
+		ovenscroll.setContent(ovenandBackBox);
 		ovenscroll.setStyle(
 			    "-fx-background-color: #b0b0b0;" + 
 			    "-fx-border-color: #808080;" + 
@@ -675,18 +739,27 @@ public class RestaurantGUIView extends Application implements Observer {
 		ovenscroll.setFitToHeight(true);
 		ovenscroll.setPrefViewportHeight(150);
 		
-		content.getChildren().addAll(pickIngredients, scroll,pickPatty,ovenscroll);
+		content.getChildren().addAll(pickIngredients, scroll, pickPatty, ovenscroll);
 		
 		Button reset = new Button("Reset");
+		reset.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
+		reset.setFont(new Font("Comic Sans MS Bold", 12));
+		
 		reset.setOnAction((event) -> {
 			controller.resetBasket();//, whcih will update the basket through observer
 		});
+
+		prepPane.setCenter(content);
+		prepPane.setLeft(ticketsInfoPrep);
+		prepPane.setRight(reset);
 		
-		tempPane.setCenter(content);
-		tempPane.setLeft(ticketsInfoPrep);
-		tempPane.setRight(reset);
-		
-		prep.setContent(tempPane);
+		prep.setContent(prepPane);
+
 		startOvenTimer();
 	}
 
