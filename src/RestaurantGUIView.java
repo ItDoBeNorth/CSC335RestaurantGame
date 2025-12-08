@@ -892,9 +892,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		cookPane.setLeft(ticketsInfoCook);
 		cookPane.setCenter(content);
 		cookPane.setRight(options);
-		
 		cook.setContent(cookPane);
-		
 	}
 	
 	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
