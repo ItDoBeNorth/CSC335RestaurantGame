@@ -369,9 +369,7 @@ public class RestaurantGUIView extends Application implements Observer {
 			makeEODscreen(endOfDayScreen, order, prep, cook, serve);
 			
 		
-			tab
-        
-        getTabs().remove(menu);
+			tabPane.getTabs().remove(menu);
 			tabPane.getTabs().addAll(order, prep, cook, serve);
 			tabPane.getSelectionModel().select(order);
 			controller.setUpDay();
