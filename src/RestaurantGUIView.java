@@ -258,7 +258,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		System.out.println("Starting JavaFX…");
 
 		// SetUp Stage
-		stage.setTitle("Brger");
+		stage.setTitle("Restaurant");
 		BorderPane pane = new BorderPane();
 		controller = new RestaurantController();
 
@@ -392,7 +392,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		orderCounterBox.setStyle(
 				"-fx-padding: 20;" +
-				"-fx-border-color: black;" +
+				"-fx-border-color: #8b5a2b;" +
 				"-fx-border-width: 4;" 
 		);
 		
@@ -417,10 +417,15 @@ public class RestaurantGUIView extends Application implements Observer {
 		c1Name.setFont(new Font("Comic Sans MS Bold", 14));
 		c1Name.setStyle("-fx-text-fill: black;");
 		c1Name.setVisible(true);
-
 		
 		// Get Order button
 		Button c1Button = new Button("Get Order");
+		c1Button.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
 		c1Button.setOnAction(e -> {
 		    controller.updateTaskList(0, currCustomers[0]);
 		    startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0], 1);
@@ -440,10 +445,15 @@ public class RestaurantGUIView extends Application implements Observer {
 		c2Label.setFont(new Font("Comic Sans MS Bold", 14));
 		c2Label.setVisible(true);
 		c2Label.setStyle("-fx-text-fill: black;");
-
 	
 		// button
 		Button c2Button = new Button("Get Order");
+		c2Button.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
 		c2Button.setOnAction(e -> {
 		    controller.updateTaskList(1, currCustomers[1]);
 		    startPatienceTimer(controller.getCurrDay(), currCustomers[1].patienceLevel(), currCustomers[1], 2);
@@ -459,8 +469,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		orderCounterBox.setBottom(counterView);
 		tempPane.setCenter(orderCounterBox);
 		order.setContent(tempPane);
-
 	}
+	
 	private int selectedTicket=0;
 	
 	public VBox makeTicketInfos() {
@@ -1012,30 +1022,77 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 	
 	public void makeEODscreen(Tab eodTab, Tab order, Tab prep, Tab cook, Tab serve) {
-		BorderPane tempPane = new BorderPane();
-		
-		EODcontent = new VBox();
-		EODcontent.setAlignment(Pos.CENTER);
-		Label rating = new Label("Rating: ");
-		Label income = new Label("Income: ");
-		Label accuracy = new Label("Accuracy: ");
-		Label timing = new Label("Timing: ");
-		Label newStuff = new Label("New Things Next Day:");
-		Label milestones = new Label("Milestones:");
-		Button next = new Button("Next Day");
-		next.setOnAction((e)->{
-			tabPane.getTabs().remove(eodTab);
-			tabPane.getTabs().addAll(order, prep, cook, serve);
-			tabPane.getSelectionModel().select(order);
-			controller.nextDay();
-		}); 
-		
-		next.setAlignment(Pos.CENTER);
-		
-		EODcontent.getChildren().addAll(rating, income, accuracy, timing, milestones, newStuff,next);
-		
-		tempPane.setCenter(EODcontent);
-		eodTab.setContent(tempPane);
+		//images
+				Image endStar = new Image(getClass().getResourceAsStream("/starbackground.jpg"));
+				BackgroundImage endStarView = new BackgroundImage(endStar, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+						new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+				
+				Image bluesky = new Image(getClass().getResourceAsStream("/bluesky.png"));
+				ImageView blueView = new ImageView(bluesky);
+				
+				BorderPane endPane = new BorderPane();
+				endPane.setBackground(new Background(endStarView));
+				
+				EODcontent = new VBox();
+				EODcontent.setAlignment(Pos.CENTER);
+				
+				blueView.setPreserveRatio(true);
+				blueView.setFitHeight(350);
+				blueView.setFitWidth(300);
+				
+				Label rating = new Label("Rating: ");
+				rating.setStyle("-fx-background-color: #b1d6f0");
+				rating.setFont(new Font("Comic Sans MS Bold", 12));
+				
+				Label income = new Label("Income: ");
+				income.setStyle("-fx-background-color: #b1d6f0");
+				income.setFont(new Font("Comic Sans MS Bold", 12));
+				
+				Label accuracy = new Label("Accuracy: ");
+				accuracy.setStyle("-fx-background-color: #b1d6f0");
+				accuracy.setFont(new Font("Comic Sans MS Bold", 12));
+				
+				Label timing = new Label("Timing: ");
+				timing.setStyle("-fx-background-color: #b1d6f0");
+				timing.setFont(new Font("Comic Sans MS Bold", 12));
+				
+				Label newStuff = new Label("New Things Next Day:");
+				newStuff.setStyle("-fx-background-color: #b1d6f0");
+				newStuff.setFont(new Font("Comic Sans MS Bold", 12));
+				
+				Label milestones = new Label("Milestones:");
+				milestones.setFont(new Font("Comic Sans MS Bold", 12));
+				milestones.setStyle(
+						"-fx-border-color: #cfa430;" +
+						"-fx-border-width: 1;" +
+						"-fx-background-color: #f0c759" 
+				);
+				
+				Button next = new Button("Next Day");
+				next.setStyle(
+						"-fx-border-color: black;" +
+						"-fx-border-width: 1;" +
+						"-fx-background-color: #b1d6f0" 
+				);
+				next.setFont(new Font("Comic Sans MS Bold", 12));
+				
+				next.setOnAction((e)->{
+					tabPane.getTabs().remove(eodTab);
+					tabPane.getTabs().addAll(order, prep, cook, serve);
+					tabPane.getSelectionModel().select(order);
+					controller.nextDay();
+				}); 
+				
+				next.setAlignment(Pos.CENTER);
+				
+				EODcontent.getChildren().addAll(rating, income, accuracy, timing, milestones, newStuff,next);
+			
+				StackPane endDisplay = new StackPane();
+				endDisplay.getChildren().addAll(blueView, EODcontent);
+				
+				endPane.setCenter(endDisplay);
+				eodTab.setContent(endPane);
+
 	}
 	
 	public void updateBurgerGUI() {
