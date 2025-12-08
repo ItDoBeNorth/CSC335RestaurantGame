@@ -97,10 +97,7 @@ public class RestaurantGUIView extends Application implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		EventDetail info = (EventDetail) arg;
-		// use enum later if needed
-		// add getting day and score if needed
 		
-		// also add sometthing for ingredients stating at the day for enable ingredients thtat are available
 		switch (info.getEventInfo()) {
 			case ("removeCustomer0"):
 				currCustomers = (Customer[]) info.getEventChange();
@@ -117,14 +114,12 @@ public class RestaurantGUIView extends Application implements Observer {
 				ticketsInfoPrep.getChildren().get(0).setVisible(false);
 				ticketsInfoCook.getChildren().get(0).setVisible(false);
 				ticketsInfoServe.getChildren().get(0).setVisible(false);
-				// remove that task from gui
 				break;
 			case("removeTask1"):
 				currTickets = (Ticket[]) info.getEventChange();
 				ticketsInfoPrep.getChildren().get(1).setVisible(false);
 				ticketsInfoCook.getChildren().get(1).setVisible(false);
 				ticketsInfoServe.getChildren().get(1).setVisible(false);
-				//remove that task from gui
 				break;
 			case ("customerQueueUpdate0"):
 				currCustomers = (Customer[]) info.getEventChange();
@@ -139,8 +134,6 @@ public class RestaurantGUIView extends Application implements Observer {
 			 	cqu0B.setDisable(false);
 			 	customer1.setVisible(true);
 			 	
-			 
-				// change things in customer1 and customer 2 box
 				break;
 			case ("customerQueueUpdate1"):
 				currCustomers = (Customer[]) info.getEventChange();
@@ -157,7 +150,6 @@ public class RestaurantGUIView extends Application implements Observer {
 				break;
 			case("currTasksChanged0"):
 				currTickets = (Ticket[]) info.getEventChange();
-				//Change from label to something else later. basicly does any gui changes needed
 				for (int i = 0; i < 3; i++) {
 					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(0);
 					
@@ -179,7 +171,6 @@ public class RestaurantGUIView extends Application implements Observer {
 				break;
 			case("currTasksChanged1"):
 				currTickets = (Ticket[]) info.getEventChange();
-				//Change from label to something else later. basicly does any gui changes needed
 				for (int i = 0; i < 3; i++) {
 					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(1);
 					double totalTime = currCustomers[1].patienceLevel() * controller.getCurrDay() + 10;
@@ -230,7 +221,6 @@ public class RestaurantGUIView extends Application implements Observer {
 				updateBurgerGUI();
 				break;
 			case("updateEndOfDayScreen"):
-				//ADD MORE LATER
 				if (EODcontent == null) return;
 				Label rating = (Label) EODcontent.getChildren().get(0);
 				rating.setText("Score: +" + controller.getDaysScore() + " \n Total: "+ player.getScore());
@@ -263,7 +253,6 @@ public class RestaurantGUIView extends Application implements Observer {
 	 *
 	 */
 	
-	/// move whatevers needed to be reset each day into its own method
 	@Override
 	public void start(Stage stage) throws Exception {
 		System.out.println("Starting JavaFX…");
@@ -292,15 +281,13 @@ public class RestaurantGUIView extends Application implements Observer {
 				out.writeObject(currPlayerList);
 				
 			} catch (IOException er) {
-				// TODO Auto-generated catch block
+				
 				er.printStackTrace();
 			}
 			});
 		 		
 
-		// Set up the tabs
-		// note for now using tabs, can use scene changing later
-		// also just for now, using basic panes and objects, change later when desiging
+		
 		tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		Tab menu = new Tab("Menu");
@@ -310,8 +297,6 @@ public class RestaurantGUIView extends Application implements Observer {
 		Tab serve = new Tab("Serve");
 		Tab endOfDayScreen = new Tab("End Of Day");
 
-		// make menu
-		// use AnchorPane menuSpace = new AnchorPane(); to set up the gui
 		VBox menuLook= new VBox();
 		HBox horiz = new HBox();
 		Button signIn = new Button("Sign In");
@@ -763,7 +748,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		reset.setFont(new Font("Comic Sans MS Bold", 12));
 		
 		reset.setOnAction((event) -> {
-			controller.resetBasket();//, whcih will update the basket through observer
+			controller.resetBasket(); // which will update the basket through observer
 		});
 
 		prepPane.setCenter(content);
@@ -809,12 +794,11 @@ public class RestaurantGUIView extends Application implements Observer {
 		StackPane burgerandBackBox = new StackPane();
 		burgerandBackBox.getChildren().addAll(boardView, burgerInfo);
 
-		//Label bunTop = new Label("Top Bun");
+		
 		ImageView bunTop=new ImageView(new Image("topBun.png"));
 		bunTop.setFitHeight(35);
 		bunTop.setFitWidth(50);
 		
-		//Label bunBot = new Label("Bottom Bun");
 		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
 		bunBot.setFitHeight(35);
 		bunBot.setFitWidth(50);
@@ -899,7 +883,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		cook.setContent(cookPane);
 	}
 	
-	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
+	
 	public void makeServe(Tab serve, Tab order, Tab endOfDayScreen) {
 		//make images
 		Image serveRoom = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
@@ -909,7 +893,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		Image boardimg = new Image(getClass().getResourceAsStream("/cuttingboard.jpg"));
 		ImageView boardView = new ImageView(boardimg);
 		
-		// change pane later
+		
 		BorderPane servePane = new BorderPane();
 		servePane.setBackground(new Background(serveRoomView));
 		
@@ -920,14 +904,14 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		VBox burgerInfo = new VBox();
 
-		//Label bunTop = new Label("Top Bun");
+		
 		ImageView bunTop=new ImageView(new Image("topBun.png"));
 		bunTop.setFitHeight(35);
 		bunTop.setFitWidth(50);
 		
 		burgerServe = new VBox();
 		
-		//Label bunBot = new Label("Bottom Bun");
+		
 		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
 		bunBot.setFitHeight(35);
 		bunBot.setFitWidth(50);
@@ -995,8 +979,7 @@ public class RestaurantGUIView extends Application implements Observer {
 						tabPane.getSelectionModel().select(endOfDayScreen);
 						
 						
-						//currCustomers[0].stopTimer();
-						//in which it should also update customer queue and update that info in customer1 and customer 2
+						
 					}
 					tabPane.getSelectionModel().select(order); 
 					
@@ -1082,8 +1065,6 @@ public class RestaurantGUIView extends Application implements Observer {
 			burgerServe.getChildren().addFirst(imgCookView);
 			burgerCook.getChildren().addFirst(imgServeView);
 		}
-		//burgerCook.setText(tempBurger);
-		//burgerServe.setText(tempBurger);
 	}
 	
 	public void updateBasketGUI() {
@@ -1091,14 +1072,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		pickFromBasket.getChildren().clear();
 		
 		ArrayList<Toppings> basketToppings = controller.getCurrBasket().getList();
-		//String tempBasket = "";
 		for (Toppings t : basketToppings) {
 			final Toppings currTopping=t;
 			String imgStr="";
 			Button topping = new Button();
 			if(currTopping instanceof Patty) {
 				Patty currPatty=(Patty)currTopping;
-				//System.out.println("Patty: "+currPatty+",cookingTime:"+currPatty.getCookingTime()+",CookingState:"+currPatty.getCookingState());
 				imgStr=currPatty.getPattyImage();
 			}
 			else {
@@ -1122,15 +1101,14 @@ public class RestaurantGUIView extends Application implements Observer {
 			
 			pickFromBasket.getChildren().add(topping);
 			basket.getChildren().add(imgBasketView);
-		}
-		//basket.setText(tempBasket);
+		};
 		
 		
 	}
 	private void updateOvenGUI() { 
-		// TODO Auto-generated method stub
+		
 		oven.getChildren().clear();
-		//pickFromBasket.getChildren().clear();
+		
 		
 		ArrayList<Toppings> ovenToppings = controller.getCurrOven().getList();
 		for (Toppings t : ovenToppings) {
@@ -1156,10 +1134,9 @@ public class RestaurantGUIView extends Application implements Observer {
 			});
 			
 		
-			//pickFromBasket.getChildren().add(patty);
+			
 			oven.getChildren().add(imgOvenView);
 		}
-		//basket.setText(tempBasket);
 		
 		
 	}
