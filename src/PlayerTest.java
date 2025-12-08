@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -9,6 +10,16 @@ class PlayerTest {
 	@Test
 	void newPlayerTest() {
 		Player sarah=new Player("Sarah"); 
+		assertEquals(sarah.getDay(),0);
+		assertEquals(sarah.getName(),"Sarah");
+		assertEquals(sarah.getScore(),0);
+	}
+	
+	@Test
+	void newPlayerListTest() {
+		PlayerList playerlist = new PlayerList();
+		Player sarah = playerlist.getPlayer("Sarah");
+		assertNotNull(sarah);
 		assertEquals(sarah.getDay(),0);
 		assertEquals(sarah.getName(),"Sarah");
 		assertEquals(sarah.getScore(),0);
