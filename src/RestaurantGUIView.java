@@ -62,6 +62,9 @@ public class RestaurantGUIView extends Application implements Observer {
 	
 	private TabPane tabPane;
 	
+	Timeline timeline1;
+	Timeline timeline2;
+	
 	//might help with observer stuff
 
 	private Customer[] currCustomers;
@@ -102,10 +105,12 @@ public class RestaurantGUIView extends Application implements Observer {
 			case ("removeCustomer0"):
 				currCustomers = (Customer[]) info.getEventChange();
 				customer1.setVisible(false);
+				if (timeline1 != null) {timeline1.stop();}
 				break;
 			case("removeCustomer1"):   
 				currCustomers = (Customer[]) info.getEventChange();
 				customer2.setVisible(false);
+				if (timeline2 != null) {timeline2.stop();}
 				break;
 			case ("removeTask0"):
 				currTickets = (Ticket[]) info.getEventChange();
@@ -164,7 +169,7 @@ public class RestaurantGUIView extends Application implements Observer {
 						
 					String temp = "";
 					for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
-						temp += currTickets[0].getToppingsList().get(n).getToppingName()+ "\n";
+						temp = currTickets[0].getToppingsList().get(n).getToppingName()+ "\n" + temp;
 					} 
 					ctc0L.setText(temp);
 					ctc0L.setManaged(true);
@@ -183,7 +188,7 @@ public class RestaurantGUIView extends Application implements Observer {
 					ticketBox.getChildren().set(2, makeSmileyFace());
 					String temp = "";
 					for (int n = 0; n < currTickets[1].getToppingsList().size(); n++) {
-						temp += currTickets[1].getToppingsList().get(n).getToppingName()+ "\n";
+						temp = currTickets[1].getToppingsList().get(n).getToppingName()+ "\n" + temp;
 					} 
 					ctc0L.setText(temp);
 					ctc0L.setManaged(true);
@@ -887,27 +892,37 @@ public class RestaurantGUIView extends Application implements Observer {
 		cookPane.setLeft(ticketsInfoCook);
 		cookPane.setCenter(content);
 		cookPane.setRight(options);
-		
 		cook.setContent(cookPane);
-
-
-
 	}
+	
 	// figure out ticketname stuff and where the tickets show up on the board for corespoinding customer
 	public void makeServe(Tab serve, Tab order, Tab endOfDayScreen) {
+		//make images
+		Image serveRoom = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
+		BackgroundImage serveRoomView = new BackgroundImage(serveRoom, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+		
+		Image boardimg = new Image(getClass().getResourceAsStream("/cuttingboard.jpg"));
+		ImageView boardView = new ImageView(boardimg);
+		
 		// change pane later
-		BorderPane tempPane = new BorderPane();
+		BorderPane servePane = new BorderPane();
+		servePane.setBackground(new Background(serveRoomView));
 		
 		VBox finish = new VBox();
+		
 		ticketChoice = new ChoiceBox<String>();
 		ticketChoice.getItems().addAll("Ticket 1", "Ticket 2");
+		
 		VBox burgerInfo = new VBox();
 
 		//Label bunTop = new Label("Top Bun");
 		ImageView bunTop=new ImageView(new Image("topBun.png"));
 		bunTop.setFitHeight(35);
 		bunTop.setFitWidth(50);
+		
 		burgerServe = new VBox();
+		
 		//Label bunBot = new Label("Bottom Bun");
 		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
 		bunBot.setFitHeight(35);
@@ -916,13 +931,21 @@ public class RestaurantGUIView extends Application implements Observer {
 		burgerInfo.getChildren().addAll(bunTop, burgerServe, bunBot);
 		
 		burgerInfo.setStyle(
-			    "-fx-background-color: #f5deb3;" +
-			    "-fx-padding: 10;" +
-			    "-fx-background-radius: 10;"
+			    "-fx-background-color: transparent;"
 			);
 		burgerInfo.setAlignment(Pos.CENTER);
+		
+		burgerInfo.setStyle(
+			    "-fx-background-color: transparent"
+			);
+		
+		boardView.setPreserveRatio(false);
+		
+		StackPane burgerandBackBox = new StackPane();
+		burgerandBackBox.getChildren().addAll(boardView, burgerInfo);
+
 		ScrollPane scroll = new ScrollPane();
-		scroll.setContent(burgerInfo);
+		scroll.setContent(burgerandBackBox);
 		scroll.setStyle(
 			    "-fx-background-color: #d2b48c;" + 
 			    "-fx-border-color: #8b5a2b;" + 
@@ -932,30 +955,52 @@ public class RestaurantGUIView extends Application implements Observer {
 			    "-fx-padding: 5;" +
 			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
 			);
+		
+		scroll.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> {
+		    boardView.setFitHeight(newVal.getHeight());
+		    boardView.setFitWidth(newVal.getWidth());
+		});
+		
+		burgerandBackBox.setMaxHeight(150);
 		burgerInfo.setMaxHeight(150); 
+		
 		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setMaxHeight(150);
 		scroll.setPrefViewportHeight(150);
+		
 		Button serveBurger = new Button("Serve Burger");
+		serveBurger.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-radius: 3;" +
+				"-fx-background-color: #b1d6f0" 
+		);
+		serveBurger.setFont(new Font("Comic Sans MS Bold", 12));
+		
 		serveBurger.setOnAction((e) -> {
-			
 			if (selectedTicket != 0) {
+				
 				if (selectedTicket==1 && currTickets[0] != null) {
 					currCustomers[0].stopTimer();
+					
 					if (!controller.serveBurger(0, currTickets[0])) {
 						
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
+						
+						
 						//currCustomers[0].stopTimer();
 						//in which it should also update customer queue and update that info in customer1 and customer 2
 					}
 					tabPane.getSelectionModel().select(order); 
 					
 					selectedTicket=0;
+					
 				} else if (selectedTicket==2 && currTickets[1] != null){
 					currCustomers[1].stopTimer();
+					
 					if (!controller.serveBurger(1, currTickets[1])) {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
@@ -972,12 +1017,11 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		finish.getChildren().addAll(serveBurger);
 		
-		tempPane.setCenter(scroll);
-		tempPane.setLeft(ticketsInfoServe);
-		tempPane.setRight(finish);
+		servePane.setCenter(scroll);
+		servePane.setLeft(ticketsInfoServe);
+		servePane.setRight(finish);
 		
-		serve.setContent(tempPane);
- 
+		serve.setContent(servePane);
 	}
 	
 	public void makeEODscreen(Tab eodTab, Tab order, Tab prep, Tab cook, Tab serve) {
@@ -1334,24 +1378,14 @@ public class RestaurantGUIView extends Application implements Observer {
 			        }
 			    })
 			);
+			if (customerNum == 1) {
+				timeline1 = timeline;
+			} else {
+				timeline2 = timeline;
+			}
 			timeline.play();
 	}
 	
-//	private void animateTicketFace(VBox ticketBox, double patienceTime) {
-//	    Timeline timeline = new Timeline(
-//	        new KeyFrame(Duration.millis(patienceTime*1000), e -> {
-//	            ticketBox.getChildren().set(2, makeFlatFace());
-//	        }),
-//	        new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
-//	            ticketBox.getChildren().set(2, makeUpsetFace());
-//	        }),
-//	        new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
-//	            ticketBox.getChildren().set(2, makeAngryFace());
-//	        })
-//	    );
-//	    timeline.play();
-//	}
-
 	
 	
 

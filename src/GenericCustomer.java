@@ -21,7 +21,7 @@ public class GenericCustomer implements Customer{
 		shape=shapes[r.nextInt(shapes.length)];
 		color=colors[r.nextInt(colors.length)];
 		name=names[r.nextInt(names.length)];
-		patienceLevel = r.nextInt(6,15);
+		patienceLevel = r.nextInt(4,7);
 		this.countdown = new Countdown();
 	
 	}

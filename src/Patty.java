@@ -31,6 +31,7 @@ public class Patty extends CookableToppings {
 	}
 	
 	public CookingState getCookingState() {
+		updateState();
 		return currState;
 	}
 	
