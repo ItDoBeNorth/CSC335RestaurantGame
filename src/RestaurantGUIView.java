@@ -80,7 +80,7 @@ public class RestaurantGUIView extends Application implements Observer {
 	private VBox burgerCook;
 	private VBox burgerServe;
 	
-	private VBox basket;
+	private HBox basket;
 	private HBox pickFromBasket;
 	
 	private VBox oven;
@@ -637,7 +637,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		basketandBackBox.getChildren().add(basketView);
 		basketandBackBox.getChildren().add(basketBox);
 		
-		basket = new VBox();
+		basket = new HBox();
 		
 		basketBox.getChildren().addAll(basket);
 		
