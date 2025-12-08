@@ -429,7 +429,9 @@ public class RestaurantGUIView extends Application implements Observer {
 		customer1.setAlignment(Pos.CENTER);
 
 		Label c1Name = new Label("Customer");
-		c1Name.setVisible(false);
+		c1Name.setFont(new Font("Comic Sans MS Bold", 14));
+		c1Name.setStyle("-fx-text-fill: black;");
+		c1Name.setVisible(true);
 
 		
 		// Get Order button
@@ -450,7 +452,9 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	
 		Label c2Label = new Label("Customer");
-		c2Label.setVisible(false);
+		c2Label.setFont(new Font("Comic Sans MS Bold", 14));
+		c2Label.setVisible(true);
+		c2Label.setStyle("-fx-text-fill: black;");
 
 	
 		// button
