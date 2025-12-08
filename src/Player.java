@@ -1,6 +1,9 @@
 import java.io.Serializable;
 import java.util.ArrayList;
-
+/**
+ * CSC 335, Fall 2025 
+ * file Player.java: This class is creates a player for the Restaurant game.
+ */
 public class Player implements Serializable {
 	private int day;
 	private int score;
@@ -25,28 +28,12 @@ public class Player implements Serializable {
 		money = 0;
 		
 		customersServed=0;
-		customersPoints=1;
+		customersPoints=1 ;
 		perfectAccuracy=0;
 		perfectTiming=0;
 		
 		
 	}
-
-	/**
-	 * Creates a player with a given name, day, and score.
-	 * 
-	 * @param name  the name chosen for the player by the user.
-	 * @param day   the current day the player is on.
-	 * @param score the current score of the player.
-	 * @param money 
-	 */
-	public Player(String name, int day, int score, int money) {
-		this.name = name;
-		this.day = day;
-		this.score = score;
-		this.money = money;
-	}
-
 	/**
 	 * move the player to the next day
 	 */
@@ -106,9 +93,15 @@ public class Player implements Serializable {
 	public void addCustomerServed() {
 		customersServed++;
 	}
-	
+	/**
+	 * get the players daily milestones based on the number of customers served,
+	 * streak of perfect accuracy, and streak of perfect timing days and adds points
+	 * to the score 
+	 * @return dailyMilestones and array list with the daily milestones 
+	 */
 	public ArrayList<String> milestones() {
-		
+		System.out.println(customersServed);
+		System.out.println(customersPoints);
 		ArrayList<String> dailyMilestones=new ArrayList<>();
 	
 		if (customersServed>=10*customersPoints) {
@@ -139,16 +132,27 @@ public class Player implements Serializable {
 		}
 		return dailyMilestones;
 			}
-	
+	/**
+	 * add a perfect accuracy day 
+	 */
 	public void addPerfectAccuracy() {
 		perfectAccuracy++;
 	}
+	/**
+	 * resets perfect accuracy days count
+	 */
 	public void resetPerfectAccuracy() {
 		perfectAccuracy=0;
 	}
+	/**
+	 * add a perfect timing day
+	 */
 	public void addPerfectTiming() {
 		perfectTiming++;
 	}
+	/**
+	 * resets perfect timing days count
+	 */
 	public void resetPerfectTiming() {
 		perfectTiming=0;
 	}
