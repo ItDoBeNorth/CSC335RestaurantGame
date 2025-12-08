@@ -22,22 +22,21 @@ public class RestaurantController {
 	 * @param model a model created from the file RestaurantModel that runs the
 	 *              function which the controller display
 	 */
-	public RestaurantController() { 
+	public RestaurantController() {
 		model = null;
-		File gameData= new File("save_game.dat"); 
+		File gameData = new File("save_game.dat");
 		if (gameData.exists()) {
 			try {
-				ObjectInputStream in= new ObjectInputStream(new FileInputStream(gameData));
-				 this.playerList=(PlayerList) in.readObject();
-				 in.close();
-				 
-			}catch (IOException | ClassNotFoundException e) {
-				
-				 e.printStackTrace();
-		}
-			
-		}
-		else {
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(gameData));
+				this.playerList = (PlayerList) in.readObject();
+				in.close();
+
+			} catch (IOException | ClassNotFoundException e) {
+
+				e.printStackTrace();
+			}
+
+		} else {
 			playerList = new PlayerList();
 		}
 	}
@@ -45,7 +44,7 @@ public class RestaurantController {
 	public PlayerList getPlayerList() {
 		return this.playerList;
 	}
-	
+
 	public RestaurantModel getModel() {
 		return model;
 	}
@@ -76,8 +75,7 @@ public class RestaurantController {
 	public void getCurrentCustomers() {
 		model.updateCustomerQueue();
 	}
-	
-	
+
 	/**
 	 * get the Ticket of the current customer
 	 * 
@@ -101,6 +99,7 @@ public class RestaurantController {
 	public void removeFromBasket(Toppings topping) {
 		model.removeFromBasket(topping);
 	}
+
 	public void addToOven(Toppings topping) {
 		model.addToOven(topping);
 		;
@@ -125,27 +124,28 @@ public class RestaurantController {
 
 	public void setUpDay() {
 		model.setUpDay();
-		}
-	
+	}
+
 	public ArrayList<Toppings> getDaysToppings() {
 		return model.getDaysIngredients();
 	}
 
-	public void undoBurger() { 
+	public void undoBurger() {
 		model.undoBurger();
 	}
 
 	public Basket<Toppings> getCurrBasket() {
 		return model.getBasket();
 	}
-	
+
 	public Oven<Toppings> getCurrOven() {
 		return model.getOven();
 	}
+
 	public Burger getBurger() {
 		return model.getBurger();
 	}
-	
+
 	public void resetBasket() {
 		model.clearBasket();
 	}
@@ -185,11 +185,28 @@ public class RestaurantController {
 		return currPlayer;
 	}
 
-	public int getDaysAccuracy() { return model.getDaysAccuracy();}
-	public int getDaysTiming() {return model.getDaysTiming();}
-	public int getDaysScore() {return model.getDaysScore();}
-	public double getDaysIncome() {return model.getDaysIncome();}
-	public int getCurrDay() {return model.getCurrDay();}
-	public String getDayMilestones(){return model.getDayMilestones();}
-	
+	public int getDaysAccuracy() {
+		return model.getDaysAccuracy();
+	}
+
+	public int getDaysTiming() {
+		return model.getDaysTiming();
+	}
+
+	public int getDaysScore() {
+		return model.getDaysScore();
+	}
+
+	public double getDaysIncome() {
+		return model.getDaysIncome();
+	}
+
+	public int getCurrDay() {
+		return model.getCurrDay();
+	}
+
+	public String getDayMilestones() {
+		return model.getDayMilestones();
+	}
+
 }

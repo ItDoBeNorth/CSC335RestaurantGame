@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
 public class ToppingTest {
-	
+
 	@Test
 	void CheeseTest() {
 		Cheese cheese = new Cheese();
@@ -15,7 +16,7 @@ public class ToppingTest {
 		assertEquals(cheese2.getPrice(), 1);
 		assertEquals(cheese2.getToppingName(), "T2");
 	}
-	
+
 	@Test
 	void OnionTest() {
 		Onion onion = new Onion();
@@ -25,7 +26,7 @@ public class ToppingTest {
 		assertEquals(onion2.getPrice(), 1);
 		assertEquals(onion2.getToppingName(), "T2");
 	}
-	
+
 	@Test
 	void TomatoTest() {
 		Tomato tomato = new Tomato();
@@ -37,10 +38,9 @@ public class ToppingTest {
 		assertEquals(tomato2.getPrice(), 1);
 		assertEquals(tomato2.getToppingName(), "T2");
 		assertFalse(tomato.isTheSameIngredient(tomato2));
-		
-		
+
 	}
-	
+
 	@Test
 	void LettuceTest() {
 		Lettuce lettuce = new Lettuce();
@@ -50,7 +50,7 @@ public class ToppingTest {
 		assertEquals(lettuce2.getPrice(), 1);
 		assertEquals(lettuce2.getToppingName(), "T2");
 	}
-	
+
 	@Test
 	void PickleTest() {
 		Pickle pickle = new Pickle();
@@ -60,6 +60,5 @@ public class ToppingTest {
 		assertEquals(pickle2.getPrice(), 1);
 		assertEquals(pickle2.getToppingName(), "T2");
 	}
-	
-	
+
 }

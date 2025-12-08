@@ -1,5 +1,5 @@
 import java.io.File;
-import java.io.FileOutputStream; 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -59,299 +59,292 @@ import javafx.util.Duration;
 public class RestaurantGUIView extends Application implements Observer {
 	private RestaurantController controller;
 	private Player player;
-	
+
 	private TabPane tabPane;
-	
+
 	Timeline timeline1;
 	Timeline timeline2;
-	
-	//might help with observer stuff
+
+	// might help with observer stuff
 
 	private Customer[] currCustomers;
 	private Ticket[] currTickets;
-	
+
 	// these things need to all be updated to the same info, just seperately
 	VBox[] ticketsForTabs;
 	// these are aboves 0, 1, 2
 	private VBox ticketsInfoPrep;
 	private VBox ticketsInfoCook;
 	private VBox ticketsInfoServe;
-	
+
 	private VBox burgerCook;
 	private VBox burgerServe;
-	
+
 	private HBox basket;
 	private HBox pickFromBasket;
-	
+
 	private VBox oven;
 	private HBox pickFromOven;
-	
+
 	// more observer things but seperate
 	private VBox customer1;
 	private VBox customer2;
-	private HBox pickIngredients;	
+	private HBox pickIngredients;
 	private HBox pickPatty;
 	private ChoiceBox<String> ticketChoice;
 	private VBox EODcontent;
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
 		EventDetail info = (EventDetail) arg;
-		
-		switch (info.getEventInfo()) {
-			case ("removeCustomer0"):
-				currCustomers = (Customer[]) info.getEventChange();
-				customer1.setVisible(false);
-				if (timeline1 != null) {timeline1.stop();}
-				break;
-			case("removeCustomer1"):   
-				currCustomers = (Customer[]) info.getEventChange();
-				customer2.setVisible(false);
-				if (timeline2 != null) {timeline2.stop();}
-				break;
-			case ("removeTask0"):
-				currTickets = (Ticket[]) info.getEventChange();
-				ticketsInfoPrep.getChildren().get(0).setVisible(false);
-				ticketsInfoCook.getChildren().get(0).setVisible(false);
-				ticketsInfoServe.getChildren().get(0).setVisible(false);
-				break;
-			case("removeTask1"):
-				currTickets = (Ticket[]) info.getEventChange();
-				ticketsInfoPrep.getChildren().get(1).setVisible(false);
-				ticketsInfoCook.getChildren().get(1).setVisible(false);
-				ticketsInfoServe.getChildren().get(1).setVisible(false);
-				break;
-			case ("customerQueueUpdate0"):
-				currCustomers = (Customer[]) info.getEventChange();
-				Label cqu0L = (Label) customer1.getChildren().get(0);
-				cqu0L.setText(currCustomers[0].getName());
-				// Image of character changed here, any animation started
-				customer1.getChildren().set(1, makeSmileyFace());
-				
-				customer1.getChildren().set(2, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
-				
-			 	Button cqu0B = (Button) customer1.getChildren().get(3);
-			 	cqu0B.setDisable(false);
-			 	customer1.setVisible(true);
-			 	
-				break;
-			case ("customerQueueUpdate1"):
-				currCustomers = (Customer[]) info.getEventChange();
-				Label cqu1L = (Label) customer2.getChildren().get(0);
-				cqu1L.setText(currCustomers[1].getName());
-				// Image of character changed here, any animation started
-				customer2.getChildren().set(1, makeSmileyFace());
-			    customer2.getChildren().set(2, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
-				
-			 	Button cqu1B = (Button) customer2.getChildren().get(3);
-			 	cqu1B.setDisable(false);
-			 	customer2.setVisible(true);
-				// change things in customer1 and customer 2 box
-				break;
-			case("currTasksChanged0"):
-				currTickets = (Ticket[]) info.getEventChange();
-				for (int i = 0; i < 3; i++) {
-					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(0);
-					
 
-					double totalTime = currCustomers[0].patienceLevel() * controller.getCurrDay() + 10;
-					//animateTicketFace(ticketBox, totalTime);
-					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().get(1);
-					ticketBox.getChildren().set(2, makeSmileyFace());
-						
-					String temp = "";
-					for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
-						temp = currTickets[0].getToppingsList().get(n).getToppingName()+ "\n" + temp;
-					} 
-					ctc0L.setText(temp);
-					ctc0L.setManaged(true);
-					ctc0L.setVisible(true);
-					ticketsForTabs[i].getChildren().get(0).setVisible(true);
+		switch (info.getEventInfo()) {
+		case ("removeCustomer0"):
+			currCustomers = (Customer[]) info.getEventChange();
+			customer1.setVisible(false);
+			if (timeline1 != null) {
+				timeline1.stop();
+			}
+			break;
+		case ("removeCustomer1"):
+			currCustomers = (Customer[]) info.getEventChange();
+			customer2.setVisible(false);
+			if (timeline2 != null) {
+				timeline2.stop();
+			}
+			break;
+		case ("removeTask0"):
+			currTickets = (Ticket[]) info.getEventChange();
+			ticketsInfoPrep.getChildren().get(0).setVisible(false);
+			ticketsInfoCook.getChildren().get(0).setVisible(false);
+			ticketsInfoServe.getChildren().get(0).setVisible(false);
+			break;
+		case ("removeTask1"):
+			currTickets = (Ticket[]) info.getEventChange();
+			ticketsInfoPrep.getChildren().get(1).setVisible(false);
+			ticketsInfoCook.getChildren().get(1).setVisible(false);
+			ticketsInfoServe.getChildren().get(1).setVisible(false);
+			break;
+		case ("customerQueueUpdate0"):
+			currCustomers = (Customer[]) info.getEventChange();
+			Label cqu0L = (Label) customer1.getChildren().get(0);
+			cqu0L.setText(currCustomers[0].getName());
+			// Image of character changed here, any animation started
+			customer1.getChildren().set(1, makeSmileyFace());
+
+			customer1.getChildren().set(2, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
+
+			Button cqu0B = (Button) customer1.getChildren().get(3);
+			cqu0B.setDisable(false);
+			customer1.setVisible(true);
+
+			break;
+		case ("customerQueueUpdate1"):
+			currCustomers = (Customer[]) info.getEventChange();
+			Label cqu1L = (Label) customer2.getChildren().get(0);
+			cqu1L.setText(currCustomers[1].getName());
+			// Image of character changed here, any animation started
+			customer2.getChildren().set(1, makeSmileyFace());
+			customer2.getChildren().set(2, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
+
+			Button cqu1B = (Button) customer2.getChildren().get(3);
+			cqu1B.setDisable(false);
+			customer2.setVisible(true);
+
+			break;
+		case ("currTasksChanged0"):
+			currTickets = (Ticket[]) info.getEventChange();
+			for (int i = 0; i < 3; i++) {
+				VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(0);
+
+				double totalTime = currCustomers[0].patienceLevel() * controller.getCurrDay() + 10;
+				Label ctc0L = (Label) ((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().get(1);
+				ticketBox.getChildren().set(2, makeSmileyFace());
+
+				String temp = "";
+				for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
+					temp = currTickets[0].getToppingsList().get(n).getToppingName() + "\n" + temp;
 				}
-				break;
-			case("currTasksChanged1"):
-				currTickets = (Ticket[]) info.getEventChange();
-				for (int i = 0; i < 3; i++) {
-					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(1);
-					double totalTime = currCustomers[1].patienceLevel() * controller.getCurrDay() + 10;
-					//animateTicketFace(ticketBox, totalTime);
-					Label ctc0L = (Label)((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().get(1);
-					ticketBox.getChildren().set(2, makeSmileyFace());
-					String temp = "";
-					for (int n = 0; n < currTickets[1].getToppingsList().size(); n++) {
-						temp = currTickets[1].getToppingsList().get(n).getToppingName()+ "\n" + temp;
-					} 
-					ctc0L.setText(temp);
-					ctc0L.setManaged(true);
-					ctc0L.setVisible(true);
-					ticketsForTabs[i].getChildren().get(1).setVisible(true);
+				ctc0L.setText(temp);
+				ctc0L.setManaged(true);
+				ctc0L.setVisible(true);
+				ticketsForTabs[i].getChildren().get(0).setVisible(true);
+			}
+			break;
+		case ("currTasksChanged1"):
+			currTickets = (Ticket[]) info.getEventChange();
+			for (int i = 0; i < 3; i++) {
+				VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(1);
+				double totalTime = currCustomers[1].patienceLevel() * controller.getCurrDay() + 10;
+				Label ctc0L = (Label) ((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().get(1);
+				ticketBox.getChildren().set(2, makeSmileyFace());
+				String temp = "";
+				for (int n = 0; n < currTickets[1].getToppingsList().size(); n++) {
+					temp = currTickets[1].getToppingsList().get(n).getToppingName() + "\n" + temp;
 				}
-				break;
-			case("resetCustomers"):
-				// remove customers
-				currCustomers = (Customer[]) info.getEventChange();
-				customer1.setVisible(false);
-				customer2.setVisible(false);
-				break;
-			case("resetTickets"):
-				// remove tickets
-				currTickets = (Ticket[]) info.getEventChange();
-			 	for (int i = 0; i < 3; i++ ) {
-			 		ticketsForTabs[i].getChildren().get(0).setVisible(false);
-			 		ticketsForTabs[i].getChildren().get(1).setVisible(false);
-			 	}
-				break; 
-			case("daysIngredients"):
-				int n = 0;
-				while (n < IngredientsList.TOPPINGLIST.length){
-					Toppings ingredient  = IngredientsList.TOPPINGLIST[n];
-					if (controller.getDaysToppings().contains(ingredient)) {
-						pickIngredients.getChildren().get(n).setDisable(false);
-					}
-					n++;
+				ctc0L.setText(temp);
+				ctc0L.setManaged(true);
+				ctc0L.setVisible(true);
+				ticketsForTabs[i].getChildren().get(1).setVisible(true);
+			}
+			break;
+		case ("resetCustomers"):
+			currCustomers = (Customer[]) info.getEventChange();
+			customer1.setVisible(false);
+			customer2.setVisible(false);
+			break;
+		case ("resetTickets"):
+			currTickets = (Ticket[]) info.getEventChange();
+			for (int i = 0; i < 3; i++) {
+				ticketsForTabs[i].getChildren().get(0).setVisible(false);
+				ticketsForTabs[i].getChildren().get(1).setVisible(false);
+			}
+			break;
+		case ("daysIngredients"):
+			int n = 0;
+			while (n < IngredientsList.TOPPINGLIST.length) {
+				Toppings ingredient = IngredientsList.TOPPINGLIST[n];
+				if (controller.getDaysToppings().contains(ingredient)) {
+					pickIngredients.getChildren().get(n).setDisable(false);
 				}
-				break;
-			case("updateBasket"):
-				updateBasketGUI();
-				break;
-			case("updateOven"):
-				updateOvenGUI();
-				break;
-			case("updateBurger"):
-				updateBurgerGUI();
-				break;
-			case("updateEndOfDayScreen"):
-				if (EODcontent == null) return;
-				Label rating = (Label) EODcontent.getChildren().get(0);
-				rating.setText("Score: +" + controller.getDaysScore() + " \n Total: "+ player.getScore());
-				Label income = (Label) EODcontent.getChildren().get(1);
-				income.setText("Days Income: " + String.format("%.2f", controller.getDaysIncome()) + "\n Total Income: " + String.format("%.2f", player.getMoney()));
-				Label accuracy = (Label) EODcontent.getChildren().get(2);
-				accuracy.setText("Days Accuracy: " + controller.getDaysAccuracy() + "%");
-				Label timing = (Label) EODcontent.getChildren().get(3);
-				timing.setText("Days Timing: " + controller.getDaysTiming() + "%");
-				Label milestones = (Label) EODcontent.getChildren().get(4);
-				milestones.setText("Days Milestones: " +controller.getDayMilestones());
-				Label newStuff = (Label) EODcontent.getChildren().get(5);
-				newStuff.setText("New Things Next Day:\n" + info.getEventChange());
-				System.out.println(controller.getDayMilestones());
-				Button next = (Button) EODcontent.getChildren().get(6);
-				next.setText("Next Day: " + (player.getDay()+2));
-				break;
-			default:
-				
-				
+				n++;
+			}
+			break;
+		case ("updateBasket"):
+			updateBasketGUI();
+			break;
+		case ("updateOven"):
+			updateOvenGUI();
+			break;
+		case ("updateBurger"):
+			updateBurgerGUI();
+			break;
+		case ("updateEndOfDayScreen"):
+			if (EODcontent == null)
+				return;
+			Label rating = (Label) EODcontent.getChildren().get(0);
+			rating.setText("Score: +" + controller.getDaysScore() + " \n Total: " + player.getScore());
+			Label income = (Label) EODcontent.getChildren().get(1);
+			income.setText("Days Income: " + String.format("%.2f", controller.getDaysIncome()) + "\n Total Income: "
+					+ String.format("%.2f", player.getMoney()));
+			Label accuracy = (Label) EODcontent.getChildren().get(2);
+			accuracy.setText("Days Accuracy: " + controller.getDaysAccuracy() + "%");
+			Label timing = (Label) EODcontent.getChildren().get(3);
+			timing.setText("Days Timing: " + controller.getDaysTiming() + "%");
+			Label milestones = (Label) EODcontent.getChildren().get(4);
+			milestones.setText("Days Milestones: " + controller.getDayMilestones());
+			Label newStuff = (Label) EODcontent.getChildren().get(5);
+			newStuff.setText("New Things Next Day:\n" + info.getEventChange());
+			System.out.println(controller.getDayMilestones());
+			Button next = (Button) EODcontent.getChildren().get(6);
+			next.setText("Next Day: " + (player.getDay() + 2));
+			break;
+		default:
+
 		}
 
 	}
 
 	// add VM arguements before testing
 
-	
-
-	/**
-	 *
-	 */
-	
 	@Override
 	public void start(Stage stage) throws Exception {
 		System.out.println("Starting JavaFX…");
-		
-		//make images
+
+		// make images
 		Image bluesky = new Image(getClass().getResourceAsStream("/bluesky.png"));
-		BackgroundImage blueskyView = new BackgroundImage(bluesky, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
+		BackgroundImage blueskyView = new BackgroundImage(bluesky, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
 
 		// SetUp Stage
 		stage.setTitle("Restaurant");
 
-		
 		BorderPane startPane = new BorderPane();
 
 		controller = new RestaurantController();
 
-		stage.setOnCloseRequest((e)->{
-			
+		stage.setOnCloseRequest((e) -> {
+
 			if (currTickets != null) {
 				for (Ticket t : currTickets) {
-					if (t!= null) t.stopCountDown();
+					if (t != null)
+						t.stopCountDown();
 				}
 				for (Customer c : currCustomers) {
-					if (c!= null) c.stopTimer();
+					if (c != null)
+						c.stopTimer();
 				}
 				List<Toppings> oven = new ArrayList<>(controller.getCurrOven().getList());
-				
+
 				for (Toppings b : oven) {
-					if (b!= null) controller.removeFromOven(b);
+					if (b != null)
+						controller.removeFromOven(b);
 				}
 			}
 			try {
-				ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));
-				PlayerList currPlayerList= controller.getPlayerList();
+				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("save_game.dat"));
+				PlayerList currPlayerList = controller.getPlayerList();
 				out.writeObject(currPlayerList);
-				
+
 			} catch (IOException er) {
 				er.printStackTrace();
 			}
 		});
-		 		
+
 		BorderPane startContentPane = new BorderPane();
 		startContentPane.setBackground(new Background(blueskyView));
-		
+
 		tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-		
+
 		Tab menu = new Tab("Menu");
 		Tab order = new Tab("Order");
 		Tab prep = new Tab("Prep");
 		Tab cook = new Tab("Cook");
 		Tab serve = new Tab("Serve");
 		Tab endOfDayScreen = new Tab("End Of Day");
-		
+
 		VBox titleScreen = new VBox();
 		HBox signInBox = new HBox();
-		
+
 		Button signIn = new Button("Sign In");
-		signIn.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		signIn.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-background-color: #b1d6f0");
 		signIn.setFont(new Font("Comic Sans MS", 12));
-		
+
 		TextField signPrompt = new TextField();
-		signPrompt.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-background-color: #b1d6f0;" +
-				"-fx-prompt-text-fill: #4a6b82;"
-		);
+		signPrompt.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-background-color: #b1d6f0;"
+				+ "-fx-prompt-text-fill: #4a6b82;");
 		signPrompt.setFont(new Font("Comic Sans MS", 12));
 		signPrompt.setPromptText("Enter your name");
-		
+
 		Label title = new Label("Team 3's Restaurant");
-		title.setStyle( 
-				"-fx-text-fill: #e0a23f;" +
-				"-fx-effect: dropshadow(gaussian, black, 2.5, 0.5, 0, 0);" +
-				"-fx-padding: 15;"
-				);
+		title.setStyle("-fx-text-fill: #e0a23f;" + "-fx-effect: dropshadow(gaussian, black, 2.5, 0.5, 0, 0);"
+				+ "-fx-padding: 15;");
 		title.setFont(new Font("Comic Sans MS Bold", 35));
 		title.setAlignment(Pos.CENTER);
-		
+
 		signInBox.getChildren().setAll(signPrompt, signIn);
 		signInBox.setAlignment(Pos.CENTER);
-		
+
 		titleScreen.getChildren().addAll(title, signInBox);
 		titleScreen.setAlignment(Pos.CENTER);
-		
+
 		signIn.setOnAction((e) -> {
 			currTickets = new Ticket[2];
 			currCustomers = new Customer[2];
-			
+
 			// send name to controller
-			player = controller.processPlayerName(signPrompt.getText().strip().toUpperCase()); //which should also start the days loop, calling nextDay (make surre player saves the day they completed), and the loop should call checks to is day over
+			player = controller.processPlayerName(signPrompt.getText().strip().toUpperCase()); // which should also
+																								// start the days loop,
+																								// calling nextDay (make
+																								// surre player saves
+																								// the day they
+																								// completed), and the
+																								// loop should call
+																								// checks to is day over
 			controller.getModel().addObserver(this);
-			
+
 			// contents based on model
 			ticketsInfoPrep = makeTicketInfos();
 			ticketsInfoCook = makeTicketInfos();
@@ -360,26 +353,24 @@ public class RestaurantGUIView extends Application implements Observer {
 			ticketsForTabs[0] = ticketsInfoPrep;
 			ticketsForTabs[1] = ticketsInfoCook;
 			ticketsForTabs[2] = ticketsInfoServe;
-			
-			// and switch to order scene. call the first customerupdate which should update those customers to the currCustomer arraylist above
+			// and switch to order scene. call the first customerupdate which should update
+			// those customers to the currCustomer arraylist above
 			makeOrder(order);
 			makePrep(prep);
 			makeCook(cook, serve);
 			makeServe(serve, order, endOfDayScreen);
 			makeEODscreen(endOfDayScreen, order, prep, cook, serve);
-			
-		
+
 			tabPane.getTabs().remove(menu);
 			tabPane.getTabs().addAll(order, prep, cook, serve);
 			tabPane.getSelectionModel().select(order);
 			controller.setUpDay();
-			
+
 		});
-		
-		// set content to tab, switch this with the pane when made
+
 		startContentPane.setCenter(titleScreen);
 		menu.setContent(startContentPane);
-		
+
 		// set initial things
 		tabPane.getTabs().addAll(menu);
 		startPane.setCenter(tabPane);
@@ -395,55 +386,51 @@ public class RestaurantGUIView extends Application implements Observer {
 	}
 
 	public void makeOrder(Tab order) {
-		// change pane later
+
 		BorderPane tempPane = new BorderPane();
-		
-		//make images
+
+		// make images
 		Image dinerBack = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
-		BackgroundImage dinerBackView = new BackgroundImage(dinerBack, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-		
+		BackgroundImage dinerBackView = new BackgroundImage(dinerBack, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
 		Image woodenFloor = new Image(getClass().getResourceAsStream("/woodenfloor.jpg"));
-		BackgroundImage woodenFloorView = new BackgroundImage(woodenFloor, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-		
+		BackgroundImage woodenFloorView = new BackgroundImage(woodenFloor, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
 		Image counter = new Image(getClass().getResourceAsStream("/counter.png"));
 		ImageView counterView = new ImageView(counter);
-		
-		//makes panes for customers, counter
+
+		// makes panes for customers, counter
 		BorderPane orderCounterBox = new BorderPane();
-		
+
 		HBox orderBox = new HBox(10);
-		
-		//customize BorderPane
+
+		// customize BorderPane
 		tempPane.setBackground(new Background(dinerBackView));
-		
-		//customize orderCounterBox
+
+		// customize orderCounterBox
 		orderCounterBox.setBackground(new Background(woodenFloorView));
-		
+
 		orderCounterBox.setMaxHeight(275);
 		orderCounterBox.setMaxWidth(200);
-		
-		orderCounterBox.setStyle(
-				"-fx-padding: 20;" +
-				"-fx-border-color: #8b5a2b;" +
-				"-fx-border-width: 4;" 
-		);
-		
-		//customize orderBox
+
+		orderCounterBox.setStyle("-fx-padding: 20;" + "-fx-border-color: #8b5a2b;" + "-fx-border-width: 4;");
+
+		// customize orderBox
 		orderBox.setAlignment(Pos.CENTER);
-		
-		orderBox.setStyle(
-				"-fx-background: transparent"
-		);
+
+		orderBox.setStyle("-fx-background: transparent");
 		orderBox.setMaxWidth(200);
 		orderBox.setMaxHeight(200);
-		
-		//customize counterView 
+
+		// customize counterView
 		counterView.setFitHeight(75);
 		counterView.setFitWidth(200);
-		
-		//make customer 1
+
+		// make customer 1
 		customer1 = new VBox(5);
 		customer1.setAlignment(Pos.CENTER);
 
@@ -451,22 +438,18 @@ public class RestaurantGUIView extends Application implements Observer {
 		c1Name.setFont(new Font("Comic Sans MS Bold", 14));
 		c1Name.setStyle("-fx-text-fill: black;");
 		c1Name.setVisible(true);
-		
+
 		// Get Order button
 		Button c1Button = new Button("Get Order");
-		c1Button.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		c1Button.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
 
 		c1Button.setFont(new Font("Comic Sans MS", 12));
 
 		c1Button.setOnAction(e -> {
-		    controller.updateTaskList(0, currCustomers[0]);
-		    startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0], 1);
-		    c1Button.setDisable(true);
+			controller.updateTaskList(0, currCustomers[0]);
+			startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0], 1);
+			c1Button.setDisable(true);
 		});
 
 		Label placeholder1 = new Label("");
@@ -477,104 +460,92 @@ public class RestaurantGUIView extends Application implements Observer {
 		customer2 = new VBox(5);
 		customer2.setAlignment(Pos.CENTER);
 
-	
 		Label c2Label = new Label("Customer");
 		c2Label.setFont(new Font("Comic Sans MS Bold", 14));
 		c2Label.setVisible(true);
 		c2Label.setStyle("-fx-text-fill: black;");
-	
+
 		// button
 		Button c2Button = new Button("Get Order");
-		c2Button.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		c2Button.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
 
 		c2Button.setFont(new Font("Comic Sans MS", 12));
 		c2Button.setOnAction(e -> {
-		    controller.updateTaskList(1, currCustomers[1]);
-		    startPatienceTimer(controller.getCurrDay(), currCustomers[1].patienceLevel(), currCustomers[1], 2);
-		    c2Button.setDisable(true);
+			controller.updateTaskList(1, currCustomers[1]);
+			startPatienceTimer(controller.getCurrDay(), currCustomers[1].patienceLevel(), currCustomers[1], 2);
+			c2Button.setDisable(true);
 		});
-		
+
 		Label placeholder2 = new Label("");
 		Label smileyFacePlaceholder2 = new Label("");
 		customer2.getChildren().addAll(c2Label, smileyFacePlaceholder2, placeholder2, c2Button);
-		
+
 		orderBox.getChildren().addAll(customer1, customer2);
 		orderCounterBox.setCenter(orderBox);
 		orderCounterBox.setBottom(counterView);
 		tempPane.setCenter(orderCounterBox);
 		order.setContent(tempPane);
 	}
-	
-	private int selectedTicket=0;
-	
+
+	private int selectedTicket = 0;
+
 	public VBox makeTicketInfos() {
-		//make images
+		// make images
 		Image notebook = new Image(getClass().getResourceAsStream("/notebook.png"));
-		BackgroundImage notebookView = new BackgroundImage(notebook, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-						
+		BackgroundImage notebookView = new BackgroundImage(notebook, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
 		VBox ticketsInfo = new VBox();
 
-		//make ticket 1
+		// make ticket 1
 		VBox ticketOne = new VBox(5);
 		ticketOne.setBackground(new Background(notebookView));
 		ticketOne.setMinHeight(110);
 		ticketOne.setMaxWidth(102);
-						
+
 		ticketOne.setAlignment(Pos.TOP_LEFT);
-		ticketOne.setStyle(
-		        "-fx-padding: 10;" +
-		        "-fx-border-color: #B8860B;" +            // dark goldenrod
-		        "-fx-border-width: 2;" +
-		        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-		);
+		ticketOne.setStyle("-fx-padding: 10;" + "-fx-border-color: #B8860B;" + // dark goldenrod
+				"-fx-border-width: 2;" + "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
 		Label t1title = new Label("Ticket 1");
 		t1title.setFont(new Font("Comic Sans MS Bold", 14));
 		Group ticket1Face = makeSmileyFace();
-		
+
 		Label t1body = new Label("get ticket info later");
 		t1body.setFont(new Font("Comic Sans MS", 12));
 		ticketOne.getChildren().addAll(t1title, t1body, ticket1Face);
-		
+
 		ticketOne.setVisible(false);
-	
-		//make ticket 2
+
+		// make ticket 2
 		// can set visibity to false
 		VBox ticketTwo = new VBox(5);
 		ticketTwo.setBackground(new Background(notebookView));
 		ticketTwo.setMinHeight(110);
 		ticketTwo.setMaxWidth(102);
-						
+
 		ticketTwo.setAlignment(Pos.TOP_LEFT);
-		ticketTwo.setStyle(
-				"-fx-padding: 10;" +
-				"-fx-border-color: #B8860B;" +
-				"-fx-border-width: 2;" +
-				"-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-		);
+		ticketTwo.setStyle("-fx-padding: 10;" + "-fx-border-color: #B8860B;" + "-fx-border-width: 2;"
+				+ "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
 		Label t2title = new Label("Ticket 2");
 		t2title.setFont(new Font("Comic Sans MS Bold", 14));
 		Group ticket2Face = makeSmileyFace();
-						
+
 		Label t2body = new Label("get ticket info later");
 		t2body.setFont(new Font("Comic Sans MS", 12));
 		ticketTwo.getChildren().addAll(t2title, t2body, ticket2Face);
 
 		ticketTwo.setVisible(false);
-		
+
 		ticketsInfo.getChildren().addAll(ticketOne, ticketTwo);
-		
-		ticketOne.setOnMouseClicked(e->{
-			selectedTicket=1;
+
+		ticketOne.setOnMouseClicked(e -> {
+			selectedTicket = 1;
 			updateTicketGui(ticketsInfo);
 		});
-		ticketTwo.setOnMouseClicked(e->{
-			selectedTicket=2;
+		ticketTwo.setOnMouseClicked(e -> {
+			selectedTicket = 2;
 			updateTicketGui(ticketsInfo);
 		});
 		return ticketsInfo;
@@ -582,127 +553,98 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	private void updateTicketGui(VBox ticketsInfo) {
 		Image notebook = new Image(getClass().getResourceAsStream("/notebook.png"));
-		BackgroundImage notebookView = new BackgroundImage(notebook, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-	
-		VBox ticketOne=(VBox) ticketsInfo.getChildren().get(0);
-		VBox ticketTwo=(VBox) ticketsInfo.getChildren().get(1);
-		
+		BackgroundImage notebookView = new BackgroundImage(notebook, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
+		VBox ticketOne = (VBox) ticketsInfo.getChildren().get(0);
+		VBox ticketTwo = (VBox) ticketsInfo.getChildren().get(1);
+
 		ticketOne.setBackground(new Background(notebookView));
 		ticketOne.setMinHeight(110);
 		ticketOne.setMaxWidth(102);
 		ticketTwo.setBackground(new Background(notebookView));
 		ticketTwo.setMinHeight(110);
 		ticketTwo.setMaxWidth(102);
-		
-		if (selectedTicket==1) {
-			ticketOne.setStyle(
-			        "-fx-padding: 10;" +
-			        "-fx-border-color: red;" +            // dark goldenrod
-			        "-fx-border-width: 2;" +
-			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-			);
-			ticketTwo.setStyle(
-			        "-fx-padding: 10;" +
-			        "-fx-border-color: #B8860B;" +
-			        "-fx-border-width: 2;" +
-			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-			);
-		}
-		else if(selectedTicket==2) {
-			ticketTwo.setStyle(
-			        "-fx-padding: 10;" +
-			        "-fx-border-color: red;" +            // dark goldenrod
-			        "-fx-border-width: 2;" +
-			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-			);
-			ticketOne.setStyle(
-			        "-fx-padding: 10;" +
-			        "-fx-border-color: #B8860B;" +
-			        "-fx-border-width: 2;" +
-			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-			);
-			
-		}
-		else {
-			ticketOne.setStyle(
-			        "-fx-padding: 10;" +
-			        "-fx-border-color: #B8860B;" +
-			        "-fx-border-width: 2;" +
-			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-			);
-			ticketTwo.setStyle(
-			        "-fx-padding: 10;" +
-			        "-fx-border-color: #B8860B;" +
-			        "-fx-border-width: 2;" +
-			        "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);"
-			);
+
+		if (selectedTicket == 1) {
+			ticketOne.setStyle("-fx-padding: 10;" + "-fx-border-color: red;" + // dark goldenrod
+					"-fx-border-width: 2;" + "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
+			ticketTwo.setStyle("-fx-padding: 10;" + "-fx-border-color: #B8860B;" + "-fx-border-width: 2;"
+					+ "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
+		} else if (selectedTicket == 2) {
+			ticketTwo.setStyle("-fx-padding: 10;" + "-fx-border-color: red;" + // dark goldenrod
+					"-fx-border-width: 2;" + "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
+			ticketOne.setStyle("-fx-padding: 10;" + "-fx-border-color: #B8860B;" + "-fx-border-width: 2;"
+					+ "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
+
+		} else {
+			ticketOne.setStyle("-fx-padding: 10;" + "-fx-border-color: #B8860B;" + "-fx-border-width: 2;"
+					+ "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
+			ticketTwo.setStyle("-fx-padding: 10;" + "-fx-border-color: #B8860B;" + "-fx-border-width: 2;"
+					+ "-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 2, 2);");
 		}
 	}
 
 	public void makePrep(Tab prep) {
-		//make images
+		// make images
 		Image prepRoom = new Image(getClass().getResourceAsStream("/preproom.jpg"));
-		BackgroundImage prepRoomView = new BackgroundImage(prepRoom, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-				
+		BackgroundImage prepRoomView = new BackgroundImage(prepRoom, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
 		Image basketimg = new Image(getClass().getResourceAsStream("/basketbottom.PNG"));
 		ImageView basketView = new ImageView(basketimg);
-		
+
 		Image ovenimg = new Image(getClass().getResourceAsStream("/oven.jpg"));
 		ImageView ovenView = new ImageView(ovenimg);
-		
+
 		BorderPane prepPane = new BorderPane();
 		prepPane.setBackground(new Background(prepRoomView));
 
 		VBox content = new VBox();
 		content.setAlignment(Pos.CENTER);
-		
+
 		pickIngredients = new HBox();
 		pickIngredients.setAlignment(Pos.CENTER);
-		
+
 		VBox basketBox = new VBox();
-		basketBox.setStyle(
-				"-fx-background-color: transparent;"
-				);
-		
+		basketBox.setStyle("-fx-background-color: transparent;");
+
 		basketView.setPreserveRatio(false);
-		
+
 		basketView.setFitWidth(230);
 		basketView.setFitHeight(160);
-		
+
 		StackPane basketandBackBox = new StackPane();
 		basketandBackBox.getChildren().add(basketView);
 		basketandBackBox.getChildren().add(basketBox);
-		
+
 		basket = new HBox();
-		
+
 		basketBox.getChildren().addAll(basket);
-		
+
 		basket.setAlignment(Pos.CENTER);
-		
+
 		int n = 0;
-		while (n < IngredientsList.TOPPINGLIST.length){
+		while (n < IngredientsList.TOPPINGLIST.length) {
 			Button topping = new Button();
-			topping.setStyle(
-					"-fx-border-color: black;" +
-					"-fx-border-width: 1;" +
-					"-fx-border-radius: 3;" +
-					"-fx-background-color: #b1d6f0" 
-			);
-			
-			Image img = new Image(IngredientsList.TOPPINGLIST[n].getToppingName()+".png");
+			topping.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+					+ "-fx-background-color: #b1d6f0");
+
+			Image img = new Image(IngredientsList.TOPPINGLIST[n].getToppingName() + ".png");
 			ImageView imgview = new ImageView(img);
 			imgview.setFitWidth(25);
 			imgview.setFitHeight(25);
-			
+
 			topping.setGraphic(imgview);
-			
+
 			Toppings currTopping = IngredientsList.TOPPINGLIST[n];
-			
+
 			topping.setOnAction((event) -> {
-				controller.addToBasket(currTopping); //which will update it in the baskets label and buttons through observer
-				
+				controller.addToBasket(currTopping); // which will update it in the baskets label and buttons through
+														// observer
+
 			});
 			if (!controller.getDaysToppings().contains(currTopping)) {
 				topping.setDisable(true);
@@ -710,92 +652,70 @@ public class RestaurantGUIView extends Application implements Observer {
 			pickIngredients.getChildren().add(topping);
 			n++;
 		}
-		
+
 		ScrollPane scroll = new ScrollPane();
 		scroll.setContent(basketandBackBox);
-		scroll.setStyle(
-			    "-fx-background-color: #d2b48c;" + 
-			    "-fx-border-color: #8b5a2b;" + 
-			    "-fx-border-width: 3;" +
-			    "-fx-background-radius: 10;" +
-			    "-fx-border-radius: 10;" +
-			    "-fx-padding: 5;" +
-			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
-			);
+		scroll.setStyle("-fx-background-color: #d2b48c;" + "-fx-border-color: #8b5a2b;" + "-fx-border-width: 3;"
+				+ "-fx-background-radius: 10;" + "-fx-border-radius: 10;" + "-fx-padding: 5;"
+				+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);");
 		scroll.setFitToWidth(false);
 		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
-		
+
 		VBox ovenBox = new VBox();
 		oven = new VBox();
-		
-		ovenBox.setStyle(
-			    "-fx-background-color: transparent;"
-			);
-		
+
+		ovenBox.setStyle("-fx-background-color: transparent;");
+
 		ovenView.setPreserveRatio(false);
 		ovenView.setFitHeight(160);
 		ovenView.setFitWidth(230);
-		
+
 		StackPane ovenandBackBox = new StackPane();
 		ovenandBackBox.getChildren().addAll(ovenView, ovenBox);
-		
+
 		ovenBox.getChildren().addAll(oven);
-		
+
 		oven.setAlignment(Pos.CENTER);
-		
+
 		Button patty = new Button();
-		patty.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
-		
+		patty.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
+
 		Image imgPatty = new Image("uncookedPatty.png");
-		ImageView imgviewPatty=new ImageView(imgPatty);
-		
+		ImageView imgviewPatty = new ImageView(imgPatty);
+
 		imgviewPatty.setFitWidth(25);
 		imgviewPatty.setFitHeight(25);
-		
+
 		patty.setGraphic(imgviewPatty);
-		
+
 		patty.setOnAction((event) -> {
-			Patty currPatty=new Patty();
-			controller.addToOven(currPatty); //which will update it in the baskets label and buttons through observer
+			Patty currPatty = new Patty();
+			controller.addToOven(currPatty); // which will update it in the baskets label and buttons through observer
 			currPatty.startCooking();
 		});
-		
+
 		pickPatty = new HBox();
 		pickPatty.setAlignment(Pos.CENTER);
 		pickPatty.getChildren().add(patty);
-		
+
 		ScrollPane ovenscroll = new ScrollPane();
 		ovenscroll.setContent(ovenandBackBox);
-		ovenscroll.setStyle(
-			    "-fx-background-color: #b0b0b0;" + 
-			    "-fx-border-color: #808080;" + 
-			    "-fx-border-width: 3;" +
-			    "-fx-background-radius: 10;" +
-			    "-fx-border-radius: 10;" +
-			    "-fx-padding: 5;" +
-			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
-			);
+		ovenscroll.setStyle("-fx-background-color: #b0b0b0;" + "-fx-border-color: #808080;" + "-fx-border-width: 3;"
+				+ "-fx-background-radius: 10;" + "-fx-border-radius: 10;" + "-fx-padding: 5;"
+				+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);");
 		ovenscroll.setFitToWidth(true);
 		ovenscroll.setFitToHeight(true);
 		ovenscroll.setPrefViewportHeight(150);
-		
+
 		content.getChildren().addAll(pickIngredients, scroll, pickPatty, ovenscroll);
-		
+
 		Button reset = new Button("Reset");
-		reset.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		reset.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
 		reset.setFont(new Font("Comic Sans MS Bold", 12));
-		
+
 		reset.setOnAction((event) -> {
 			controller.resetBasket(); // which will update the basket through observer
 		});
@@ -803,7 +723,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		prepPane.setCenter(content);
 		prepPane.setLeft(ticketsInfoPrep);
 		prepPane.setRight(reset);
-		
+
 		prep.setContent(prepPane);
 
 		startOvenTimer();
@@ -811,329 +731,285 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	public void makeCook(Tab cook, Tab serve) {
 		Image prepRoom = new Image(getClass().getResourceAsStream("/preproom.jpg"));
-		BackgroundImage prepRoomView = new BackgroundImage(prepRoom, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-		
+		BackgroundImage prepRoomView = new BackgroundImage(prepRoom, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
 		Image boardimg = new Image(getClass().getResourceAsStream("/cuttingboard.jpg"));
 		ImageView boardView = new ImageView(boardimg);
-		
+
 		// contents
 		BorderPane cookPane = new BorderPane();
 		cookPane.setBackground(new Background(prepRoomView));
 
 		VBox content = new VBox();
 		content.setAlignment(Pos.CENTER);
-		
-		pickFromBasket = new HBox(); 
-		
+
+		pickFromBasket = new HBox();
+
 		VBox burgerInfo = new VBox();
 		burgerInfo.setAlignment(Pos.CENTER);
-		
+
 		burgerCook = new VBox();
-		
-		burgerInfo.setStyle(
-			    "-fx-background-color: transparent"
-			);
-		
+
+		burgerInfo.setStyle("-fx-background-color: transparent");
+
 		boardView.setPreserveRatio(false);
-		
+
 		boardView.setFitWidth(230.25);
 		boardView.setFitHeight(162.27);
-		
+
 		StackPane burgerandBackBox = new StackPane();
 		burgerandBackBox.getChildren().addAll(boardView, burgerInfo);
 
-		
-		ImageView bunTop=new ImageView(new Image("topBun.png"));
+		ImageView bunTop = new ImageView(new Image("topBun.png"));
 		bunTop.setFitHeight(35);
 		bunTop.setFitWidth(50);
-		
-		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
+
+		ImageView bunBot = new ImageView(new Image("bottomBun.png"));
 		bunBot.setFitHeight(35);
 		bunBot.setFitWidth(50);
-		
+
 		burgerInfo.getChildren().addAll(bunTop, burgerCook, bunBot);
-		
+
 		ScrollPane scroll = new ScrollPane();
-		
+
 		scroll.setContent(burgerandBackBox);
-		
-		scroll.setStyle(
-			    "-fx-background-color: #d2b48c;" + 
-			    "-fx-border-color: #8b5a2b;" + 
-			    "-fx-border-width: 3;" +
-			    "-fx-background-radius: 10;" +
-			    "-fx-border-radius: 10;" +
-			    "-fx-padding: 5;" +
-			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
-			);
-		
+
+		scroll.setStyle("-fx-background-color: #d2b48c;" + "-fx-border-color: #8b5a2b;" + "-fx-border-width: 3;"
+				+ "-fx-background-radius: 10;" + "-fx-border-radius: 10;" + "-fx-padding: 5;"
+				+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);");
+
 		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
-		
+
 		scroll.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> {
-		    boardView.setFitHeight(newVal.getHeight());
+			boardView.setFitHeight(newVal.getHeight());
 		});
-		
+
 		content.getChildren().addAll(pickFromBasket, scroll);
-		
+
 		VBox options = new VBox();
 		options.setAlignment(Pos.TOP_RIGHT);
-		
+
 		Button undo = new Button("Undo");
-		undo.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		undo.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
 		undo.setFont(new Font("Comic Sans MS Bold", 12));
-		
+
 		undo.setOnAction((e) -> {
 			if (!controller.getBurger().getToppings().isEmpty()) {
 				undo.setDisable(true);
-				controller.undoBurger(); //which should pop from top of stack of burger and update through observer
+				controller.undoBurger(); // which should pop from top of stack of burger and update through observer
 				undo.setDisable(false);
 			}
 		});
-		
+
 		Button reset = new Button("Reset");
-		reset.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		reset.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
 		reset.setFont(new Font("Comic Sans MS Bold", 12));
-		
+
 		reset.setOnAction((e) -> {
 			controller.resetBurger(); // which will update the basket and burger through observer
 		});
-		
+
 		Button serveB = new Button("Serve");
-		serveB.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		serveB.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
 		serveB.setFont(new Font("Comic Sans MS Bold", 12));
-		
+
 		serveB.setOnAction((e) -> {
 			tabPane.getSelectionModel().select(serve);
 		});
-		
+
 		options.getChildren().addAll(undo, reset, serveB);
-		
+
 		cookPane.setLeft(ticketsInfoCook);
 		cookPane.setCenter(content);
 		cookPane.setRight(options);
 		cook.setContent(cookPane);
 	}
-	
-	
+
 	public void makeServe(Tab serve, Tab order, Tab endOfDayScreen) {
-		//make images
+		// make images
 		Image serveRoom = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
-		BackgroundImage serveRoomView = new BackgroundImage(serveRoom, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-		
+		BackgroundImage serveRoomView = new BackgroundImage(serveRoom, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
 		Image boardimg = new Image(getClass().getResourceAsStream("/cuttingboard.jpg"));
 		ImageView boardView = new ImageView(boardimg);
-		
+
 		// change pane later
 		BorderPane servePane = new BorderPane();
 		servePane.setBackground(new Background(serveRoomView));
-		
+
 		VBox finish = new VBox();
-		
+
 		ticketChoice = new ChoiceBox<String>();
 		ticketChoice.getItems().addAll("Ticket 1", "Ticket 2");
-		
+
 		VBox burgerInfo = new VBox();
 
-		//Label bunTop = new Label("Top Bun");
-		ImageView bunTop=new ImageView(new Image("topBun.png"));
+		ImageView bunTop = new ImageView(new Image("topBun.png"));
 		bunTop.setFitHeight(35);
 		bunTop.setFitWidth(50);
-		
+
 		burgerServe = new VBox();
-		
-		//Label bunBot = new Label("Bottom Bun");
-		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
+
+		ImageView bunBot = new ImageView(new Image("bottomBun.png"));
 		bunBot.setFitHeight(35);
 		bunBot.setFitWidth(50);
-		
+
 		burgerInfo.getChildren().addAll(bunTop, burgerServe, bunBot);
-		
-		burgerInfo.setStyle(
-			    "-fx-background-color: transparent;"
-			);
+
+		burgerInfo.setStyle("-fx-background-color: transparent;");
 		burgerInfo.setAlignment(Pos.CENTER);
-		
-		burgerInfo.setStyle(
-			    "-fx-background-color: transparent"
-			);
-		
+
+		burgerInfo.setStyle("-fx-background-color: transparent");
+
 		boardView.setPreserveRatio(false);
-		
+
 		StackPane burgerandBackBox = new StackPane();
 		burgerandBackBox.getChildren().addAll(boardView, burgerInfo);
 
 		ScrollPane scroll = new ScrollPane();
 		scroll.setContent(burgerandBackBox);
-		scroll.setStyle(
-			    "-fx-background-color: #d2b48c;" + 
-			    "-fx-border-color: #8b5a2b;" + 
-			    "-fx-border-width: 3;" +
-			    "-fx-background-radius: 10;" +
-			    "-fx-border-radius: 10;" +
-			    "-fx-padding: 5;" +
-			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);"
-			);
-		
+		scroll.setStyle("-fx-background-color: #d2b48c;" + "-fx-border-color: #8b5a2b;" + "-fx-border-width: 3;"
+				+ "-fx-background-radius: 10;" + "-fx-border-radius: 10;" + "-fx-padding: 5;"
+				+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);");
+
 		scroll.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> {
-		    boardView.setFitHeight(newVal.getHeight());
-		    boardView.setFitWidth(newVal.getWidth());
+			boardView.setFitHeight(newVal.getHeight());
+			boardView.setFitWidth(newVal.getWidth());
 		});
-		
+
 		burgerandBackBox.setMaxHeight(150);
-		burgerInfo.setMaxHeight(150); 
-		
+		burgerInfo.setMaxHeight(150);
+
 		scroll.setMinSize(200, 300);
 		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setMaxHeight(150);
 		scroll.setPrefViewportHeight(150);
-		
+
 		Button serveBurger = new Button("Serve Burger");
-		serveBurger.setStyle(
-				"-fx-border-color: black;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-radius: 3;" +
-				"-fx-background-color: #b1d6f0" 
-		);
+		serveBurger.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+				+ "-fx-background-color: #b1d6f0");
 		serveBurger.setFont(new Font("Comic Sans MS Bold", 12));
-		
+
 		serveBurger.setOnAction((e) -> {
 			if (selectedTicket != 0) {
-				
-				if (selectedTicket==1 && currTickets[0] != null) {
+
+				if (selectedTicket == 1 && currTickets[0] != null) {
 					currCustomers[0].stopTimer();
-					
+
 					if (!controller.serveBurger(0, currTickets[0])) {
-						
+
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
-						//currCustomers[0].stopTimer();
-						//in which it should also update customer queue and update that info in customer1 and customer 2
+
 					}
-					tabPane.getSelectionModel().select(order); 
-					
-					selectedTicket=0;
-					
-				} else if (selectedTicket==2 && currTickets[1] != null){
+					tabPane.getSelectionModel().select(order);
+
+					selectedTicket = 0;
+
+				} else if (selectedTicket == 2 && currTickets[1] != null) {
 					currCustomers[1].stopTimer();
-					
+
 					if (!controller.serveBurger(1, currTickets[1])) {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
 					}
-					tabPane.getSelectionModel().select(order); 
-					selectedTicket=0;
+					tabPane.getSelectionModel().select(order);
+					selectedTicket = 0;
 				}
 				updateTicketGui(ticketsInfoPrep);
 				updateTicketGui(ticketsInfoCook);
 				updateTicketGui(ticketsInfoServe);
 			}
 		});
-		
+
 		finish.getChildren().addAll(serveBurger);
-		
+
 		servePane.setCenter(scroll);
 		servePane.setLeft(ticketsInfoServe);
 		servePane.setRight(finish);
-		
+
 		serve.setContent(servePane);
 	}
-	
+
 	public void makeEODscreen(Tab eodTab, Tab order, Tab prep, Tab cook, Tab serve) {
-		//images
-				Image endStar = new Image(getClass().getResourceAsStream("/starbackground.jpg"));
-				BackgroundImage endStarView = new BackgroundImage(endStar, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-						new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
-				
-				Image bluesky = new Image(getClass().getResourceAsStream("/bluesky.png"));
-				ImageView blueView = new ImageView(bluesky);
-				
-				BorderPane endPane = new BorderPane();
-				endPane.setBackground(new Background(endStarView));
-				
-				EODcontent = new VBox();
-				EODcontent.setAlignment(Pos.CENTER);
-				
-				blueView.setPreserveRatio(true);
-				blueView.setFitHeight(350);
-				blueView.setFitWidth(300);
-				
-				Label rating = new Label("Rating: ");
-				rating.setStyle("-fx-background-color: #b1d6f0");
-				rating.setFont(new Font("Comic Sans MS Bold", 12));
-				
-				Label income = new Label("Income: ");
-				income.setStyle("-fx-background-color: #b1d6f0");
-				income.setFont(new Font("Comic Sans MS Bold", 12));
-				
-				Label accuracy = new Label("Accuracy: ");
-				accuracy.setStyle("-fx-background-color: #b1d6f0");
-				accuracy.setFont(new Font("Comic Sans MS Bold", 12));
-				
-				Label timing = new Label("Timing: ");
-				timing.setStyle("-fx-background-color: #b1d6f0");
-				timing.setFont(new Font("Comic Sans MS Bold", 12));
-				
-				Label newStuff = new Label("New Things Next Day:");
-				newStuff.setStyle("-fx-background-color: #b1d6f0");
-				newStuff.setFont(new Font("Comic Sans MS Bold", 12));
-				
-				Label milestones = new Label("Milestones:");
-				milestones.setFont(new Font("Comic Sans MS Bold", 12));
-				milestones.setStyle(
-						"-fx-border-color: #cfa430;" +
-						"-fx-border-width: 1;" +
-						"-fx-background-color: #f0c759" 
-				);
-				
-				Button next = new Button("Next Day");
-				next.setStyle(
-						"-fx-border-color: black;" +
-						"-fx-border-width: 1;" +
-						"-fx-background-color: #b1d6f0" 
-				);
-				next.setFont(new Font("Comic Sans MS Bold", 12));
-				
-				next.setOnAction((e)->{
-					tabPane.getTabs().remove(eodTab);
-					tabPane.getTabs().addAll(order, prep, cook, serve);
-					tabPane.getSelectionModel().select(order);
-					controller.nextDay();
-				}); 
-				
-				next.setAlignment(Pos.CENTER);
-				
-				EODcontent.getChildren().addAll(rating, income, accuracy, timing, milestones, newStuff,next);
-			
-				StackPane endDisplay = new StackPane();
-				endDisplay.getChildren().addAll(blueView, EODcontent);
-				
-				endPane.setCenter(endDisplay);
-				eodTab.setContent(endPane);
+		// images
+		Image endStar = new Image(getClass().getResourceAsStream("/starbackground.jpg"));
+		BackgroundImage endStarView = new BackgroundImage(endStar, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
+		Image bluesky = new Image(getClass().getResourceAsStream("/bluesky.png"));
+		ImageView blueView = new ImageView(bluesky);
+
+		BorderPane endPane = new BorderPane();
+		endPane.setBackground(new Background(endStarView));
+
+		EODcontent = new VBox();
+		EODcontent.setAlignment(Pos.CENTER);
+
+		blueView.setPreserveRatio(true);
+		blueView.setFitHeight(350);
+		blueView.setFitWidth(300);
+
+		Label rating = new Label("Rating: ");
+		rating.setStyle("-fx-background-color: #b1d6f0");
+		rating.setFont(new Font("Comic Sans MS Bold", 12));
+
+		Label income = new Label("Income: ");
+		income.setStyle("-fx-background-color: #b1d6f0");
+		income.setFont(new Font("Comic Sans MS Bold", 12));
+
+		Label accuracy = new Label("Accuracy: ");
+		accuracy.setStyle("-fx-background-color: #b1d6f0");
+		accuracy.setFont(new Font("Comic Sans MS Bold", 12));
+
+		Label timing = new Label("Timing: ");
+		timing.setStyle("-fx-background-color: #b1d6f0");
+		timing.setFont(new Font("Comic Sans MS Bold", 12));
+
+		Label newStuff = new Label("New Things Next Day:");
+		newStuff.setStyle("-fx-background-color: #b1d6f0");
+		newStuff.setFont(new Font("Comic Sans MS Bold", 12));
+
+		Label milestones = new Label("Milestones:");
+		milestones.setFont(new Font("Comic Sans MS Bold", 12));
+		milestones.setStyle("-fx-border-color: #cfa430;" + "-fx-border-width: 1;" + "-fx-background-color: #f0c759");
+
+		Button next = new Button("Next Day");
+		next.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-background-color: #b1d6f0");
+		next.setFont(new Font("Comic Sans MS Bold", 12));
+
+		next.setOnAction((e) -> {
+			tabPane.getTabs().remove(eodTab);
+			tabPane.getTabs().addAll(order, prep, cook, serve);
+			tabPane.getSelectionModel().select(order);
+			controller.nextDay();
+		});
+
+		next.setAlignment(Pos.CENTER);
+
+		EODcontent.getChildren().addAll(rating, income, accuracy, timing, milestones, newStuff, next);
+
+		StackPane endDisplay = new StackPane();
+		endDisplay.getChildren().addAll(blueView, EODcontent);
+
+		endPane.setCenter(endDisplay);
+		eodTab.setContent(endPane);
 
 	}
-	
+
 	public void updateBurgerGUI() {
 		burgerCook.getChildren().clear();
 		burgerCook.setAlignment(Pos.CENTER);
@@ -1142,138 +1018,127 @@ public class RestaurantGUIView extends Application implements Observer {
 		ArrayList<Toppings> burgerToppings = controller.getBurger().getToppings();
 		String tempBurger = "";
 		for (Toppings t : burgerToppings) {
-			String imgStr="";
-			if(t instanceof Patty) {
-				Patty currPatty=(Patty)t;
-				imgStr=currPatty.getPattyImage();
-			}
-			else {
-				imgStr=t.getToppingName()+".png";
+			String imgStr = "";
+			if (t instanceof Patty) {
+				Patty currPatty = (Patty) t;
+				imgStr = currPatty.getPattyImage();
+			} else {
+				imgStr = t.getToppingName() + ".png";
 			}
 			Image img = new Image(imgStr);
-			ImageView imgCookView=new ImageView(img);
+			ImageView imgCookView = new ImageView(img);
 			imgCookView.setFitWidth(50);
 			imgCookView.setFitHeight(35);
-			ImageView imgServeView=new ImageView(img);
+			ImageView imgServeView = new ImageView(img);
 			imgServeView.setFitWidth(50);
 			imgServeView.setFitHeight(35);
-			
+
 			burgerServe.getChildren().addFirst(imgCookView);
 			burgerCook.getChildren().addFirst(imgServeView);
 		}
 	}
-	
+
 	public void updateBasketGUI() {
 		basket.getChildren().clear();
 		pickFromBasket.getChildren().clear();
-		
+
 		ArrayList<Toppings> basketToppings = controller.getCurrBasket().getList();
 		for (Toppings t : basketToppings) {
-			final Toppings currTopping=t;
-			String imgStr="";
+			final Toppings currTopping = t;
+			String imgStr = "";
 			Button topping = new Button();
-			if(currTopping instanceof Patty) {
-				Patty currPatty=(Patty)currTopping;
-				imgStr=currPatty.getPattyImage();
-			}
-			else {
-				imgStr=t.getToppingName()+".png";
+			if (currTopping instanceof Patty) {
+				Patty currPatty = (Patty) currTopping;
+				imgStr = currPatty.getPattyImage();
+			} else {
+				imgStr = t.getToppingName() + ".png";
 			}
 			Image img = new Image(imgStr);
-			ImageView imgview=new ImageView(img);
+			ImageView imgview = new ImageView(img);
 			imgview.setFitWidth(25);
 			imgview.setFitHeight(25);
 			topping.setGraphic(imgview);
-			
-			ImageView imgBasketView=new ImageView(img);
+
+			ImageView imgBasketView = new ImageView(img);
 			imgBasketView.setFitWidth(50);
 			imgBasketView.setFitHeight(35);
-			 
+
 			topping.setOnAction((e) -> {
 				controller.addToBurger(currTopping);
 				controller.removeFromBasket(currTopping);
-				controller.getCurrBasket().printList();		
+				controller.getCurrBasket().printList();
 			});
-			
+
 			pickFromBasket.getChildren().add(topping);
 			basket.getChildren().add(imgBasketView);
-		};
-		
-		
+		}
+		;
+
 	}
-	private void updateOvenGUI() { 
-		
+
+	private void updateOvenGUI() {
+
 		oven.getChildren().clear();
-		
-		
+
 		ArrayList<Toppings> ovenToppings = controller.getCurrOven().getList();
 		for (Toppings t : ovenToppings) {
 
 			Button patty = new Button();
-			Patty currPatty=(Patty)t;
+			Patty currPatty = (Patty) t;
 			currPatty.updateState();
-			String imgStr=currPatty.getPattyImage();
+			String imgStr = currPatty.getPattyImage();
 			Image img = new Image(imgStr);
-			ImageView imgview=new ImageView(img);
+			ImageView imgview = new ImageView(img);
 			imgview.setFitWidth(25);
 			imgview.setFitHeight(25);
 			patty.setGraphic(imgview);
-			
-			ImageView imgOvenView=new ImageView(img);
+
+			ImageView imgOvenView = new ImageView(img);
 			imgOvenView.setFitWidth(50);
 			imgOvenView.setFitHeight(35);
-			
-			imgOvenView.setOnMouseClicked(e->{
+
+			imgOvenView.setOnMouseClicked(e -> {
 				controller.removeFromOven(t);
-						
+
 				updateBasketGUI();
 			});
-			
-		
-			
+
 			oven.getChildren().add(imgOvenView);
 		}
-		
-		
+
 	}
-	
+
 	private Shape getShape(String shape, Label cqu0L, Color color) {
-		if (shape.equals("circle")){
+		if (shape.equals("circle")) {
 			return createCircle(cqu0L, color);
-		}
-		else if (shape.equals("triangle")) {
+		} else if (shape.equals("triangle")) {
 			return createTriangle(cqu0L, color);
-		}
-		else
+		} else
 			return createRectangle(cqu0L, color);
 	}
-	
-	
+
 	private Circle createCircle(Label cqu0L, Color color) {
 		Circle newCircle = new Circle(20);
 		newCircle.setFill(color);
 		newCircle.setStroke(Color.BLACK);
-		
+
 		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
 		Tooltip.install(newCircle, tooltip1);
 		return newCircle;
 	}
-	
+
 	private Polygon createTriangle(Label cqu0L, Color color) {
 		Polygon triangle = new Polygon();
-		triangle.getPoints().addAll(new Double[]{
-			    25.0, 0.0,
-			    50.0, 40.0,
-			    5.0, 40.0 });
+		triangle.getPoints().addAll(new Double[] { 25.0, 0.0, 50.0, 40.0, 5.0, 40.0 });
 		triangle.setFill(color);
 		triangle.setStroke(Color.BLACK);
-		
+
 		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
 		Tooltip.install(triangle, tooltip1);
-		
+
 		return triangle;
 	}
-	
+
 	private Rectangle createRectangle(Label cqu0L, Color color) {
 		Rectangle rectangle = new Rectangle();
 		rectangle.setX(20);
@@ -1282,191 +1147,174 @@ public class RestaurantGUIView extends Application implements Observer {
 		rectangle.setHeight(40);
 		rectangle.setFill(color);
 		rectangle.setStroke(Color.BLACK);
-		
+
 		Tooltip tooltip1 = new Tooltip(cqu0L.getText());
 		Tooltip.install(rectangle, tooltip1);
 		return rectangle;
 	}
-	
+
 	private void startOvenTimer() {
-		Timeline ovenTimeline = new Timeline(new KeyFrame(Duration.seconds(1),e->{
+		Timeline ovenTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
 			updateOvenGUI();
-		})); 
+		}));
 		ovenTimeline.setCycleCount(Animation.INDEFINITE);
 		ovenTimeline.play();
-}
-	
+	}
+
 	private Group makeSmileyFace() {
-	    Circle head = new Circle(12);
-	    head.setFill(Color.GREEN);
-	    head.setStroke(Color.BLACK);
+		Circle head = new Circle(12);
+		head.setFill(Color.GREEN);
+		head.setStroke(Color.BLACK);
 
-	    Circle eye1 = new Circle(2);
-	    eye1.setTranslateX(-4);
-	    eye1.setTranslateY(-3);
+		Circle eye1 = new Circle(2);
+		eye1.setTranslateX(-4);
+		eye1.setTranslateY(-3);
 
-	    Circle eye2 = new Circle(2);
-	    eye2.setTranslateX(4);
-	    eye2.setTranslateY(-3);
+		Circle eye2 = new Circle(2);
+		eye2.setTranslateX(4);
+		eye2.setTranslateY(-3);
 
-	    Arc smile = new Arc(0, 2, 6, 4, 180, 180);
-	    smile.setType(ArcType.OPEN);
-	    smile.setStroke(Color.BLACK);
-	    smile.setFill(Color.TRANSPARENT);
-	    smile.setStrokeWidth(2);
+		Arc smile = new Arc(0, 2, 6, 4, 180, 180);
+		smile.setType(ArcType.OPEN);
+		smile.setStroke(Color.BLACK);
+		smile.setFill(Color.TRANSPARENT);
+		smile.setStrokeWidth(2);
 
-	    return new Group(head, eye1, eye2, smile);
+		return new Group(head, eye1, eye2, smile);
 	}
-	
-	
-	
+
 	private Group makeFlatFace() {
-	    Circle head = new Circle(12);
-	    head.setFill(Color.YELLOW);
-	    head.setStroke(Color.BLACK);
+		Circle head = new Circle(12);
+		head.setFill(Color.YELLOW);
+		head.setStroke(Color.BLACK);
 
-	    Circle eye1 = new Circle(2, Color.BLACK);
-	    eye1.setTranslateX(-4);
-	    eye1.setTranslateY(-3);
+		Circle eye1 = new Circle(2, Color.BLACK);
+		eye1.setTranslateX(-4);
+		eye1.setTranslateY(-3);
 
-	    Circle eye2 = new Circle(2, Color.BLACK);
-	    eye2.setTranslateX(4);
-	    eye2.setTranslateY(-3);
+		Circle eye2 = new Circle(2, Color.BLACK);
+		eye2.setTranslateX(4);
+		eye2.setTranslateY(-3);
 
-	    Line mouth = new Line(-6, 4, 6, 4);
-	    mouth.setStroke(Color.BLACK);
-	    mouth.setStrokeWidth(2);
+		Line mouth = new Line(-6, 4, 6, 4);
+		mouth.setStroke(Color.BLACK);
+		mouth.setStrokeWidth(2);
 
-	    return new Group(head, eye1, eye2, mouth);
+		return new Group(head, eye1, eye2, mouth);
 	}
-	
+
 	private Group makeUpsetFace() {
-	    Circle head = new Circle(12);
-	    head.setFill(Color.ORANGE);
-	    head.setStroke(Color.BLACK);
+		Circle head = new Circle(12);
+		head.setFill(Color.ORANGE);
+		head.setStroke(Color.BLACK);
 
-	    Circle eye1 = new Circle(2, Color.BLACK);
-	    eye1.setTranslateX(-4);
-	    eye1.setTranslateY(-3);
+		Circle eye1 = new Circle(2, Color.BLACK);
+		eye1.setTranslateX(-4);
+		eye1.setTranslateY(-3);
 
-	    Circle eye2 = new Circle(2, Color.BLACK);
-	    eye2.setTranslateX(4);
-	    eye2.setTranslateY(-3);
+		Circle eye2 = new Circle(2, Color.BLACK);
+		eye2.setTranslateX(4);
+		eye2.setTranslateY(-3);
 
-	    Line brow1 = new Line(-7, -7, -3, -6);
-	    brow1.setStrokeWidth(2);
+		Line brow1 = new Line(-7, -7, -3, -6);
+		brow1.setStrokeWidth(2);
 
-	    Line brow2 = new Line(7, -7, 3, -6);
-	    brow2.setStrokeWidth(2);
+		Line brow2 = new Line(7, -7, 3, -6);
+		brow2.setStrokeWidth(2);
 
-	    Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
-	    mouth.setType(ArcType.OPEN);
-	    mouth.setStroke(Color.BLACK);
-	    mouth.setFill(Color.TRANSPARENT);
-	    mouth.setStrokeWidth(2);
+		Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
+		mouth.setType(ArcType.OPEN);
+		mouth.setStroke(Color.BLACK);
+		mouth.setFill(Color.TRANSPARENT);
+		mouth.setStrokeWidth(2);
 
-	    return new Group(head, eye1, eye2, brow1, brow2, mouth);
+		return new Group(head, eye1, eye2, brow1, brow2, mouth);
 	}
-	
+
 	private Group makeAngryFace() {
-	    Circle head = new Circle(12);
-	    head.setFill(Color.RED);
-	    head.setStroke(Color.BLACK);
-	    
+		Circle head = new Circle(12);
+		head.setFill(Color.RED);
+		head.setStroke(Color.BLACK);
 
-	    Circle eye1 = new Circle(2, Color.BLACK);
-	    eye1.setTranslateX(-4);
-	    eye1.setTranslateY(-3);
+		Circle eye1 = new Circle(2, Color.BLACK);
+		eye1.setTranslateX(-4);
+		eye1.setTranslateY(-3);
 
-	    Circle eye2 = new Circle(2, Color.BLACK);
-	    eye2.setTranslateX(4);
-	    eye2.setTranslateY(-3);
+		Circle eye2 = new Circle(2, Color.BLACK);
+		eye2.setTranslateX(4);
+		eye2.setTranslateY(-3);
 
-	    Line brow1 = new Line(-7, -7, -1, -5);
-	    brow1.setStrokeWidth(2);
+		Line brow1 = new Line(-7, -7, -1, -5);
+		brow1.setStrokeWidth(2);
 
-	    Line brow2 = new Line(7, -7, 1, -5);
-	    brow2.setStrokeWidth(2);
+		Line brow2 = new Line(7, -7, 1, -5);
+		brow2.setStrokeWidth(2);
 
-	    Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
-	    mouth.setType(ArcType.OPEN);
-	    mouth.setFill(Color.TRANSPARENT);
-	    mouth.setStroke(Color.BLACK);
-	    mouth.setStrokeWidth(2);
-	   
+		Arc mouth = new Arc(0, 5, 6, 4, 0, 180);
+		mouth.setType(ArcType.OPEN);
+		mouth.setFill(Color.TRANSPARENT);
+		mouth.setStroke(Color.BLACK);
+		mouth.setStrokeWidth(2);
 
-	    return new Group(head, eye1, eye2, brow1, brow2, mouth);
+		return new Group(head, eye1, eye2, brow1, brow2, mouth);
 	}
 
-
-
-	
 	private void startPatienceTimer(int day, int patienceLevel, Customer customer, int customerNum) {
 		double patienceTime = 10 + patienceLevel * day;
-		customer.startTimer(patienceTime*2);
-		Timeline timeline = new Timeline(
-			    new KeyFrame(Duration.millis(patienceTime*1000), e -> {
-			        if (customer.CDisRunning()) {
-			            if (customerNum == 1) {
-		                    customer1.getChildren().set(1, makeFlatFace());
-		                    for (int i = 0; i < 3; i++) {
-		                    	((VBox)ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeFlatFace());
-		                    }
-		                    
-		                } else {
-		                    customer2.getChildren().set(1, makeFlatFace());
-		                    for (int i = 0; i < 3; i++) {
-		                    	((VBox)ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeFlatFace());
-		                    }
-		                }
-			           
-			        }
-			    }),
-			    new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
-			        if (customer.CDisRunning()) {
-			            if (customerNum == 1) {
-		                    customer1.getChildren().set(1, makeUpsetFace());
-		                    for (int i = 0; i < 3; i++) {
-		                    	((VBox)ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeUpsetFace());
-		                    }
-		                } else {
-		                    customer2.getChildren().set(1, makeUpsetFace());
-		                    for (int i = 0; i < 3; i++) {
-		                    	((VBox)ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeUpsetFace());
-		                    }
-		                }
-			            
-			        }
-			    }),
-			    new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
-			        if (customer.CDisRunning()) {
-			            if (customerNum == 1) {
-		                    customer1.getChildren().set(1, makeAngryFace());
-		                    for (int i = 0; i < 3; i++) {
-		                    	((VBox)ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeAngryFace());
-		                    }
-		                } else {
-		                    customer2.getChildren().set(1, makeAngryFace());
-		                    for (int i = 0; i < 3; i++) {
-		                    	((VBox)ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeAngryFace());
-		                    }
-		                }
-		
-			        }
-			    })
-			);
-			if (customerNum == 1) {
-				timeline1 = timeline;
-			} else {
-				timeline2 = timeline;
+		customer.startTimer(patienceTime * 2);
+		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(patienceTime * 1000), e -> {
+			if (customer.CDisRunning()) {
+				if (customerNum == 1) {
+					customer1.getChildren().set(1, makeFlatFace());
+					for (int i = 0; i < 3; i++) {
+						((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeFlatFace());
+					}
+
+				} else {
+					customer2.getChildren().set(1, makeFlatFace());
+					for (int i = 0; i < 3; i++) {
+						((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeFlatFace());
+					}
+				}
+
 			}
-			timeline.play();
+		}), new KeyFrame(Duration.millis((patienceTime + patienceTime / 2) * 1000), e -> {
+			if (customer.CDisRunning()) {
+				if (customerNum == 1) {
+					customer1.getChildren().set(1, makeUpsetFace());
+					for (int i = 0; i < 3; i++) {
+						((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeUpsetFace());
+					}
+				} else {
+					customer2.getChildren().set(1, makeUpsetFace());
+					for (int i = 0; i < 3; i++) {
+						((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeUpsetFace());
+					}
+				}
+
+			}
+		}), new KeyFrame(Duration.millis((patienceTime * 1.8) * 1000), e -> {
+			if (customer.CDisRunning()) {
+				if (customerNum == 1) {
+					customer1.getChildren().set(1, makeAngryFace());
+					for (int i = 0; i < 3; i++) {
+						((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().set(2, makeAngryFace());
+					}
+				} else {
+					customer2.getChildren().set(1, makeAngryFace());
+					for (int i = 0; i < 3; i++) {
+						((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().set(2, makeAngryFace());
+					}
+				}
+
+			}
+		}));
+		if (customerNum == 1) {
+			timeline1 = timeline;
+		} else {
+			timeline2 = timeline;
+		}
+		timeline.play();
 	}
-	
-	
-	
 
-	
 }
-
-

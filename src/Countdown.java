@@ -1,16 +1,17 @@
 import java.util.*;
 
-public class Countdown{
+public class Countdown {
 	private Timer timer;
 	public int elapsed = 0;
 	public double timeLeft;
 	public boolean timeUp;
 	public boolean countDownIsRunning;
-	
+
 	public boolean startCountdown(double seconds) {
 		if (seconds < 0) {
 			countDownIsRunning = false;
-			return false;}
+			return false;
+		}
 		stopTimer();
 		timeLeft = seconds;
 		timeUp = false;
@@ -30,14 +31,14 @@ public class Countdown{
 					countDownIsRunning = false;
 					timer.cancel();
 				}
-				
+
 			}
-			
+
 		};
 		timer.scheduleAtFixedRate(task, 0, 1000);
 		return true;
 	}
-	
+
 	public void startStopwatch() {
 		stopTimer();
 		timer = new Timer();
@@ -51,17 +52,16 @@ public class Countdown{
 		};
 		timer.scheduleAtFixedRate(task, 0, 1000);
 	}
-	
-	
+
 	public void stopTimer() {
-		 if (timer != null) {
-			 	countDownIsRunning = false;
-	            timer.cancel();
-		 }
+		if (timer != null) {
+			countDownIsRunning = false;
+			timer.cancel();
+		}
 	}
-	
+
 	public boolean countDownIsRunning() {
 		return countDownIsRunning;
 	}
-	
+
 }
