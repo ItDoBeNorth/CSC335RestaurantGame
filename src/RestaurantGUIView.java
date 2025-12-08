@@ -256,24 +256,32 @@ public class RestaurantGUIView extends Application implements Observer {
 	@Override
 	public void start(Stage stage) throws Exception {
 		System.out.println("Starting JavaFX…");
+		
+		//make images
+		Image bluesky = new Image(getClass().getResourceAsStream("/bluesky.png"));
+		BackgroundImage blueskyView = new BackgroundImage(bluesky, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+		        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true ));
 
 		// SetUp Stage
 		stage.setTitle("Restaurant");
-		BorderPane pane = new BorderPane();
+		
+		BorderPane startPane = new BorderPane();
 		controller = new RestaurantController();
 
 		stage.setOnCloseRequest((e)->{
+			
 			if (currTickets != null) {
-			for (Ticket t : currTickets) {
-				if (t!= null) t.stopCountDown();
-			}
-			for (Customer c : currCustomers) {
-				if (c!= null) c.stopTimer();
-			}
-			List<Toppings> oven = new ArrayList<>(controller.getCurrOven().getList());
-			for (Toppings b : oven) {
-				if (b!= null) controller.removeFromOven(b);
-			}
+				for (Ticket t : currTickets) {
+					if (t!= null) t.stopCountDown();
+				}
+				for (Customer c : currCustomers) {
+					if (c!= null) c.stopTimer();
+				}
+				List<Toppings> oven = new ArrayList<>(controller.getCurrOven().getList());
+				
+				for (Toppings b : oven) {
+					if (b!= null) controller.removeFromOven(b);
+				}
 			}
 			try {
 				ObjectOutputStream out= new ObjectOutputStream(new FileOutputStream("save_game.dat"));
@@ -281,39 +289,67 @@ public class RestaurantGUIView extends Application implements Observer {
 				out.writeObject(currPlayerList);
 				
 			} catch (IOException er) {
-				
 				er.printStackTrace();
 			}
-			});
+		});
 		 		
-
+		BorderPane startContentPane = new BorderPane();
+		startContentPane.setBackground(new Background(blueskyView));
 		
 		tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+		
 		Tab menu = new Tab("Menu");
 		Tab order = new Tab("Order");
 		Tab prep = new Tab("Prep");
 		Tab cook = new Tab("Cook");
 		Tab serve = new Tab("Serve");
 		Tab endOfDayScreen = new Tab("End Of Day");
-
-		VBox menuLook= new VBox();
-		HBox horiz = new HBox();
+		
+		VBox titleScreen = new VBox();
+		HBox signInBox = new HBox();
+		
 		Button signIn = new Button("Sign In");
-		TextField textfield = new TextField();
-		textfield.setPromptText("Enter your name");
-		menuLook.getChildren().addAll(new Label("Sign In"), horiz);
+		signIn.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-background-color: #b1d6f0" 
+		);
+		signIn.setFont(new Font("Comic Sans MS", 12));
+		
+		TextField signPrompt = new TextField();
+		signPrompt.setStyle(
+				"-fx-border-color: black;" +
+				"-fx-border-width: 1;" +
+				"-fx-background-color: #b1d6f0;" +
+				"-fx-prompt-text-fill: #4a6b82;"
+		);
+		signPrompt.setFont(new Font("Comic Sans MS", 12));
+		signPrompt.setPromptText("Enter your name");
+		
+		Label title = new Label("Team 3's Restaurant");
+		title.setStyle( 
+				"-fx-text-fill: #e0a23f;" +
+				"-fx-effect: dropshadow(gaussian, black, 2.5, 0.5, 0, 0);" +
+				"-fx-padding: 15;"
+				);
+		title.setFont(new Font("Comic Sans MS Bold", 35));
+		title.setAlignment(Pos.CENTER);
+		
+		signInBox.getChildren().setAll(signPrompt, signIn);
+		signInBox.setAlignment(Pos.CENTER);
+		
+		titleScreen.getChildren().addAll(title, signInBox);
+		titleScreen.setAlignment(Pos.CENTER);
 		
 		signIn.setOnAction((e) -> {
 			currTickets = new Ticket[2];
 			currCustomers = new Customer[2];
 			
-			
 			// send name to controller
-			player = controller.processPlayerName(textfield.getText().strip().toUpperCase()); //which should also start the days loop, calling nextDay (make surre player saves the day they completed), and the loop should call checks to is day over
+			player = controller.processPlayerName(signPrompt.getText().strip().toUpperCase()); //which should also start the days loop, calling nextDay (make surre player saves the day they completed), and the loop should call checks to is day over
 			controller.getModel().addObserver(this);
 			
-
 			// contents based on model
 			ticketsInfoPrep = makeTicketInfos();
 			ticketsInfoCook = makeTicketInfos();
@@ -330,30 +366,26 @@ public class RestaurantGUIView extends Application implements Observer {
 			makeServe(serve, order, endOfDayScreen);
 			makeEODscreen(endOfDayScreen, order, prep, cook, serve);
 			
-			
-
+		
 			tabPane.getTabs().remove(menu);
 			tabPane.getTabs().addAll(order, prep, cook, serve);
 			tabPane.getSelectionModel().select(order);
 			controller.setUpDay();
 			
-			
-			
 		});
-		// set content to tab, switch this with the pane when made
-		horiz.getChildren().setAll(textfield, signIn);
-		menu.setContent(menuLook);
 		
+		// set content to tab, switch this with the pane when made
+		startContentPane.setCenter(titleScreen);
+		menu.setContent(startContentPane);
 		
 		// set initial things
 		tabPane.getTabs().addAll(menu);
-		pane.setCenter(tabPane);
+		startPane.setCenter(tabPane);
 
 		// scene ready
-		Scene scene = new Scene(pane, 400, 450);
+		Scene scene = new Scene(startPane, 400, 450);
 		stage.setScene(scene);
 		stage.show();
-
 	}
 
 	public static void main(String[] args) {
@@ -426,6 +458,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				"-fx-border-radius: 3;" +
 				"-fx-background-color: #b1d6f0" 
 		);
+		c1Button.setFont(new Font("Comic Sans MS", 12));
 		c1Button.setOnAction(e -> {
 		    controller.updateTaskList(0, currCustomers[0]);
 		    startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0], 1);
@@ -454,6 +487,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				"-fx-border-radius: 3;" +
 				"-fx-background-color: #b1d6f0" 
 		);
+		c2Button.setFont(new Font("Comic Sans MS", 12));
 		c2Button.setOnAction(e -> {
 		    controller.updateTaskList(1, currCustomers[1]);
 		    startPatienceTimer(controller.getCurrDay(), currCustomers[1].patienceLevel(), currCustomers[1], 2);
@@ -903,7 +937,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		Image boardimg = new Image(getClass().getResourceAsStream("/cuttingboard.jpg"));
 		ImageView boardView = new ImageView(boardimg);
 		
-		
+		// change pane later
 		BorderPane servePane = new BorderPane();
 		servePane.setBackground(new Background(serveRoomView));
 		
@@ -914,14 +948,14 @@ public class RestaurantGUIView extends Application implements Observer {
 		
 		VBox burgerInfo = new VBox();
 
-		
+		//Label bunTop = new Label("Top Bun");
 		ImageView bunTop=new ImageView(new Image("topBun.png"));
 		bunTop.setFitHeight(35);
 		bunTop.setFitWidth(50);
 		
 		burgerServe = new VBox();
 		
-		
+		//Label bunBot = new Label("Bottom Bun");
 		ImageView bunBot=new ImageView(new Image("bottomBun.png"));
 		bunBot.setFitHeight(35);
 		bunBot.setFitWidth(50);
@@ -962,6 +996,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		burgerandBackBox.setMaxHeight(150);
 		burgerInfo.setMaxHeight(150); 
 		
+		scroll.setMinSize(200, 300);
 		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setMaxHeight(150);
@@ -987,9 +1022,8 @@ public class RestaurantGUIView extends Application implements Observer {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
-						
-						
-						
+						//currCustomers[0].stopTimer();
+						//in which it should also update customer queue and update that info in customer1 and customer 2
 					}
 					tabPane.getSelectionModel().select(order); 
 					
