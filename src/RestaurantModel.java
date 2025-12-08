@@ -7,9 +7,6 @@ import java.util.Queue;
 import java.util.Random;
 
 
-/** 
- * setChanged(); notifyObservers(new EventDetail());
- */
 @SuppressWarnings("deprecation")
 public class RestaurantModel extends Observable {
 	private Player player;

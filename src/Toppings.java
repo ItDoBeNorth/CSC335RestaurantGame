@@ -25,17 +25,5 @@ public abstract class Toppings {
 		}
 		return false;
 	}
-	/*
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-            return true;
-        }
-		if (obj == null || this.getClass() != obj.getClass()) {
-            return false;
-        }
-		Toppings other = (Toppings) obj;
-		return (other.getToppingName() == this.getToppingName());
-	}
-*/
+	
 }
