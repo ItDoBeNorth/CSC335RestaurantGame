@@ -104,6 +104,9 @@ public class RestaurantModel extends Observable {
 		if (currDay > 5) {
 			daysIngredients.add(new Patty());
 		}
+		//clear oven
+		clearOven();
+		// customerLimit for now is day, can be changed later
 		System.out.println(daysIngredients.size());
 		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(
 				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(currDay, allCustomer.length-1))));
@@ -375,7 +378,11 @@ public class RestaurantModel extends Observable {
 	public ArrayList<Toppings> getDaysIngredients() {
 		return daysIngredients;
 	}
-
+	
+	public Customer[] getCurrCustomers(){
+		return currCustomers;
+	}
+	
 	public int getDaysAccuracy() {
 		return daysAccuracy;
 	}

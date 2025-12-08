@@ -76,7 +76,8 @@ public class RestaurantController {
 	public void getCurrentCustomers() {
 		model.updateCustomerQueue();
 	}
-
+	
+	
 	/**
 	 * get the Ticket of the current customer
 	 * 
@@ -107,13 +108,6 @@ public class RestaurantController {
 
 	public void removeFromOven(Toppings topping) {
 		model.removeFromOven(topping);
-	}
-
-	/**
-	 * clears the player's basket
-	 */
-	public void clearBasket() {
-		model.clearBasket();
 	}
 
 	/**
@@ -162,8 +156,6 @@ public class RestaurantController {
 	public void resetBurger() {
 		model.resetBurger();
 	}
-	
-	
 
 	/**
 	 * serve the order to the customer
