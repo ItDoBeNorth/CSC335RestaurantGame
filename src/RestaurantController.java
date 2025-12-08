@@ -23,7 +23,6 @@ public class RestaurantController {
 	 *              function which the controller display
 	 */
 	public RestaurantController() { 
-		//playerList = new PlayerList(); // later make it a static and saveload playerList
 		model = null;
 		File gameData= new File("save_game.dat"); 
 		if (gameData.exists()) {
@@ -33,7 +32,7 @@ public class RestaurantController {
 				 in.close();
 				 
 			}catch (IOException | ClassNotFoundException e) {
-				// TODO Auto-generated catch block
+				
 				 e.printStackTrace();
 		}
 			
@@ -169,11 +168,9 @@ public class RestaurantController {
 			model.updateCustomerQueue();
 			return true;
 		} else {
-			// should implement switching to next day and end of day screen
 			System.out.println("Day over");
 			model.EODScreen();
 			return false;
-			//nextDay();
 		}
 	}
 

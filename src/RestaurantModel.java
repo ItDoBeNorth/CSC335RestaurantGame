@@ -7,9 +7,6 @@ import java.util.Queue;
 import java.util.Random;
 
 
-/** 
- * setChanged(); notifyObservers(new EventDetail());
- */
 @SuppressWarnings("deprecation")
 public class RestaurantModel extends Observable {
 	private Player player;
@@ -34,18 +31,15 @@ public class RestaurantModel extends Observable {
 	private ArrayList<String> dayMilestones;
 	
 	private int customersServed;
-	private String[] newThings = {"New Ingredient: Lettuce\nNew Customer: John(Generous)", "New Ingredient: Onion\nNew Customer: Peter(Hurry)", "New Ingredient: Pickle\nNew Customer: Mariah(Picky)", "New Ingredient: Tomato\nNew Customer: David(Hurry)", "New Customer: Sarah(Patient)"};
-	// new things how
+	private String[] newThings = {"New Ingredient: Lettuce\nNew Customer: John(Generous)", "New Ingredient: Onion\nNew Customer: Peter(Hurry)", "New Ingredient: Pickle\nNew Customer: Mariah(Picky)", "New Ingredient: Tomato\nNew Customer: David(Hurry)", "New Customer: Sarah(Patient)", "One more customer, One more patty", "One more customer"};
 
-	// change later
+
 	private static Toppings[] allToppings;
 	private static Customer[] allCustomer;
 
 	RestaurantModel(Player player) {
-		// saveLoad from players file but for now pass in a player starting with day one
 		this.player = player;
-		currDay = player.getDay(); // if nextDay is the first thing that is called make sure day-1 OR only save day
-								// on end of day
+		currDay = player.getDay(); // player holds on to completed days
 
 		daysIngredients = new ArrayList<Toppings>();
 		daysCustomers = new LinkedList<Customer>();
@@ -68,7 +62,6 @@ public class RestaurantModel extends Observable {
 	}
 
 	public boolean dayOver() {
-		// add something here for player day end score and stuff
 		return (daysCustomers.isEmpty() && currCustomers[0] == null && currCustomers[1] == null);
 	}
 
@@ -90,7 +83,7 @@ public class RestaurantModel extends Observable {
 		}
 		dayMilestones=player.milestones();
 		setChanged();
-		notifyObservers(new EventDetail("updateEndOfDayScreen", newThings[Math.min(currDay-1, allToppings.length)]));
+		notifyObservers(new EventDetail("updateEndOfDayScreen", newThings[Math.min(currDay-1, newThings.length - 1)]));
 	}
 	
 	public void nextDay() {
@@ -106,7 +99,7 @@ public class RestaurantModel extends Observable {
 		daysScore = 0;
 		customersServed = 0;
 		currDay++;
-		// decide ingredients different if want, for now its by day
+		// ingredients and customers change by day
 		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, Math.min(currDay, allToppings.length))));
 		if (currDay > 5) {
 			daysIngredients.add(new Patty());
@@ -114,13 +107,16 @@ public class RestaurantModel extends Observable {
 		//clear oven
 		clearOven();
 		// customerLimit for now is day, can be changed later
+		System.out.println(daysIngredients.size());
 		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(
-				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(currDay, allCustomer.length))));
+				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(currDay, allCustomer.length-1))));
+		// adds new random customers after day 9
 		if (currDay > 9) {
 			for (int i = 0; i < (currDay-9); i++) {
 				tempCustomers.add(allCustomer[r.nextInt(allCustomer.length)]);
 			}
 		}
+		System.out.println(tempCustomers.size());
 		Collections.shuffle(tempCustomers);
 		daysCustomers = new LinkedList<Customer>(tempCustomers);
 		setChanged();
@@ -224,12 +220,10 @@ public class RestaurantModel extends Observable {
 	}
 
 	public void resetBurger() {
-		//basket.limit += burger.getToppings().size();
 		for (Toppings t : burger.getToppings()) {
 			basket.addIngredient(t);
 		}
 		burger.reset();
-		//basket.limit = 10;
 		setChanged();
 		notifyObservers(new EventDetail("updateBurger", null));
 		setChanged();
@@ -295,7 +289,7 @@ public class RestaurantModel extends Observable {
 			if (numItems + itemsS > 100) {order = 50;}
 			accuracy = numItems + itemsS + order;
 			if (p == KnownCustomer.Personality.ACCURATE) {
-				// more accurate needed for customer
+				// harsher accuracy
 				if (accuracy < 200) {
 					System.out.println(accuracy);
 					accuracy = 0;
@@ -314,7 +308,7 @@ public class RestaurantModel extends Observable {
 			income = income * 2;
 		}
 		
-		// add to where its needed
+		// add all calculated amounts to where its needed
 		daysAccuracy += accuracy;
 		daysIncome += income;
 		daysTiming += timing;
