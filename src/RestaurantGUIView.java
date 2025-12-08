@@ -62,6 +62,9 @@ public class RestaurantGUIView extends Application implements Observer {
 	
 	private TabPane tabPane;
 	
+	Timeline timeline1;
+	Timeline timeline2;
+	
 	//might help with observer stuff
 
 	private Customer[] currCustomers;
@@ -102,10 +105,12 @@ public class RestaurantGUIView extends Application implements Observer {
 			case ("removeCustomer0"):
 				currCustomers = (Customer[]) info.getEventChange();
 				customer1.setVisible(false);
+				if (timeline1 != null) {timeline1.stop();}
 				break;
 			case("removeCustomer1"):   
 				currCustomers = (Customer[]) info.getEventChange();
 				customer2.setVisible(false);
+				if (timeline2 != null) {timeline2.stop();}
 				break;
 			case ("removeTask0"):
 				currTickets = (Ticket[]) info.getEventChange();
@@ -164,7 +169,7 @@ public class RestaurantGUIView extends Application implements Observer {
 						
 					String temp = "";
 					for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
-						temp += currTickets[0].getToppingsList().get(n).getToppingName()+ "\n";
+						temp = currTickets[0].getToppingsList().get(n).getToppingName()+ "\n" + temp;
 					} 
 					ctc0L.setText(temp);
 					ctc0L.setManaged(true);
@@ -183,7 +188,7 @@ public class RestaurantGUIView extends Application implements Observer {
 					ticketBox.getChildren().set(2, makeSmileyFace());
 					String temp = "";
 					for (int n = 0; n < currTickets[1].getToppingsList().size(); n++) {
-						temp += currTickets[1].getToppingsList().get(n).getToppingName()+ "\n";
+						temp = currTickets[1].getToppingsList().get(n).getToppingName()+ "\n" + temp;
 					} 
 					ctc0L.setText(temp);
 					ctc0L.setManaged(true);
@@ -891,6 +896,8 @@ public class RestaurantGUIView extends Application implements Observer {
 						tabPane.getTabs().clear();
 						tabPane.getTabs().add(endOfDayScreen);
 						tabPane.getSelectionModel().select(endOfDayScreen);
+						
+						
 						//currCustomers[0].stopTimer();
 						//in which it should also update customer queue and update that info in customer1 and customer 2
 					}
@@ -1277,24 +1284,14 @@ public class RestaurantGUIView extends Application implements Observer {
 			        }
 			    })
 			);
+			if (customerNum == 1) {
+				timeline1 = timeline;
+			} else {
+				timeline2 = timeline;
+			}
 			timeline.play();
 	}
 	
-//	private void animateTicketFace(VBox ticketBox, double patienceTime) {
-//	    Timeline timeline = new Timeline(
-//	        new KeyFrame(Duration.millis(patienceTime*1000), e -> {
-//	            ticketBox.getChildren().set(2, makeFlatFace());
-//	        }),
-//	        new KeyFrame(Duration.millis((patienceTime  + patienceTime / 2)*1000), e -> {
-//	            ticketBox.getChildren().set(2, makeUpsetFace());
-//	        }),
-//	        new KeyFrame(Duration.millis((patienceTime*1.8)*1000), e -> {
-//	            ticketBox.getChildren().set(2, makeAngryFace());
-//	        })
-//	    );
-//	    timeline.play();
-//	}
-
 	
 	
 

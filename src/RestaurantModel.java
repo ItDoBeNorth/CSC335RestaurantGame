@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
+import java.util.Random;
 
 
 /** 
@@ -12,6 +13,8 @@ import java.util.Queue;
 @SuppressWarnings("deprecation")
 public class RestaurantModel extends Observable {
 	private Player player;
+	
+	private static Random r = new Random();
 
 	private ArrayList<Toppings> daysIngredients;
 	private Queue<Customer> daysCustomers;
@@ -105,9 +108,17 @@ public class RestaurantModel extends Observable {
 		currDay++;
 		// decide ingredients different if want, for now its by day
 		daysIngredients = new ArrayList<Toppings>(Arrays.asList(Arrays.copyOfRange(allToppings, 0, Math.min(currDay, allToppings.length))));
+		if (currDay > 5) {
+			daysIngredients.add(new Patty());
+		}
 		// customerLimit for now is day, can be changed later
 		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(
 				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(currDay, allCustomer.length))));
+		if (currDay > 9) {
+			for (int i = 0; i < (currDay-9); i++) {
+				tempCustomers.add(allCustomer[r.nextInt(allCustomer.length)]);
+			}
+		}
 		Collections.shuffle(tempCustomers);
 		daysCustomers = new LinkedList<Customer>(tempCustomers);
 		setChanged();
@@ -293,7 +304,7 @@ public class RestaurantModel extends Observable {
 		}
 		
 		//50 points from accuracy of the patties
-		accuracy += pattyAccuracy(new ArrayList<Toppings>(ticket.getToppingsList()));
+		accuracy += pattyAccuracy(new ArrayList<Toppings>(burger.getToppings()));
 		
 		// income based on total accuracy and price of ingredients
 		income = 5 + (getPrice(burger.getToppings()) * ((accuracy+timing)/400.0));
@@ -330,9 +341,11 @@ public class RestaurantModel extends Observable {
 		}
 		// scores accordingly, 50 for all cooked, 25 for all burnt, 15 for all uncooked
 		int total = undercooked+cooked+overcooked;
+		System.out.println("total = " +total);
 		if (total == 0) {return 50;}
-		return (int) ((50*((double)cooked/total))+(15*((double)undercooked/total))+(25*((double)overcooked/total)));
-		
+		int temp = (int) ((50*((double)cooked/total))+(15*((double)undercooked/total))+(25*((double)overcooked/total)));
+		System.out.println("temp = " + temp);
+		return temp;
 	}
 	
 	public double getPrice(ArrayList<Toppings> toppings) {
@@ -342,6 +355,7 @@ public class RestaurantModel extends Observable {
 		}
 		return amount;
 	}
+	
 	public boolean isTheSameOrder(ArrayList<Toppings> ticketIngredients,ArrayList<Toppings> orderIngredients) {
 		if(ticketIngredients.size()!=orderIngredients.size()) {
 			return false;
