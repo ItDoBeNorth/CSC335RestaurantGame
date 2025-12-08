@@ -34,7 +34,7 @@ public class RestaurantModel extends Observable {
 	private ArrayList<String> dayMilestones;
 	
 	private int customersServed;
-	private String[] newThings = {"New Ingredient: Lettuce\nNew Customer: John(Generous)", "New Ingredient: Onion\nNew Customer: Peter(Hurry)", "New Ingredient: Pickle\nNew Customer: Mariah(Picky)", "New Ingredient: Tomato\nNew Customer: David(Hurry)", "New Customer: Sarah(Patient)"};
+	private String[] newThings = {"New Ingredient: Lettuce\nNew Customer: John(Generous)", "New Ingredient: Onion\nNew Customer: Peter(Hurry)", "New Ingredient: Pickle\nNew Customer: Mariah(Picky)", "New Ingredient: Tomato\nNew Customer: David(Hurry)", "New Customer: Sarah(Patient)", "One more customer, One more patty", "One more customer"};
 	// new things how
 
 	// change later
@@ -90,7 +90,7 @@ public class RestaurantModel extends Observable {
 		}
 		dayMilestones=player.milestones();
 		setChanged();
-		notifyObservers(new EventDetail("updateEndOfDayScreen", newThings[Math.min(currDay-1, allToppings.length)]));
+		notifyObservers(new EventDetail("updateEndOfDayScreen", newThings[Math.min(currDay-1, newThings.length - 1)]));
 	}
 	
 	public void nextDay() {
@@ -114,7 +114,7 @@ public class RestaurantModel extends Observable {
 		System.out.println(daysIngredients.size());
 		// customerLimit for now is day, can be changed later
 		ArrayList<Customer> tempCustomers = new ArrayList<Customer>(
-				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(currDay, allCustomer.length))));
+				Arrays.asList(Arrays.copyOfRange(allCustomer, 0, 1 + Math.min(currDay, allCustomer.length-1))));
 		if (currDay > 9) {
 			for (int i = 0; i < (currDay-9); i++) {
 				tempCustomers.add(allCustomer[r.nextInt(allCustomer.length)]);
