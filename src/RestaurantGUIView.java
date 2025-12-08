@@ -264,8 +264,10 @@ public class RestaurantGUIView extends Application implements Observer {
 
 		// SetUp Stage
 		stage.setTitle("Restaurant");
+
 		
 		BorderPane startPane = new BorderPane();
+
 		controller = new RestaurantController();
 
 		stage.setOnCloseRequest((e)->{
@@ -367,7 +369,9 @@ public class RestaurantGUIView extends Application implements Observer {
 			makeEODscreen(endOfDayScreen, order, prep, cook, serve);
 			
 		
-			tabPane.getTabs().remove(menu);
+			tab
+        
+        getTabs().remove(menu);
 			tabPane.getTabs().addAll(order, prep, cook, serve);
 			tabPane.getSelectionModel().select(order);
 			controller.setUpDay();
@@ -458,7 +462,9 @@ public class RestaurantGUIView extends Application implements Observer {
 				"-fx-border-radius: 3;" +
 				"-fx-background-color: #b1d6f0" 
 		);
+
 		c1Button.setFont(new Font("Comic Sans MS", 12));
+
 		c1Button.setOnAction(e -> {
 		    controller.updateTaskList(0, currCustomers[0]);
 		    startPatienceTimer(controller.getCurrDay(), currCustomers[0].patienceLevel(), currCustomers[0], 1);
@@ -487,6 +493,7 @@ public class RestaurantGUIView extends Application implements Observer {
 				"-fx-border-radius: 3;" +
 				"-fx-background-color: #b1d6f0" 
 		);
+
 		c2Button.setFont(new Font("Comic Sans MS", 12));
 		c2Button.setOnAction(e -> {
 		    controller.updateTaskList(1, currCustomers[1]);
