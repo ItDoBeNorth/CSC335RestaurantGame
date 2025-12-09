@@ -1365,7 +1365,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		eye1.setTranslateX(-4);
 		eye1.setTranslateY(-3);
 
-		Circle eye2 = new Circle(2);
+		Circle eye2 = new Circle(2); 
 		eye2.setTranslateX(4);
 		eye2.setTranslateY(-3);
 
