@@ -56,190 +56,267 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * RestaurantGUIView sets up the visual implementation for the Restaurant game. It starts off with a sign in screen, then makes different screens to take orders,
+ * make burgers, and serve them, as well as makes elements that can be interacted with. Once all orders for a day are fulfilled, the End of Day screen is displayed.
+ */
 public class RestaurantGUIView extends Application implements Observer {
+	/**
+	 * RestaurantController object for this class
+	 */
 	private RestaurantController controller;
+	/**
+	 * Player object for this game
+	 */
 	private Player player;
 
+	/**
+	 * TabPane object that holds all the tabs for the various stages of gameplay
+	 */
 	private TabPane tabPane;
 
+	/**
+	 * Timeline object for this game
+	 */
 	Timeline timeline1;
+	/**
+	 * Timeline object for this game
+	 */
 	Timeline timeline2;
 
 	// might help with observer stuff
 
+	/**
+	 * Customer array for customers being served right now
+	 */
 	private Customer[] currCustomers;
+	/**
+	 * Ticket array for Tickets being fulfilled right now
+	 */
 	private Ticket[] currTickets;
 
 	// these things need to all be updated to the same info, just seperately
+	/**
+	 * VBox array of Tickets for different Tabs
+	 */
 	VBox[] ticketsForTabs;
 	// these are aboves 0, 1, 2
+	/**
+	 * Vbox holding tickets for Prep tab
+	 */
 	private VBox ticketsInfoPrep;
+	/**
+	 * VBox holding tickets for Cook tab
+	 */
 	private VBox ticketsInfoCook;
+	/**
+	 * VBox holding tickets for Serve tab
+	 */
 	private VBox ticketsInfoServe;
 
+	/**
+	 * VBox for cooking burger
+	 */
 	private VBox burgerCook;
+	/**
+	 * VBox for serving burger
+	 */
 	private VBox burgerServe;
 
+	/**
+	 * HBox for representing the basket
+	 */
 	private HBox basket;
+	/**
+	 * HBox for what's picked from the basket
+	 */
 	private HBox pickFromBasket;
 
+	/**
+	 * VBox to represent the oven
+	 */
 	private VBox oven;
+	/**
+	 * HBox for what's picked from the oven
+	 */
 	private HBox pickFromOven;
 
 	// more observer things but seperate
+	/**
+	 * VBox to hold customer 1
+	 */
 	private VBox customer1;
+	/**
+	 * VBox to hold customer 2
+	 */
 	private VBox customer2;
+	/**
+	 * HBox to hold ingredients that have been picked
+	 */
 	private HBox pickIngredients;
+	/**
+	 * HBox to hold Pattys that have been picked
+	 */
 	private HBox pickPatty;
+	/**
+	 * ChoiceBox of String to hold ticket choices
+	 */
 	private ChoiceBox<String> ticketChoice;
+	/**
+	 * VBox of EODcontent
+	 */
 	private VBox EODcontent;
 
+	/**
+	 * Is able to update the current customer and tasks that are being looked at, as well as the basket, burger, and oven and end of day screen. It does this
+	 * by switching cases, removing customers/tasks, updating the queues for customers and tasks, and various instance variables.
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		EventDetail info = (EventDetail) arg;
 
 		switch (info.getEventInfo()) {
-		case ("removeCustomer0"):
-			currCustomers = (Customer[]) info.getEventChange();
-			customer1.setVisible(false);
-			if (timeline1 != null) {
-				timeline1.stop();
-			}
-			break;
-		case ("removeCustomer1"):
-			currCustomers = (Customer[]) info.getEventChange();
-			customer2.setVisible(false);
-			if (timeline2 != null) {
-				timeline2.stop();
-			}
-			break;
-		case ("removeTask0"):
-			currTickets = (Ticket[]) info.getEventChange();
-			ticketsInfoPrep.getChildren().get(0).setVisible(false);
-			ticketsInfoCook.getChildren().get(0).setVisible(false);
-			ticketsInfoServe.getChildren().get(0).setVisible(false);
-			break;
-		case ("removeTask1"):
-			currTickets = (Ticket[]) info.getEventChange();
-			ticketsInfoPrep.getChildren().get(1).setVisible(false);
-			ticketsInfoCook.getChildren().get(1).setVisible(false);
-			ticketsInfoServe.getChildren().get(1).setVisible(false);
-			break;
-		case ("customerQueueUpdate0"):
-			currCustomers = (Customer[]) info.getEventChange();
-			Label cqu0L = (Label) customer1.getChildren().get(0);
-			cqu0L.setText(currCustomers[0].getName());
-			// Image of character changed here, any animation started
-			customer1.getChildren().set(1, makeSmileyFace());
-
-			customer1.getChildren().set(2, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
-
-			Button cqu0B = (Button) customer1.getChildren().get(3);
-			cqu0B.setDisable(false);
-			customer1.setVisible(true);
-
-			break;
-		case ("customerQueueUpdate1"):
-			currCustomers = (Customer[]) info.getEventChange();
-			Label cqu1L = (Label) customer2.getChildren().get(0);
-			cqu1L.setText(currCustomers[1].getName());
-			// Image of character changed here, any animation started
-			customer2.getChildren().set(1, makeSmileyFace());
-			customer2.getChildren().set(2, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
-
-			Button cqu1B = (Button) customer2.getChildren().get(3);
-			cqu1B.setDisable(false);
-			customer2.setVisible(true);
-
-			break;
-		case ("currTasksChanged0"):
-			currTickets = (Ticket[]) info.getEventChange();
-			for (int i = 0; i < 3; i++) {
-				VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(0);
-
-				double totalTime = currCustomers[0].patienceLevel() * controller.getCurrDay() + 10;
-				Label ctc0L = (Label) ((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().get(1);
-				ticketBox.getChildren().set(2, makeSmileyFace());
-
-				String temp = "";
-				for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
-					temp = currTickets[0].getToppingsList().get(n).getToppingName() + "\n" + temp;
+			case ("removeCustomer0"):
+				currCustomers = (Customer[]) info.getEventChange();
+				customer1.setVisible(false);
+				if (timeline1 != null) {
+					timeline1.stop();
 				}
-				ctc0L.setText(temp);
-				ctc0L.setManaged(true);
-				ctc0L.setVisible(true);
-				ticketsForTabs[i].getChildren().get(0).setVisible(true);
-			}
-			break;
-		case ("currTasksChanged1"):
-			currTickets = (Ticket[]) info.getEventChange();
-			for (int i = 0; i < 3; i++) {
-				VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(1);
-				double totalTime = currCustomers[1].patienceLevel() * controller.getCurrDay() + 10;
-				Label ctc0L = (Label) ((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().get(1);
-				ticketBox.getChildren().set(2, makeSmileyFace());
-				String temp = "";
-				for (int n = 0; n < currTickets[1].getToppingsList().size(); n++) {
-					temp = currTickets[1].getToppingsList().get(n).getToppingName() + "\n" + temp;
+				break;
+			case ("removeCustomer1"):
+				currCustomers = (Customer[]) info.getEventChange();
+				customer2.setVisible(false);
+				if (timeline2 != null) {
+					timeline2.stop();
 				}
-				ctc0L.setText(temp);
-				ctc0L.setManaged(true);
-				ctc0L.setVisible(true);
-				ticketsForTabs[i].getChildren().get(1).setVisible(true);
-			}
-			break;
-		case ("resetCustomers"):
-			currCustomers = (Customer[]) info.getEventChange();
-			customer1.setVisible(false);
-			customer2.setVisible(false);
-			break;
-		case ("resetTickets"):
-			currTickets = (Ticket[]) info.getEventChange();
-			for (int i = 0; i < 3; i++) {
-				ticketsForTabs[i].getChildren().get(0).setVisible(false);
-				ticketsForTabs[i].getChildren().get(1).setVisible(false);
-			}
-			break;
-		case ("daysIngredients"):
-			int n = 0;
-			while (n < IngredientsList.TOPPINGLIST.length) {
-				Toppings ingredient = IngredientsList.TOPPINGLIST[n];
-				if (controller.getDaysToppings().contains(ingredient)) {
-					pickIngredients.getChildren().get(n).setDisable(false);
+				break;
+			case ("removeTask0"):
+				currTickets = (Ticket[]) info.getEventChange();
+				ticketsInfoPrep.getChildren().get(0).setVisible(false);
+				ticketsInfoCook.getChildren().get(0).setVisible(false);
+				ticketsInfoServe.getChildren().get(0).setVisible(false);
+				break;
+			case ("removeTask1"):
+				currTickets = (Ticket[]) info.getEventChange();
+				ticketsInfoPrep.getChildren().get(1).setVisible(false);
+				ticketsInfoCook.getChildren().get(1).setVisible(false);
+				ticketsInfoServe.getChildren().get(1).setVisible(false);
+				break;
+			case ("customerQueueUpdate0"):
+				currCustomers = (Customer[]) info.getEventChange();
+				Label cqu0L = (Label) customer1.getChildren().get(0);
+				cqu0L.setText(currCustomers[0].getName());
+				// Image of character changed here, any animation started
+				customer1.getChildren().set(1, makeSmileyFace());
+	
+				customer1.getChildren().set(2, getShape(currCustomers[0].getShape(), cqu0L, currCustomers[0].getColor()));
+	
+				Button cqu0B = (Button) customer1.getChildren().get(3);
+				cqu0B.setDisable(false);
+				customer1.setVisible(true);
+	
+				break;
+			case ("customerQueueUpdate1"):
+				currCustomers = (Customer[]) info.getEventChange();
+				Label cqu1L = (Label) customer2.getChildren().get(0);
+				cqu1L.setText(currCustomers[1].getName());
+				// Image of character changed here, any animation started
+				customer2.getChildren().set(1, makeSmileyFace());
+				customer2.getChildren().set(2, getShape(currCustomers[1].getShape(), cqu1L, currCustomers[1].getColor()));
+	
+				Button cqu1B = (Button) customer2.getChildren().get(3);
+				cqu1B.setDisable(false);
+				customer2.setVisible(true);
+	
+				break;
+			case ("currTasksChanged0"):
+				currTickets = (Ticket[]) info.getEventChange();
+				for (int i = 0; i < 3; i++) {
+					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(0);
+	
+					double totalTime = currCustomers[0].patienceLevel() * controller.getCurrDay() + 10;
+					Label ctc0L = (Label) ((VBox) ticketsForTabs[i].getChildren().get(0)).getChildren().get(1);
+					ticketBox.getChildren().set(2, makeSmileyFace());
+	
+					String temp = "";
+					for (int n = 0; n < currTickets[0].getToppingsList().size(); n++) {
+						temp = currTickets[0].getToppingsList().get(n).getToppingName() + "\n" + temp;
+					}
+					ctc0L.setText(temp);
+					ctc0L.setManaged(true);
+					ctc0L.setVisible(true);
+					ticketsForTabs[i].getChildren().get(0).setVisible(true);
 				}
-				n++;
-			}
-			break;
-		case ("updateBasket"):
-			updateBasketGUI();
-			break;
-		case ("updateOven"):
-			updateOvenGUI();
-			break;
-		case ("updateBurger"):
-			updateBurgerGUI();
-			break;
-		case ("updateEndOfDayScreen"):
-			if (EODcontent == null)
-				return;
-			Label rating = (Label) EODcontent.getChildren().get(0);
-			rating.setText("Score: +" + controller.getDaysScore() + " \n Total: " + player.getScore());
-			Label income = (Label) EODcontent.getChildren().get(1);
-			income.setText("Days Income: " + String.format("%.2f", controller.getDaysIncome()) + "\n Total Income: "
-					+ String.format("%.2f", player.getMoney()));
-			Label accuracy = (Label) EODcontent.getChildren().get(2);
-			accuracy.setText("Days Accuracy: " + controller.getDaysAccuracy() + "%");
-			Label timing = (Label) EODcontent.getChildren().get(3);
-			timing.setText("Days Timing: " + controller.getDaysTiming() + "%");
-			Label milestones = (Label) EODcontent.getChildren().get(4);
-			milestones.setText("Days Milestones: " + controller.getDayMilestones());
-			Label newStuff = (Label) EODcontent.getChildren().get(5);
-			newStuff.setText("New Things Next Day:\n" + info.getEventChange());
-			System.out.println(controller.getDayMilestones());
-			Button next = (Button) EODcontent.getChildren().get(6);
-			next.setText("Next Day: " + (player.getDay() + 2));
-			break;
-		default:
+				break;
+			case ("currTasksChanged1"):
+				currTickets = (Ticket[]) info.getEventChange();
+				for (int i = 0; i < 3; i++) {
+					VBox ticketBox = (VBox) ticketsForTabs[i].getChildren().get(1);
+					double totalTime = currCustomers[1].patienceLevel() * controller.getCurrDay() + 10;
+					Label ctc0L = (Label) ((VBox) ticketsForTabs[i].getChildren().get(1)).getChildren().get(1);
+					ticketBox.getChildren().set(2, makeSmileyFace());
+					String temp = "";
+					for (int n = 0; n < currTickets[1].getToppingsList().size(); n++) {
+						temp = currTickets[1].getToppingsList().get(n).getToppingName() + "\n" + temp;
+					}
+					ctc0L.setText(temp);
+					ctc0L.setManaged(true);
+					ctc0L.setVisible(true);
+					ticketsForTabs[i].getChildren().get(1).setVisible(true);
+				}
+				break;
+			case ("resetCustomers"):
+				currCustomers = (Customer[]) info.getEventChange();
+				customer1.setVisible(false);
+				customer2.setVisible(false);
+				break;
+			case ("resetTickets"):
+				currTickets = (Ticket[]) info.getEventChange();
+				for (int i = 0; i < 3; i++) {
+					ticketsForTabs[i].getChildren().get(0).setVisible(false);
+					ticketsForTabs[i].getChildren().get(1).setVisible(false);
+				}
+				break;
+			case ("daysIngredients"):
+				int n = 0;
+				while (n < IngredientsList.TOPPINGLIST.length) {
+					Toppings ingredient = IngredientsList.TOPPINGLIST[n];
+					if (controller.getDaysToppings().contains(ingredient)) {
+						pickIngredients.getChildren().get(n).setDisable(false);
+					}
+					n++;
+				}
+				break;
+			case ("updateBasket"):
+				updateBasketGUI();
+				break;
+			case ("updateOven"):
+				updateOvenGUI();
+				break;
+			case ("updateBurger"):
+				updateBurgerGUI();
+				break;
+			case ("updateEndOfDayScreen"):
+				if (EODcontent == null)
+					return;
+				Label rating = (Label) EODcontent.getChildren().get(0);
+				rating.setText("Score: +" + controller.getDaysScore() + " \n Total: " + player.getScore());
+				Label income = (Label) EODcontent.getChildren().get(1);
+				income.setText("Days Income: " + String.format("%.2f", controller.getDaysIncome()) + "\n Total Income: "
+						+ String.format("%.2f", player.getMoney()));
+				Label accuracy = (Label) EODcontent.getChildren().get(2);
+				accuracy.setText("Days Accuracy: " + controller.getDaysAccuracy() + "%");
+				Label timing = (Label) EODcontent.getChildren().get(3);
+				timing.setText("Days Timing: " + controller.getDaysTiming() + "%");
+				Label milestones = (Label) EODcontent.getChildren().get(4);
+				milestones.setText("Days Milestones: " + controller.getDayMilestones());
+				Label newStuff = (Label) EODcontent.getChildren().get(5);
+				newStuff.setText("New Things Next Day:\n" + info.getEventChange());
+				System.out.println(controller.getDayMilestones());
+				Button next = (Button) EODcontent.getChildren().get(6);
+				next.setText("Next Day: " + (player.getDay() + 2));
+				break;
+			default:
 
 		}
 
@@ -247,6 +324,11 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	// add VM arguements before testing
 
+	/**
+	 * Sets up the starting page for the GUI. Makes Tabs for various stages of game play (ordering, prepping, cooking, serving, and end of day) as well as a sign on 
+	 * screen. This screen prompts the user to put in their name, under which their version of the game will be stored. The screen is a BorderPane holding a Tab holding 
+	 * a BorderPane with a custom Background.
+	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		System.out.println("Starting JavaFX…");
@@ -381,13 +463,22 @@ public class RestaurantGUIView extends Application implements Observer {
 		stage.show();
 	}
 
+	/**
+	 * For launching the GUI
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	/**
+	 * Makes the order tab screen. Makes central VBox in a BorderPane. The VBox has a wooden floor background while the BorderPane has a background of a diner. 
+	 * The VBox contains two customers who have faces, name labels, and buttons to get their orders. Finally, there is a counter below both the customers.
+	 * @param order Tab object whose contents are being filled
+	 */
 	public void makeOrder(Tab order) {
 
-		BorderPane tempPane = new BorderPane();
+		BorderPane orderPane = new BorderPane();
 
 		// make images
 		Image dinerBack = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
@@ -409,7 +500,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		HBox orderBox = new HBox(10);
 
 		// customize BorderPane
-		tempPane.setBackground(new Background(dinerBackView));
+		orderPane.setBackground(new Background(dinerBackView));
 
 		// customize orderCounterBox
 		orderCounterBox.setBackground(new Background(woodenFloorView));
@@ -484,12 +575,20 @@ public class RestaurantGUIView extends Application implements Observer {
 		orderBox.getChildren().addAll(customer1, customer2);
 		orderCounterBox.setCenter(orderBox);
 		orderCounterBox.setBottom(counterView);
-		tempPane.setCenter(orderCounterBox);
-		order.setContent(tempPane);
+		orderPane.setCenter(orderCounterBox);
+		order.setContent(orderPane);
 	}
 
+	/**
+	 * Sets selected Ticket integer to 0
+	 */
 	private int selectedTicket = 0;
 
+	/**
+	 * Makes a VBox holding both Tickets. Each Ticket is a VBox with a background of yellow notebook paper, a Label that says Ticket and 
+	 * the ticket's number, a Label containing the ingredients for the Ticket, and a smiley face representing how much time is left for the Ticket.
+	 * @return VBox containing both Tickets.
+	 */
 	public VBox makeTicketInfos() {
 		// make images
 		Image notebook = new Image(getClass().getResourceAsStream("/notebook.png"));
@@ -551,6 +650,11 @@ public class RestaurantGUIView extends Application implements Observer {
 		return ticketsInfo;
 	}
 
+	/**
+	 * Updates Ticket's GUI when one is selected. Depending on which selectedTicket, the border of the corresponding Ticket is set red, while the other is set to
+	 * its initial look. If neither ticket is selected, both are set to default.
+	 * @param ticketsInfo VBox containing the GUI for the Tickets that was originally made
+	 */
 	private void updateTicketGui(VBox ticketsInfo) {
 		Image notebook = new Image(getClass().getResourceAsStream("/notebook.png"));
 		BackgroundImage notebookView = new BackgroundImage(notebook, BackgroundRepeat.NO_REPEAT,
@@ -586,6 +690,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * Makes the prep tab, which includes a basket for picking ingredients and oven for grilling patties. Both of these objects are ScrollPanes that have underlying 
+	 * VBoxes with custom backgrounds via a StackPane. Above the basket, there are buttons for all ingredients, with unavailable ones greyed out. In the upper left,
+	 * there are the current Tickets. In the upper right, there is a button to reset the basket.
+	 * @param prep Tab for prep screen
+	 */
 	public void makePrep(Tab prep) {
 		// make images
 		Image prepRoom = new Image(getClass().getResourceAsStream("/preproom.jpg"));
@@ -617,8 +727,8 @@ public class RestaurantGUIView extends Application implements Observer {
 		basketView.setFitHeight(160);
 
 		StackPane basketandBackBox = new StackPane();
-		basketandBackBox.getChildren().add(basketView);
-		basketandBackBox.getChildren().add(basketBox);
+		basketandBackBox.getChildren().addAll(basketView, basketBox);
+		basketandBackBox.setAlignment(Pos.CENTER);
 
 		basket = new HBox();
 
@@ -658,7 +768,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		scroll.setStyle("-fx-background-color: #d2b48c;" + "-fx-border-color: #8b5a2b;" + "-fx-border-width: 3;"
 				+ "-fx-background-radius: 10;" + "-fx-border-radius: 10;" + "-fx-padding: 5;"
 				+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);");
-		scroll.setFitToWidth(false);
+		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
 
@@ -729,6 +839,13 @@ public class RestaurantGUIView extends Application implements Observer {
 		startOvenTimer();
 	}
 
+	/**
+	 * Makes the cook tab which allows you to assemble the burger from chosen ingredients. The underlying container is a BorderPane with a custom image. Over it, in the 
+	 * center, is a ScrollPane with a VBox that has a custom background and png's for the burger buns and added ingredients. Above that are buttons for every ingredient 
+	 * added to the basket. In the upper left are the tickets, in the upper right are buttons to undo, reset, and serve.
+	 * @param cook Tab for cooking screen
+	 * @param serve Tab for serving screen
+	 */
 	public void makeCook(Tab cook, Tab serve) {
 		Image prepRoom = new Image(getClass().getResourceAsStream("/preproom.jpg"));
 		BackgroundImage prepRoomView = new BackgroundImage(prepRoom, BackgroundRepeat.NO_REPEAT,
@@ -783,9 +900,11 @@ public class RestaurantGUIView extends Application implements Observer {
 		scroll.setFitToWidth(true);
 		scroll.setFitToHeight(true);
 		scroll.setPrefViewportHeight(150);
+		scroll.setMinSize(200, 300);
 
 		scroll.viewportBoundsProperty().addListener((obs, oldVal, newVal) -> {
 			boardView.setFitHeight(newVal.getHeight());
+			boardView.setFitWidth(newVal.getWidth());
 		});
 
 		content.getChildren().addAll(pickFromBasket, scroll);
@@ -832,6 +951,14 @@ public class RestaurantGUIView extends Application implements Observer {
 		cook.setContent(cookPane);
 	}
 
+	/**
+	 * Makes tab for serving screen. This contains a BorderPane with a custom background, in the center of which is a ScrollPane containing a VBox also with a 
+	 * custom background. This VBox contains the burger that was assembled on the cook screen. In the upper left are the active tickets, and in the upper right is a
+	 * serve burger button. Once a ticket is selected, this button can be clicked to submit the burger towards that ticket.
+	 * @param serve Tab for serve screen
+	 * @param order Tab for order screen
+	 * @param endOfDayScreen Tab for endOfDayScreen
+	 */
 	public void makeServe(Tab serve, Tab order, Tab endOfDayScreen) {
 		// make images
 		Image serveRoom = new Image(getClass().getResourceAsStream("/dinerbackground.jpg"));
@@ -943,6 +1070,16 @@ public class RestaurantGUIView extends Application implements Observer {
 		serve.setContent(servePane);
 	}
 
+	/**
+	 * Makes tab for end of day screen. The underlying element is a BorderPane with a custom background, which contains a StackPane that holds a custom image and 
+	 * the contents for the end of day screen. These are several labels, who specific information is filled in elsewhere. There is also a Button to continue to the next
+	 * day
+	 * @param eodTab Tab for eod screen
+	 * @param order Tan for order screen
+	 * @param prep Tab for prep screen
+	 * @param cook Tab for cook screen
+	 * @param serve Tab for serve screen
+	 */
 	public void makeEODscreen(Tab eodTab, Tab order, Tab prep, Tab cook, Tab serve) {
 		// images
 		Image endStar = new Image(getClass().getResourceAsStream("/starbackground.jpg"));
@@ -1010,13 +1147,17 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	}
 
+	/**
+	 * Updates the burger GUI to display all the Toppings currently on it. This GUI is used in the cook and serve Tabs.
+	 */
 	public void updateBurgerGUI() {
 		burgerCook.getChildren().clear();
 		burgerCook.setAlignment(Pos.CENTER);
 		burgerServe.getChildren().clear();
 		burgerServe.setAlignment(Pos.CENTER);
+		
 		ArrayList<Toppings> burgerToppings = controller.getBurger().getToppings();
-		String tempBurger = "";
+		
 		for (Toppings t : burgerToppings) {
 			String imgStr = "";
 			if (t instanceof Patty) {
@@ -1025,10 +1166,13 @@ public class RestaurantGUIView extends Application implements Observer {
 			} else {
 				imgStr = t.getToppingName() + ".png";
 			}
+			
 			Image img = new Image(imgStr);
 			ImageView imgCookView = new ImageView(img);
+			
 			imgCookView.setFitWidth(50);
 			imgCookView.setFitHeight(35);
+			
 			ImageView imgServeView = new ImageView(img);
 			imgServeView.setFitWidth(50);
 			imgServeView.setFitHeight(35);
@@ -1038,21 +1182,30 @@ public class RestaurantGUIView extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * Updates the basket's GUI so that when a button representing a topping is clicked, that topping is removed from the basket. In addition, makes it so
+	 * that when a topping is added to the basket, a button is created for it in pickFromBasket.
+	 */
 	public void updateBasketGUI() {
 		basket.getChildren().clear();
 		pickFromBasket.getChildren().clear();
 
 		ArrayList<Toppings> basketToppings = controller.getCurrBasket().getList();
+		
 		for (Toppings t : basketToppings) {
 			final Toppings currTopping = t;
 			String imgStr = "";
 			Button topping = new Button();
+			topping.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+					+ "-fx-background-color: #b1d6f0");
+			
 			if (currTopping instanceof Patty) {
 				Patty currPatty = (Patty) currTopping;
 				imgStr = currPatty.getPattyImage();
 			} else {
 				imgStr = t.getToppingName() + ".png";
 			}
+			
 			Image img = new Image(imgStr);
 			ImageView imgview = new ImageView(img);
 			imgview.setFitWidth(25);
@@ -1076,6 +1229,10 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	}
 
+	/**
+	 * Makes it so that when a Patty is added or removed from the oven, it's GUI updates. Additionally, if the Patty is removed, it is added to the basket and the
+	 * basket's GUI updates.
+	 */
 	private void updateOvenGUI() {
 
 		oven.getChildren().clear();
@@ -1084,8 +1241,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		for (Toppings t : ovenToppings) {
 
 			Button patty = new Button();
+			patty.setStyle("-fx-border-color: black;" + "-fx-border-width: 1;" + "-fx-border-radius: 3;"
+					+ "-fx-background-color: #b1d6f0");
+			
 			Patty currPatty = (Patty) t;
 			currPatty.updateState();
+			
 			String imgStr = currPatty.getPattyImage();
 			Image img = new Image(imgStr);
 			ImageView imgview = new ImageView(img);
@@ -1108,6 +1269,13 @@ public class RestaurantGUIView extends Application implements Observer {
 
 	}
 
+	/**
+	 * Based on the String shape, calls method to make corresponding shape using the Label cqu0L and Color color
+	 * @param shape String
+	 * @param cqu0L Label
+	 * @param color Color
+	 * @return Shape made using shape, cqu0L, and color
+	 */
 	private Shape getShape(String shape, Label cqu0L, Color color) {
 		if (shape.equals("circle")) {
 			return createCircle(cqu0L, color);
@@ -1117,6 +1285,12 @@ public class RestaurantGUIView extends Application implements Observer {
 			return createRectangle(cqu0L, color);
 	}
 
+	/**
+	 * Makes a Circle with a black Stroke, filled with color, and with a Tooltip of the text from Label cqu0l
+	 * @param cqu0L Label
+	 * @param color Color
+	 * @return Circle
+	 */
 	private Circle createCircle(Label cqu0L, Color color) {
 		Circle newCircle = new Circle(20);
 		newCircle.setFill(color);
@@ -1127,6 +1301,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		return newCircle;
 	}
 
+	/**
+	 * Makes a Polygon that is a triangle with a black Stroke, filled with color, and with a Tooltip of the text from Label cqu0l
+	 * @param cqu0L Label
+	 * @param color Color
+	 * @return Polygon
+	 */
 	private Polygon createTriangle(Label cqu0L, Color color) {
 		Polygon triangle = new Polygon();
 		triangle.getPoints().addAll(new Double[] { 25.0, 0.0, 50.0, 40.0, 5.0, 40.0 });
@@ -1139,6 +1319,12 @@ public class RestaurantGUIView extends Application implements Observer {
 		return triangle;
 	}
 
+	/**
+	 * Makes a Rectangle with a black Stroke, filled with color, and with a Tooltip of the text from Label cqu0l
+	 * @param cqu0L Label
+	 * @param color Color
+	 * @return Rectangle
+	 */
 	private Rectangle createRectangle(Label cqu0L, Color color) {
 		Rectangle rectangle = new Rectangle();
 		rectangle.setX(20);
@@ -1153,6 +1339,9 @@ public class RestaurantGUIView extends Application implements Observer {
 		return rectangle;
 	}
 
+	/**
+	 * Makes a Timeline object that every second, updates the oven's GUI to show the Pattys as more cooked
+	 */
 	private void startOvenTimer() {
 		Timeline ovenTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
 			updateOvenGUI();
@@ -1161,6 +1350,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		ovenTimeline.play();
 	}
 
+	/**
+	 * Makes a smiley face using three Circles and an Arc for the smile. One Circle is the head and is green, the other two are the eyes. 
+	 * @return Group containing three Circles and Arc used to make smiley
+	 */
 	private Group makeSmileyFace() {
 		Circle head = new Circle(12);
 		head.setFill(Color.GREEN);
@@ -1183,6 +1376,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		return new Group(head, eye1, eye2, smile);
 	}
 
+	/**
+	 * Makes a face using three Circles and a Line for the mouth. One Circle is the head and is yellow, the other two are the eyes. The Line is straight across
+	 * @return Group containing three Circles and Line used to make flat face
+	 */
 	private Group makeFlatFace() {
 		Circle head = new Circle(12);
 		head.setFill(Color.YELLOW);
@@ -1203,6 +1400,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		return new Group(head, eye1, eye2, mouth);
 	}
 
+	/**
+	 * Makes a face using three Circles and an Arc for the frown. One Circle is the head and is orange, the other two are the eyes. The arc is curved down
+	 * @return Group containing three Circles and Arc used to make upset face
+	 */
 	private Group makeUpsetFace() {
 		Circle head = new Circle(12);
 		head.setFill(Color.ORANGE);
@@ -1231,6 +1432,10 @@ public class RestaurantGUIView extends Application implements Observer {
 		return new Group(head, eye1, eye2, brow1, brow2, mouth);
 	}
 
+	/**
+	 * Makes a  face using three Circles and an Arc for the frown. One Circle is the head and is red, the other two are the eyes. The arc is curved sharply down
+	 * @return Group containing three Circles and Arc used to make angry face
+	 */
 	private Group makeAngryFace() {
 		Circle head = new Circle(12);
 		head.setFill(Color.RED);
@@ -1259,6 +1464,14 @@ public class RestaurantGUIView extends Application implements Observer {
 		return new Group(head, eye1, eye2, brow1, brow2, mouth);
 	}
 
+	/**
+	 * Makes a timer based on day and the customer('s patience level) to track how impatient the customer gets as their food is made. As more time elapses, the customer
+	 * goes from a green to yellow to orange to red face. There are two different Timelines to represent the patience levels of the two different customers
+	 * @param day integer
+	 * @param patienceLevel integer
+	 * @param customer Customer object
+	 * @param customerNum integer
+	 */
 	private void startPatienceTimer(int day, int patienceLevel, Customer customer, int customerNum) {
 		double patienceTime = 10 + patienceLevel * day;
 		customer.startTimer(patienceTime * 2);
