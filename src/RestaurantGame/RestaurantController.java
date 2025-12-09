@@ -27,7 +27,15 @@ public class RestaurantController {
 		model = null;
 		File gameData = new File("save_game.dat");
 		if (gameData.exists()) {
+			try {
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(gameData));
+				this.playerList = (PlayerList) in.readObject();
+				in.close();
 
+			} catch (IOException | ClassNotFoundException e) {
+
+				e.printStackTrace();
+			}
 		} else {
 			playerList = new PlayerList();
 		}
