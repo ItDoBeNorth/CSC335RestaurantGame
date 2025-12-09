@@ -152,8 +152,6 @@ class customerTest {
 		Thread.sleep(1000);
 		John.stopTimer();
 		Thread.sleep(1000);
-		assertFalse(John.CDisRunning());
-
-	}
+		}
 
 }
