@@ -18,6 +18,7 @@ public class EventDetailTest {
 		Basket<Toppings> bk = new Basket<Toppings>(1);
 		EventDetail event = new EventDetail("eventTest", bk);
 		assertEquals(event.getEventInfo(), "eventTest");
+		assertEquals((Basket<Toppings>)event.getEventChange(), bk);
 	}
 
 }
