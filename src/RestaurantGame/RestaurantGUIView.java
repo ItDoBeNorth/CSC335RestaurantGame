@@ -383,8 +383,9 @@ public class RestaurantGUIView extends Application implements Observer {
 
 		Tab menu = new Tab("Menu");
 		Tab order = new Tab("Order");
-		Tab prep = new Tab("Prep");
-		Tab cook = new Tab("Cook");
+		Tab prep = new Tab("Cook");
+		Tab cook = new Tab("Prep");
+		//switched prep and cook names
 		Tab serve = new Tab("Serve");
 		Tab endOfDayScreen = new Tab("End Of Day");
 
