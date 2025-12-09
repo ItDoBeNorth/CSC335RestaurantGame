@@ -114,12 +114,12 @@ public class Player implements Serializable {
 			addScore(250 * customersPoints);
 			customersPoints++;
 		}
-		if (perfectAccuracy == 10) {
-			String newMilestone = "10 Perfect Accuracy days(+1000pts)";
+		if (perfectAccuracy == 5) {
+			String newMilestone = "5 Perfect Accuracy days(+1000pts)";
 			dailyMilestones.add(newMilestone);
 			addScore(1000);
-		} else if (perfectAccuracy == 5) {
-			String newMilestone = "5 Perfect Accuracy days(+500pts)";
+		} else if (perfectAccuracy == 2) {
+			String newMilestone = "2 Perfect Accuracy days(+500pts)";
 			dailyMilestones.add(newMilestone);
 			addScore(500);
 		}
@@ -127,8 +127,8 @@ public class Player implements Serializable {
 			String newMilestone = "5 Perfect Timing days(+1000pts)";
 			dailyMilestones.add(newMilestone);
 			addScore(1000);
-		} else if (perfectTiming == 3) {
-			String newMilestone = "3 Perfect Timing days(+500pts)";
+		} else if (perfectTiming == 2) {
+			String newMilestone = "2 Perfect Timing days(+500pts)";
 			dailyMilestones.add(newMilestone);
 			addScore(500);
 		}
