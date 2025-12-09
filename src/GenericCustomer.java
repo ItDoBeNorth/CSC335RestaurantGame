@@ -27,14 +27,14 @@ public class GenericCustomer implements Customer{
      * Creates a GenericCustomer with random shape, color, name, and patience level.
      */
 	public GenericCustomer() {
-		//customer shape and color (for GUI Implementation)
-		Random r=new Random();
-		shape=shapes[r.nextInt(shapes.length)];
-		color=colors[r.nextInt(colors.length)];
-		name=names[r.nextInt(names.length)];
-		patienceLevel = r.nextInt(4,7);
+		// customer shape and color (for GUI Implementation)
+		Random r = new Random();
+		shape = shapes[r.nextInt(shapes.length)];
+		color = colors[r.nextInt(colors.length)];
+		name = names[r.nextInt(names.length)];
+		patienceLevel = r.nextInt(4, 7);
 		this.countdown = new Countdown();
-	
+
 	}
 	
 	 /**
@@ -47,11 +47,11 @@ public class GenericCustomer implements Customer{
      */
 	@Override
 	public ArrayList<Toppings> getOrder(ArrayList<Toppings> ingredientsList, int maxPick) {
-		ArrayList<Toppings> order=new ArrayList<>();
-		Patty newPatty=new Patty();
+		ArrayList<Toppings> order = new ArrayList<>();
+		Patty newPatty = new Patty();
 		order.add(newPatty);
-		for (int i=0;i<maxPick;i++) {
-			Toppings currTopping=ingredientsList.get(r.nextInt(ingredientsList.size()));
+		for (int i = 0; i < maxPick; i++) {
+			Toppings currTopping = ingredientsList.get(r.nextInt(ingredientsList.size()));
 			order.add(currTopping);
 		}
 		return order;
@@ -116,7 +116,7 @@ public class GenericCustomer implements Customer{
 	@Override
 	public void startTimer(double time) {
 		countdown.startCountdown(time);
-		
+
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class GenericCustomer implements Customer{
 	@Override
 	public void stopTimer() {
 		countdown.stopTimer();
-		
+
 	}
 	
 	/**

@@ -35,7 +35,7 @@ public class Basket<T> {
 			list.add(ingredient);
 			size++;
 			return true;
-		}	
+		}
 		return false;
 	}
 	
@@ -61,7 +61,7 @@ public class Basket<T> {
      */
 	public void remove(Toppings topping) {
 		list.remove(topping);
-		size --;
+		size--;
 	}
 	
 	/**
@@ -81,5 +81,5 @@ public class Basket<T> {
 	public ArrayList<T> getList(){
 		return (ArrayList<T>) list;
 	}
-	
+
 }

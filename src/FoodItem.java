@@ -15,7 +15,7 @@ public abstract class FoodItem {
 	public FoodItem(double price, double prepTime) {
 		this.price = price;
 		this.prepTime = prepTime;
-		
+
 	}
 	
 	/**
@@ -35,5 +35,5 @@ public abstract class FoodItem {
 	public double getPrepTime() {
 		return this.prepTime;
 	}
-	
+
 }

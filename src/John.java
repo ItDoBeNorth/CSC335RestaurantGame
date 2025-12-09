@@ -10,7 +10,12 @@ public class John extends KnownCustomer {
 	 * Constructor that creates a John customer with predefined attributes.   
 	 */
 	public John() {
-		super("John","triangle",Color.ORANGE,new ArrayList<Toppings>(){{add (new Patty());add(new Cheese());}},Personality.GENEROUS, 3);
+		super("John", "triangle", Color.ORANGE, new ArrayList<Toppings>() {
+			{
+				add(new Patty());
+				add(new Cheese());
+			}
+		}, Personality.GENEROUS, 3);
 	}
 	
 	 /**
@@ -24,10 +29,10 @@ public class John extends KnownCustomer {
      */
 	@Override
 	public ArrayList<Toppings> getOrder(ArrayList<Toppings> ingredientsList, int maxPick) {
-		ArrayList<Toppings> order= new ArrayList<Toppings>(super.getFavoriteOrder());
-		for (int i=order.size();i<maxPick;i++) {
-				order.add(favoriteTopping);
-			}
+		ArrayList<Toppings> order = new ArrayList<Toppings>(super.getFavoriteOrder());
+		for (int i = order.size(); i < maxPick; i++) {
+			order.add(favoriteTopping);
+		}
 		return order;
 	}
 

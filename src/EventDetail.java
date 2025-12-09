@@ -16,9 +16,9 @@ public class EventDetail {
      * @param itemChange: An object describing what changed during the event
      */
 	public EventDetail(String info, Object itemChange) {
-		//use enums if needed later
-		this.eventInfo  = info;
-		this.eventChange  = itemChange;
+		// use enums if needed later
+		this.eventInfo = info;
+		this.eventChange = itemChange;
 	}
 	
 	/**

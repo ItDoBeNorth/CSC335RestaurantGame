@@ -47,7 +47,7 @@ public class Burger{
 			return toppingList.pop();
 		}
 		return null;
-		
+
 	}
 	
 	/**
@@ -66,7 +66,5 @@ public class Burger{
 	public ArrayList<Toppings> getToppings() {
 		return new ArrayList<Toppings>(toppingList);
 	}
-	
-	
 
 }

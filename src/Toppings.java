@@ -5,7 +5,7 @@
  * other toppings to check if they represent the same ingredient.
  */
 public abstract class Toppings {
-	
+
 	private double price;
 	private String toppingName;
 	
@@ -45,10 +45,10 @@ public abstract class Toppings {
      * @return true if both toppings are the same ingredient, false otherwise
      */
 	public boolean isTheSameIngredient(Toppings obj) {
-		if(obj!=null && this.getClass() == obj.getClass()&& obj.getToppingName() == this.getToppingName()) {
+		if (obj != null && this.getClass() == obj.getClass() && obj.getToppingName() == this.getToppingName()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 }

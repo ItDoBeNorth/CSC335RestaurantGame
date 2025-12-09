@@ -12,9 +12,13 @@ public abstract class KnownCustomer implements Customer {
 	protected String name;
 	protected String shape;
 	protected Color color;
-	
+
 	protected final ArrayList<Toppings> favoriteOrder;
-	public enum Personality {ACCURATE, URGENT, GENEROUS, PATIENT;}
+
+	public enum Personality {
+		ACCURATE, URGENT, GENEROUS, PATIENT;
+	}
+
 	private Personality personality;
 	// mult by day to get time patience + 10 sec
 	private int patienceLevel;
@@ -116,7 +120,7 @@ public abstract class KnownCustomer implements Customer {
 	@Override
 	public void startTimer(double time) {
 		countdown.startCountdown(time);
-		
+
 	}
 	
 	 /**
@@ -125,7 +129,7 @@ public abstract class KnownCustomer implements Customer {
 	@Override
 	public void stopTimer() {
 		countdown.stopTimer();
-		
+
 	}
 	
 	 /**
@@ -137,5 +141,5 @@ public abstract class KnownCustomer implements Customer {
 	public boolean CDisRunning() {
 		return countdown.countDownIsRunning;
 	}
-	
+
 }

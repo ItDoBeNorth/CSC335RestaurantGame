@@ -70,6 +70,5 @@ public class Ticket {
 	public void addTopping(Toppings newIngredient) {
 		this.ingredients.add(newIngredient);
 	}
-	
 
 }

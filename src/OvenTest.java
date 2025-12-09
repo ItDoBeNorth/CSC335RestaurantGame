@@ -17,16 +17,15 @@ public class OvenTest {
 		oven.addIngredient(new Cheese());
 		assertFalse(oven.addIngredient(new Cheese()));
 		assertEquals(oven.getList().get(2).getToppingName(), "cheese");
-		//assertEquals(oven.remove(new Cheese()), "cheese");
+		// assertEquals(oven.remove(new Cheese()), "cheese");
 		oven.clearOven();
-		
+
 		assertEquals(oven.getSize(), 0);
 		Toppings pickle = new Pickle();
 		oven.addIngredient(pickle);
 		oven.printList();
 		assertEquals(oven.remove(pickle).getToppingName(), "pickle");
-		
+
 	}
-	
-	
+
 }

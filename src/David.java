@@ -10,7 +10,12 @@ public class David extends KnownCustomer {
 	 * Constructor that creates a David customer with predefined attributes.   
 	 */
 	public David() {
-		super("David","square",Color.DARKGREEN,new ArrayList<Toppings>(){{add (new Patty());add(new Onion());}},Personality.URGENT, 1);
+		super("David", "square", Color.DARKGREEN, new ArrayList<Toppings>() {
+			{
+				add(new Patty());
+				add(new Onion());
+			}
+		}, Personality.URGENT, 1);
 	}
 	
 	/**
@@ -24,10 +29,10 @@ public class David extends KnownCustomer {
      */
 	@Override
 	public ArrayList<Toppings> getOrder(ArrayList<Toppings> ingredientsList, int maxPick) {
-		ArrayList<Toppings> order= new ArrayList<Toppings>(super.getFavoriteOrder());
-		for (int i=order.size();i<maxPick;i++) {
-				order.add(favoriteTopping);
-			}
+		ArrayList<Toppings> order = new ArrayList<Toppings>(super.getFavoriteOrder());
+		for (int i = order.size(); i < maxPick; i++) {
+			order.add(favoriteTopping);
+		}
 		return order;
 	}
 

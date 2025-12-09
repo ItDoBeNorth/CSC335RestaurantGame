@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-
 public class CookableToppingsTest {
-	
+
 	@Test
 	void PattyTest() throws InterruptedException {
 		Patty patty = new Patty();
@@ -17,14 +16,14 @@ public class CookableToppingsTest {
 		assertEquals(patty.getToppingName(), "Patty");
 		assertEquals(patty.getPattyImage(), "uncookedPatty.png");
 		patty.getCookingState();
-		
+
 	}
-	
+
 	@Test
 	void PattyTest2() throws InterruptedException {
 		Patty patty = new Patty(1.00, 2.00, "patty");
-		//patty.startCooking();
-		//Thread.sleep(16000);
+		// patty.startCooking();
+		// Thread.sleep(16000);
 		assertEquals(patty.getPattyImage(), "Patty.png");
 	}
 }

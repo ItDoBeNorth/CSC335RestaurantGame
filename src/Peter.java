@@ -11,7 +11,12 @@ public class Peter extends KnownCustomer {
 	 */
 	public Peter() {
 
-		super("Peter","square",Color.GREENYELLOW,new ArrayList<Toppings>(){{add (new Patty());add(new Lettuce());}},Personality.URGENT, 2);
+		super("Peter", "square", Color.GREENYELLOW, new ArrayList<Toppings>() {
+			{
+				add(new Patty());
+				add(new Lettuce());
+			}
+		}, Personality.URGENT, 2);
 	}
 	
 	 /**
@@ -25,10 +30,10 @@ public class Peter extends KnownCustomer {
      */
 	@Override
 	public ArrayList<Toppings> getOrder(ArrayList<Toppings> ingredientsList, int maxPick) {
-		ArrayList<Toppings> order= new ArrayList<Toppings>(super.getFavoriteOrder());
-		for (int i=order.size();i<maxPick;i++) {
-				order.add(favoriteTopping);
-			}
+		ArrayList<Toppings> order = new ArrayList<Toppings>(super.getFavoriteOrder());
+		for (int i = order.size(); i < maxPick; i++) {
+			order.add(favoriteTopping);
+		}
 		return order;
 	}
 

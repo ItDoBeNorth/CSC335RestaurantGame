@@ -21,7 +21,7 @@ public class Oven<T> {
 	public Oven(int limit) {
 		list = new ArrayList<T>();
 		size = 0;
-		this.limit = limit; 
+		this.limit = limit;
 	}
 	
 	 /**
@@ -36,7 +36,7 @@ public class Oven<T> {
 			list.add(indredient);
 			size++;
 			return true;
-		}	
+		}
 		return false;
 	}
 	
@@ -80,10 +80,10 @@ public class Oven<T> {
     * @return: The removed ingredient, null if it was not found.
     */
 	public Toppings remove(Toppings topping) {
-		int i=list.indexOf(topping);
-		Toppings removedPatty=(Toppings)list.remove(i);
-		size --;
+		int i = list.indexOf(topping);
+		Toppings removedPatty = (Toppings) list.remove(i);
+		size--;
 		return removedPatty;
 	}
-	
+
 }

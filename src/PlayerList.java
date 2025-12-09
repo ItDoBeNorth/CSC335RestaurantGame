@@ -10,7 +10,7 @@ import java.util.HashMap;
  * and loaded between game sessions.
  */
 public class PlayerList implements Serializable {
-	//private static final long serialVersionUID = 1L;
+	// private static final long serialVersionUID = 1L;
 
 	public HashMap<String, Player> thisPlayerList;
 	
@@ -19,7 +19,7 @@ public class PlayerList implements Serializable {
      * creates an empty PlayerList with no players added yet.
      */
 	public PlayerList() {
-		 thisPlayerList = new HashMap<>();
+		thisPlayerList = new HashMap<>();
 	}
 	
 	 /**
@@ -37,10 +37,8 @@ public class PlayerList implements Serializable {
 		}
 
 		Player thisPlayer = thisPlayerList.get(playerName.strip());
-		
-		
+
 		return thisPlayer;
 	}
-	
-	
+
 }

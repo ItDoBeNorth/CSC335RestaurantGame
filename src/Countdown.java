@@ -25,7 +25,8 @@ public class Countdown{
 	public boolean startCountdown(double seconds) {
 		if (seconds < 0) {
 			countDownIsRunning = false;
-			return false;}
+			return false;
+		}
 		stopTimer();
 		timeLeft = seconds;
 		timeUp = false;
@@ -45,9 +46,9 @@ public class Countdown{
 					countDownIsRunning = false;
 					timer.cancel();
 				}
-				
+
 			}
-			
+
 		};
 		timer.scheduleAtFixedRate(task, 0, 1000);
 		return true;
@@ -75,10 +76,10 @@ public class Countdown{
       * Stops whichever timer (countdown or stopwatch) is currently running.
       */
 	public void stopTimer() {
-		 if (timer != null) {
-			 	countDownIsRunning = false;
-	            timer.cancel();
-		 }
+		if (timer != null) {
+			countDownIsRunning = false;
+			timer.cancel();
+		}
 	}
 	
 	/**
@@ -89,5 +90,5 @@ public class Countdown{
 	public boolean countDownIsRunning() {
 		return countDownIsRunning;
 	}
-	
+
 }

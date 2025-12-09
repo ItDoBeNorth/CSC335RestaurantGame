@@ -21,7 +21,7 @@ public abstract class CookableToppings extends Toppings{
 	public CookableToppings(double price, double prepTime, String toppingName) {
 		super(price, toppingName);
 		this.prepTime = prepTime;
-		timer=new Countdown();
+		timer = new Countdown();
 	}
 	
 	 /**
@@ -33,12 +33,12 @@ public abstract class CookableToppings extends Toppings{
 		return this.prepTime;
 	}
 	
-	//can be moved to something else like cooking sandwhich instead
 	/**
      * Starts the cooking timer for this topping.
      */
 	public void startCooking() {
-		timer.startStopwatch();;
+		timer.startStopwatch();
+		;
 	}
 	
 	 /**
@@ -47,7 +47,7 @@ public abstract class CookableToppings extends Toppings{
       * @return the number of seconds elapsed on the timer
       */
 	public double getCookingTime() {
-		cookingTime=timer.elapsed;
+		cookingTime = timer.elapsed;
 		return cookingTime;
 	}
 	
@@ -56,7 +56,7 @@ public abstract class CookableToppings extends Toppings{
      */
 	public void stopCooking() {
 		timer.stopTimer();
-		
+
 	}
 
 }

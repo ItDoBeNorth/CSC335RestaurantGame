@@ -6,7 +6,10 @@
  * updates accordingly.
  */
 public class Patty extends CookableToppings {
-	public enum CookingState {UNDERCOOKED,COOKED,OVERCOOKED}
+	public enum CookingState {
+		UNDERCOOKED, COOKED, OVERCOOKED
+	}
+
 	private CookingState currState;
 	private String stateImage;
 	
@@ -36,17 +39,15 @@ public class Patty extends CookableToppings {
      *
      */
 	public void updateState() {
-		if(getCookingTime()<=6) {
+		if (getCookingTime() <= 6) {
 			setState(CookingState.UNDERCOOKED);
-			stateImage="uncookedPatty.png";
-		}
-		else if(getCookingTime()>6&&getCookingTime()<=11) {
+			stateImage = "uncookedPatty.png";
+		} else if (getCookingTime() > 6 && getCookingTime() <= 11) {
 			setState(CookingState.COOKED);
-			stateImage="Patty.png";
-		}
-		else {
+			stateImage = "Patty.png";
+		} else {
 			setState(CookingState.OVERCOOKED);
-			stateImage="overcookedPatty.png";
+			stateImage = "overcookedPatty.png";
 		}
 	}
 	
@@ -56,7 +57,7 @@ public class Patty extends CookableToppings {
      * @param state: The new state to assign
      */
 	public void setState(CookingState state) {
-		this.currState=state;
+		this.currState = state;
 	}
 	
 	 /**
