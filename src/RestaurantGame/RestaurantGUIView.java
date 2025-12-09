@@ -401,7 +401,7 @@ public class RestaurantGUIView extends Application implements Observer {
 		signPrompt.setFont(new Font("Comic Sans MS", 12));
 		signPrompt.setPromptText("Enter your name");
 
-		Label title = new Label("Team 3's Restaurant");
+		Label title = new Label("Better Burgers");
 		title.setStyle("-fx-text-fill: #e0a23f;" + "-fx-effect: dropshadow(gaussian, black, 2.5, 0.5, 0, 0);"
 				+ "-fx-padding: 15;");
 		title.setFont(new Font("Comic Sans MS Bold", 35));

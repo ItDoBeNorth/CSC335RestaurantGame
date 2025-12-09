@@ -27,6 +27,6 @@ public class CookableToppingsTest {
 		Patty patty = new Patty(1.00, 2.00, "patty");
 		// patty.startCooking();
 		// Thread.sleep(16000);
-		assertEquals(patty.getPattyImage(), "Patty.png");
+		assertEquals(patty.getCookingState(), Patty.CookingState.UNDERCOOKED);
 	}
 }

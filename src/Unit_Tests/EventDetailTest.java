@@ -6,17 +6,18 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import RestaurantGame.Basket;
 import RestaurantGame.Cheese;
 import RestaurantGame.EventDetail;
+import RestaurantGame.Toppings;
 
 public class EventDetailTest {
 
 	@Test
 	void test1() {
-		Cheese cheese = new Cheese();
-		EventDetail event = new EventDetail("eventTest", cheese);
+		Basket<Toppings> bk = new Basket<Toppings>(1);
+		EventDetail event = new EventDetail("eventTest", bk);
 		assertEquals(event.getEventInfo(), "eventTest");
-		assertEquals(event.getEventChange().toString(), "Cheese@2c78d320");
 	}
 
 }
